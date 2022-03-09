@@ -1,0 +1,36 @@
+Download/Update:
+WPI tools
+NI tools
+CTRE tools
+Rev tools
+Navx tools
+
+Then update/flash:
+Falcon motors
+Spark MAX
+RoboRio
+Radio
+Navx
+
+
+
+Before you do this, make sure you have added all vendor libaries (especially rev and CTRE)
+Make sure you are connected to the internet for all this stuff.
+You need: Rev-lib, ctre, kauii labs, photonvision
+
+
+Do : git submodule init
+
+git submodule add https://github.com/NordicStorm/swerve-lib
+
+Then go into VS Code and open a terminal
+cd swerve-lib
+./gradlew build
+
+Then, open your build.gradle in the main project
+In the 'dependencies' block, add this line:
+    implementation project(":swerve-lib") 
+
+Open your settings.gradle in the main project
+At the end of the file, add this line:
+include ':swerve-lib'
