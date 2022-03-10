@@ -1,0 +1,31 @@
+Drivetrain:
+
+
+Barrel:
+    bottom motor = spark 10
+    top motor = spark 11
+    top shooter = spark 12
+    bottom shooter = spark 13
+
+    bottom sensor = DIO 1
+    top sensor = DIO 2
+    encoder
+
+Climbers:
+    left NEO = spark 14
+    right NEO = spark 15
+
+
+
+CAN path:
+    PDH - male port
+    4 falcons
+    <convert>
+    2 sparks for neos
+    Up to barrel
+    3 sparks
+    !cross!
+    1 spark
+    <convert>
+    4 falcons
+    Roborio - female port
