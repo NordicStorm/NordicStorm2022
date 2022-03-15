@@ -34,16 +34,21 @@ public class Barrel extends SubsystemBase {
 
     long bottomStopIntake = 0;
     long bottomStopHandoff = 0;
+    long bottomStopFinalShift = 0;
+
+    long bottomHandoffDuration = 500;
+    long bottomHandoffDeadzone = bottomHandoffDuration - 200;
+    long bottomShiftDuration = 100;
 
     long topStopIntake = 0;
     long topStopHandoff = 0;
+    long topStopFinalShift = 0;
 
     long topIntakeDuration = 500;
     long topHandoffDuration = 500;
     long topHandoffDeadzone = topHandoffDuration - 200;
+    long topShiftDuration = 100;
 
-    long bottomHandoffDuration = 500;
-    long bottomHandoffDeadzone = bottomHandoffDuration - 200;
 
     @Override
     public void periodic() {
@@ -65,7 +70,11 @@ public class Barrel extends SubsystemBase {
             long timeLeft = topStopHandoff - now;
             if(timeLeft < topHandoffDeadzone && topBall){
                 topStopIntake = 0;
+                topStopFinalShift = now+topShiftDuration;
             }
+        }
+        if (topStopFinalShift > now) {
+            desTopSpeed = 1;
         }
         if (topStopHandoff > now) {
             desTopSpeed = 9;
@@ -86,7 +95,11 @@ public class Barrel extends SubsystemBase {
 
             if (timeLeft < bottomHandoffDeadzone && bottomBall) {
                 bottomStopIntake = 0;
+                bottomStopFinalShift = now + bottomShiftDuration;
             }
+        }
+        if (bottomStopFinalShift > now) {
+            runBottom = true;
         }
         
 
