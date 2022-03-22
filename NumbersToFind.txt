@@ -1,0 +1,30 @@
+Barrel:
+    Indexer:
+        Bottom intake time
+        Bottom intake shift
+        Bottom intake send
+        
+        Top stage intake time
+        Top stage shift
+        Top stage send time
+
+        Top stage standard move speed
+        Top stage shoot speed
+        Top stage PID values
+        Top stage max speed to put in next ball
+
+    Shooter:
+        PID values for wheels
+    Tilt:
+        Botttom position
+        top position
+        Conversion to angle factor
+        PID values
+
+
+Climbers:
+    
+    Max extension position
+    Reach extension position
+    PID values for reach
+    PID values for pull

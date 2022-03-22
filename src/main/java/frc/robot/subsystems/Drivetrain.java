@@ -74,12 +74,13 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     // when a raw "drive" is used, privilege level is 0, so if this is set higher it
     // won't be take rotation control
     public int currentRotationPrivilegeNeeded = 0;
+
     Pixy pixy;
 
     public Drivetrain() {
         pixy = new Pixy();
         pixy.startUpdatingPixy();
-
+        
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,

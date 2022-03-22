@@ -78,4 +78,11 @@ public class Util {
         }
         return diff;
     }
+    public static double leftDebug() {
+        double y = RobotContainer.leftJoystick.getY();
+        if(Math.abs(y)>0.2){
+            return y;
+        }
+        return 0;
+    }
 }

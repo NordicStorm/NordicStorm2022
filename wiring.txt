@@ -6,7 +6,7 @@ Barrel:
     top motor = spark 11
     top shooter = spark 12
     bottom shooter = spark 13
-
+    screw = spark 16
     bottom sensor = DIO 1
     top sensor = DIO 2
     encoder

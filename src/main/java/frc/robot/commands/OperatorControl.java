@@ -4,34 +4,47 @@
 
 package frc.robot.commands;
 
+import frc.robot.RobotContainer;
+import frc.robot.Util;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.Climbers;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class OperatorControl extends CommandBase {
 
-  private final Drivetrain drivetrain;
-  private final Vision vision;
-  private final Barrel barrel;
-  private final Climbers climbers;
+    private final Drivetrain drivetrain;
+    private final Vision vision;
+    private final Barrel barrel;
+    private final Climbers climbers;
 
-  public OperatorControl(Drivetrain drivetrain, Barrel barrel, Climbers climbers, Vision vision) {
-    this.drivetrain=drivetrain;
-    this.barrel=barrel;
-    this.vision=vision;
-    this.climbers = climbers;
+    public OperatorControl(Drivetrain drivetrain, Barrel barrel, Climbers climbers, Vision vision) {
+        this.drivetrain = drivetrain;
+        this.barrel = barrel;
+        this.vision = vision;
+        this.climbers = climbers;
 
-    addRequirements(drivetrain);
-  }
+        addRequirements(drivetrain);
+    }
 
-  @Override
-  public void initialize() {}
+    @Override
+    public void initialize() {
+        var leftStick = RobotContainer.leftJoystick;
+        var rightStick = RobotContainer.rightJoystick;
+        double forward = rightStick.getY();
+        double sideways = rightStick.getX();
+        double twist = rightStick.getTwist();
+        
+        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, twist), drivetrain.getAngleRadians());
+        drivetrain.limitDrive(localSpeeds, 0);
+        
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+
+    }
 }

@@ -26,7 +26,7 @@ public class Barrel extends SubsystemBase {
 
     private CANSparkMax bottomStage = new CANSparkMax(10, MotorType.kBrushed);
     private CANSparkMax topStage = new CANSparkMax(11, MotorType.kBrushless);
-    
+
     private RelativeEncoder topStageEncoder = topStage.getEncoder();
     private DigitalInput bottomSensor = new DigitalInput(1);
     private DigitalInput topSensor = new DigitalInput(2);
@@ -59,9 +59,9 @@ public class Barrel extends SubsystemBase {
 
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
-        
-        
-        
+
+
+
     }
 
     public void setOtherSubsystems(Drivetrain drivetrain, Climbers climbers, Vision vision) {
@@ -142,7 +142,7 @@ public class Barrel extends SubsystemBase {
         if (bottomStopFinalShift > now) {
             runBottom = true;
         }
-        
+
 
         if (runBottom) {
             bottomStage.set(1);
@@ -178,7 +178,7 @@ public class Barrel extends SubsystemBase {
         if(ballAvailableToShoot()){
             topStopHandoff = System.currentTimeMillis()+topHandoffDuration;
         }else{
-            
+
         }
     }
 
@@ -188,7 +188,7 @@ public class Barrel extends SubsystemBase {
 
     }
     /**
-     * 
+     *
      * @param angle the angle in degrees, where 90 would be straight up.
      * @return
      */
@@ -196,7 +196,7 @@ public class Barrel extends SubsystemBase {
         screwPID.setReference(angle/angToRotConvert, ControlType.kPosition);
     }
     /**
-     * 
+     *
      * @return the current measured barrel angle in degrees, where 90 would be straight up.
      */
     public double getTiltAngle(){
@@ -219,7 +219,7 @@ public class Barrel extends SubsystemBase {
         pid.setI(0);
         pid.setD(0);
         pid.setFF(0);
-        
+
     }
     /**
      * Set the target rpm of the top and bottom flywheels. Both must be positive.
@@ -237,17 +237,17 @@ public class Barrel extends SubsystemBase {
     private double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = 0.1*x*x*x + 0;//CURVE:TSPEED,UPD:2022
+        double result = 32; //CURVE:TSPEED,now
         return result;
     }
     /**
-     * 
+     *
      * @param meters from target's center
      * @return
      */
     private double getShootingAngle(double meters){
-        return 0;
+
     }
-    
+
 
 }
