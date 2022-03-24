@@ -255,12 +255,14 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
         double fixX = enforceWalls(targetFieldSpeeds.vxMetersPerSecond, drivetrainConfig.maxAcceleration,
                 pose.getX(), 1, 4.2);
-        if (vWalls)
+        if (vWalls){
             targetFieldSpeeds.vxMetersPerSecond = fixX;
+        }
         double fixY = enforceWalls(targetFieldSpeeds.vyMetersPerSecond, drivetrainConfig.maxAcceleration,
                 pose.getY(), -6.5, -1);
-        if (vWalls)
+        if (vWalls){
             targetFieldSpeeds.vyMetersPerSecond = fixY;
+        }
         var targetLocalSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(targetFieldSpeeds.vxMetersPerSecond,
                 targetFieldSpeeds.vyMetersPerSecond,
                 targetFieldSpeeds.omegaRadiansPerSecond,

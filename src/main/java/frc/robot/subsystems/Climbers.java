@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Util;
 
@@ -21,7 +22,7 @@ public class Climbers extends SubsystemBase {
     private Barrel barrel;
 
     private CANSparkMax leftMotor = new CANSparkMax(14, MotorType.kBrushless);
-    private CANSparkMax rightMotor = new CANSparkMax(15, MotorType.kBrushless);
+    private CANSparkMax rightMotor = new CANSparkMax(18, MotorType.kBrushless);
     private SparkMaxPIDController leftPID = leftMotor.getPIDController();
     private SparkMaxPIDController rightPID = rightMotor.getPIDController();
     private RelativeEncoder leftEncoder = leftMotor.getEncoder();
@@ -43,7 +44,10 @@ public class Climbers extends SubsystemBase {
     @Override
     public void periodic() {
         double velo = leftEncoder.getVelocity();
-        setVoltages(Util.leftDebug()*12);
+        //setVoltages(Util.leftDebug()*12);
+        SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
+
+        SmartDashboard.putNumber("temp", leftMotor.getMotorTemperature());
         
     }
 
@@ -62,9 +66,17 @@ public class Climbers extends SubsystemBase {
 
     }
 
+    /**
+     * Positive means extending up
+     * @param volts
+     */
     public void setVoltages(double volts){
         leftPID.setReference(volts, CANSparkMax.ControlType.kVoltage);
-        rightPID.setReference(volts, CANSparkMax.ControlType.kVoltage);
+        rightPID.setReference(-volts, CANSparkMax.ControlType.kVoltage);
+    }
+    public void setRaw(double power){
+        leftMotor.set(power);
+        rightMotor.set(-power);
     }
 
     public void setPositions(double pos){

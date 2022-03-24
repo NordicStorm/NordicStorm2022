@@ -31,20 +31,34 @@ public class OperatorControl extends CommandBase {
 
     @Override
     public void initialize() {
-        var leftStick = RobotContainer.leftJoystick;
-        var rightStick = RobotContainer.rightJoystick;
-        double forward = rightStick.getY();
-        double sideways = rightStick.getX();
-        double twist = rightStick.getTwist();
-        
-        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, twist), drivetrain.getAngleRadians());
-        drivetrain.limitDrive(localSpeeds, 0);
         
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        var leftStick = RobotContainer.leftJoystick;
+        var rightStick = RobotContainer.rightJoystick;
+        double forward = -rightStick.getY();
+        double sideways = -rightStick.getX();
+        double rot = -rightStick.getTwist();
+        double throttle = rightStick.getThrottle();
+        throttle=Util.map(throttle, 1, -1, 0.1, 1);
+        if(forward<0.008 && rot>=0.14){//weird thing with joystick
+            //rot = Util.map(rot, 0.15, in_max, out_min, out_max);
+            rot -= 0.14;
+        }
+        throttle*=4;//config.maxVelocity;
+        
 
+        forward = Util.applyDeadzone(forward, 0.1) * throttle;
+        sideways = Util.applyDeadzone(sideways, 0.1) * throttle;
+        rot = Util.applyDeadzone(rot, 0.3) * throttle;
+
+        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getAngleRadians());
+        drivetrain.limitDrive(localSpeeds, 0);
+        System.out.println(localSpeeds);
+
+        barrel.setIntake(leftStick.getRawButton(4));
     }
 }

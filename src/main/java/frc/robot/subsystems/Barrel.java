@@ -18,6 +18,8 @@ import com.revrobotics.SparkMaxAnalogSensor.Mode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+import frc.robot.Util;
 
 public class Barrel extends SubsystemBase {
     private Drivetrain drivetrain;
@@ -28,10 +30,10 @@ public class Barrel extends SubsystemBase {
     private CANSparkMax topStage = new CANSparkMax(11, MotorType.kBrushless);
     
     private RelativeEncoder topStageEncoder = topStage.getEncoder();
-    private DigitalInput bottomSensor = new DigitalInput(1);
-    private DigitalInput topSensor = new DigitalInput(2);
+    private DigitalInput bottomSensor = new DigitalInput(20);
+    private DigitalInput topSensor = new DigitalInput(21);
 
-    private CANSparkMax screw = new CANSparkMax(16, MotorType.kBrushless);
+    private CANSparkMax screw = new CANSparkMax(17, MotorType.kBrushless);
     private SparkMaxPIDController screwPID = screw.getPIDController();
     private SparkMaxAnalogSensor screwEncoder = screw.getAnalog(Mode.kAbsolute);
 
@@ -55,7 +57,7 @@ public class Barrel extends SubsystemBase {
         screwPID.setFeedbackDevice(screwEncoder);
         screwPID.setP(0);
         screwPID.setI(0);
-        screwEncoder.setPositionConversionFactor(0.5);
+        screwEncoder.setPositionConversionFactor(0.2);
 
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
@@ -143,7 +145,6 @@ public class Barrel extends SubsystemBase {
             runBottom = true;
         }
         
-
         if (runBottom) {
             bottomStage.set(1);
         }else{
@@ -185,7 +186,14 @@ public class Barrel extends SubsystemBase {
     //tilt stuff
     private final double angToRotConvert = 360;
     private void updateTilt() {
-
+        SmartDashboard.putNumber("tiltang", screwEncoder.getPosition());
+        double x = RobotContainer.leftJoystick.getZ();
+        if(Math.abs(x)>0.5){
+            screw.set(x);
+        }else{
+            screw.set(0);
+        }
+        //screwPID.setReference(Util.leftDebug()*12, CANSparkMax.ControlType.kVoltage);
     }
     /**
      * 
@@ -207,12 +215,15 @@ public class Barrel extends SubsystemBase {
     private void updateShooter() {
         double velo = topWheelEncoder.getVelocity();
         SmartDashboard.putNumber("topShooterVelo", velo);
+        setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
+        
     }
     /**
      * Configures the coasting, PID gains, etc for one of the flywheels
      */
     private void configureFlywheelMotor(CANSparkMax motor){
         SparkMaxPIDController pid = motor.getPIDController();
+        motor.setInverted(true);
         motor.enableVoltageCompensation(12);
         motor.setIdleMode(IdleMode.kCoast);
         pid.setP(0);
@@ -231,6 +242,15 @@ public class Barrel extends SubsystemBase {
         }
         topWheelPID.setReference(topRPM, CANSparkMax.ControlType.kVelocity);
         bottomWheelPID.setReference(bottomRPM, CANSparkMax.ControlType.kVelocity);
+    }
+
+    public void setFlywheelsRaw(double top, double bottom){
+        if(top<0 || bottom<0){
+            System.out.println("ERROR: Tried to set shooter RPM to negative");
+            return;
+        }
+        topWheelPID.setReference(top, CANSparkMax.ControlType.kDutyCycle);
+        bottomWheelPID.setReference(bottom, CANSparkMax.ControlType.kDutyCycle);
     }
 
 
