@@ -10,6 +10,12 @@ public class Util {
     public static SwerveModuleState stateFromModule(SwerveModule module){
         return new SwerveModuleState(module.getDriveVelocity(), new Rotation2d(module.getSteerAngle()));
     }
+    /**
+     * angle unit is degrees!
+     * @param speeds
+     * @param degrees
+     * @return
+     */
     public static ChassisSpeeds rotateSpeeds(ChassisSpeeds speeds, double degrees){
         return ChassisSpeeds.fromFieldRelativeSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, Rotation2d.fromDegrees(degrees));
     }

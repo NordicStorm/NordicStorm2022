@@ -9,7 +9,7 @@ public interface PathableDrivetrain {
      * 
      * @return the angle in <b>radians</b>. Positive = counterclockwise!
      */
-    double getAngleRadians();
+    double getGyroRadians();
 
     /**
      * Get the current pose of the robot, which includes position and rotation.

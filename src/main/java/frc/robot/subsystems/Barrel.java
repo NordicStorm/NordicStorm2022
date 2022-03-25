@@ -57,7 +57,8 @@ public class Barrel extends SubsystemBase {
         screwPID.setFeedbackDevice(screwEncoder);
         screwPID.setP(0);
         screwPID.setI(0);
-        screwEncoder.setPositionConversionFactor(0.2);
+        screwEncoder.setPositionConversionFactor(0.3);
+        
 
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
@@ -84,10 +85,10 @@ public class Barrel extends SubsystemBase {
     long topStopHandoff = 0;
     long topStopFinalShift = 0;
 
-    long topIntakeDuration = 500;
+    long topIntakeDuration = 5000;
     long topHandoffDuration = 500;
     long topHandoffDeadzone = topHandoffDuration - 200;
-    long topShiftDuration = 100;
+    long topShiftDuration = 00;
 
     boolean topBallAvailable = false;
 
@@ -111,6 +112,7 @@ public class Barrel extends SubsystemBase {
         if (topStopIntake > now) {
             desTopSpeed = 1;
             long timeLeft = topStopHandoff - now;
+            // if the handoff time left is passed the deadzone
             if(timeLeft < topHandoffDeadzone && topBall){
                 topStopIntake = 0;
                 topStopFinalShift = now+topShiftDuration;
@@ -186,10 +188,10 @@ public class Barrel extends SubsystemBase {
     //tilt stuff
     private final double angToRotConvert = 360;
     private void updateTilt() {
-        SmartDashboard.putNumber("tiltang", screwEncoder.getPosition());
+        SmartDashboard.putNumber("tiltang", getTiltAngle());
         double x = RobotContainer.leftJoystick.getZ();
-        if(Math.abs(x)>0.5){
-            screw.set(x);
+        if(Math.abs(x)>0.8){
+            screw.set(x*0.3);
         }else{
             screw.set(0);
         }
@@ -208,14 +210,14 @@ public class Barrel extends SubsystemBase {
      * @return the current measured barrel angle in degrees, where 90 would be straight up.
      */
     public double getTiltAngle(){
-        return screwEncoder.getPosition()*angToRotConvert;
+        return screwEncoder.getPosition()*-angToRotConvert - 1*(226.8-118);
     }
 
     //Shooter stuff
     private void updateShooter() {
         double velo = topWheelEncoder.getVelocity();
         SmartDashboard.putNumber("topShooterVelo", velo);
-        setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
+        //setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
         
     }
     /**

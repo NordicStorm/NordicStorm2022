@@ -55,7 +55,7 @@ public class OperatorControl extends CommandBase {
         sideways = Util.applyDeadzone(sideways, 0.1) * throttle;
         rot = Util.applyDeadzone(rot, 0.3) * throttle;
 
-        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getAngleRadians());
+        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getGyroDegrees());
         drivetrain.limitDrive(localSpeeds, 0);
         System.out.println(localSpeeds);
 

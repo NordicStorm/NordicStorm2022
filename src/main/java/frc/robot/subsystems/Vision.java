@@ -73,7 +73,7 @@ public class Vision extends SubsystemBase {
                         targetHeight,
                         camAngle,
                         Math.toRadians(res.getBestTarget().getPitch()));
-                Rotation2d botRotation = Rotation2d.fromDegrees(drivetrain.getGyroAngle());
+                Rotation2d botRotation = Rotation2d.fromDegrees(drivetrain.getGyroDegrees());
                 var estPose = estimateFieldToRobot(
                         camHeight, targetHeight, camAngle, Math.toRadians(target.getPitch()),
                         Rotation2d.fromDegrees(-target.getYaw()), botRotation, targetToField,

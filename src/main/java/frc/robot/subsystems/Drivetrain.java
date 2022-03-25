@@ -146,13 +146,13 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
      * 
      * @return current angle in degrees
      */
-    public double getGyroAngle() {
+    public double getGyroDegrees() {
         return -navx.getAngle();
     }
 
     @Override
-    public double getAngleRadians() {
-        return Math.toRadians(getGyroAngle());
+    public double getGyroRadians() {
+        return Math.toRadians(getGyroDegrees());
     }
 
     @Override
@@ -196,7 +196,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         drivetrainConfig.maxAcceleration = SmartDashboard.getNumber("MaxAccel", 0);
 
         // Update the pose
-        pose = odometry.update(Rotation2d.fromDegrees(getGyroAngle()), Util.stateFromModule(frontLeftModule),
+        pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), Util.stateFromModule(frontLeftModule),
                 Util.stateFromModule(frontRightModule), Util.stateFromModule(backLeftModule),
                 Util.stateFromModule(backRightModule));
         driveActualMotors(targetChassisSpeeds);
@@ -212,7 +212,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
         SmartDashboard.putNumber("odo_x", pose.getX());
         SmartDashboard.putNumber("odo_y", pose.getY());
-        SmartDashboard.putNumber("driveAng", getGyroAngle());
+        SmartDashboard.putNumber("driveAng", getGyroDegrees());
         if (RobotContainer.rightJoystick.getRawButton(8)) {
             resetPose(2, -2, 0);
         }
@@ -251,7 +251,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         localSpeeds.vyMetersPerSecond = doAccelerationLimit(currentLocalSpeeds.vyMetersPerSecond,
                 localSpeeds.vyMetersPerSecond, maxAccelLocal, maxAccelLocal * 0.6);
 
-        var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroAngle());
+        var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroDegrees());
 
         double fixX = enforceWalls(targetFieldSpeeds.vxMetersPerSecond, drivetrainConfig.maxAcceleration,
                 pose.getX(), 1, 4.2);
@@ -266,7 +266,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         var targetLocalSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(targetFieldSpeeds.vxMetersPerSecond,
                 targetFieldSpeeds.vyMetersPerSecond,
                 targetFieldSpeeds.omegaRadiansPerSecond,
-                Rotation2d.fromDegrees(getGyroAngle()));
+                Rotation2d.fromDegrees(getGyroDegrees()));
 
         drive(targetLocalSpeeds, rotPrivilege);
 
@@ -348,7 +348,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     public void rotateTowardTarget() {
         double angleNeeded = 0;// Math.toDegrees(Util.angleBetweenPoses(pose, Robot.vision.targetToField));
-        double diff = Util.angleDiff(getGyroAngle(), angleNeeded);
+        double diff = Util.angleDiff(getGyroDegrees(), angleNeeded);
         double correction = diff * 0.2;
         correction = Util.absClamp(correction, 2.5);
         setRotationSpeed(correction, 1);

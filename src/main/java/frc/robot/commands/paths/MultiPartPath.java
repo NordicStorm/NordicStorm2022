@@ -199,7 +199,7 @@ public class MultiPartPath {
     public double rotationNeededForHeadingLock() {
         rotationController.setConstraints(new TrapezoidProfile.Constraints(drivetrainConfig.maxAnglularVelocity,
                 drivetrainConfig.maxAngularAcceleration));
-        return rotationController.calculate(drivetrain.getAngleRadians(), headingOffset);
+        return rotationController.calculate(drivetrain.getGyroRadians(), headingOffset);
     }
 
     /**
