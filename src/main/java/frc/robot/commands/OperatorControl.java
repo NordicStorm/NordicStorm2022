@@ -11,6 +11,7 @@ import frc.robot.subsystems.Climbers;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class OperatorControl extends CommandBase {
@@ -48,6 +49,10 @@ public class OperatorControl extends CommandBase {
             //rot = Util.map(rot, 0.15, in_max, out_min, out_max);
             rot -= 0.14;
         }
+        if(forward>0.7 && false){
+            drivetrain.driveVolts(new ChassisSpeeds(12, 0, 0));
+            return;
+        }
         throttle*=4;//config.maxVelocity;
         
 
@@ -57,8 +62,7 @@ public class OperatorControl extends CommandBase {
 
         ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getGyroDegrees());
         drivetrain.limitDrive(localSpeeds, 0);
-        System.out.println(localSpeeds);
-
+        SmartDashboard.putNumber("comX", localSpeeds.vxMetersPerSecond);
         barrel.setIntake(leftStick.getRawButton(4));
     }
 }

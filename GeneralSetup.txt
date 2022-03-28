@@ -18,6 +18,7 @@ Before you do this, make sure you have added all vendor libaries (especially rev
 Make sure you are connected to the internet for all this stuff.
 You need: Rev-lib, ctre, kauii labs, photonvision
 
+Then: to get Swerve-Lib working
 
 Do : git submodule init
 

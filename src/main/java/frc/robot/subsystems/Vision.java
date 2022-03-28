@@ -44,14 +44,14 @@ public class Vision extends SubsystemBase {
     double targetCenter = 0;
     Pose2d pose = null;
     boolean lightOn = true;
-    double camHeight = Units.inchesToMeters(10.125);
+    double camHeight = Units.inchesToMeters(26.5);
     double targetHeight = Units.inchesToMeters(103);
-    double camAngle = Math.toRadians(33);
+    double camAngle = Math.toRadians(32);
 
     // Position of robot relative to cam
-    Transform2d camToRobot = new Transform2d(new Translation2d(Units.inchesToMeters(-(14 - 1.5)), 0),
-            new Rotation2d(0));
-    final public Pose2d targetToField = new Pose2d(0, -3.96, new Rotation2d(0));
+    Transform2d camToRobot = new Transform2d(new Translation2d(Units.inchesToMeters(12), 0),
+            Rotation2d.fromDegrees(180));
+    final public Pose2d targetToField = new Pose2d(Units.feetToMeters(27), Units.feetToMeters(13.5), new Rotation2d(0));
     public PhotonTrackedTarget bestTarget = null;
     public boolean hasSeenTarget = false;
 
@@ -85,7 +85,7 @@ public class Vision extends SubsystemBase {
                 SmartDashboard.putNumber("vis_y", estPose.getY());
                 SmartDashboard.putNumber("vis_x_ft", Units.metersToFeet(estPose.getX()));
                 SmartDashboard.putNumber("vis_y_ft", Units.metersToFeet(estPose.getY()));
-                drivetrain.resetPose(estPose.getX(), estPose.getY(), 0);
+                //drivetrain.resetPose(estPose.getX(), estPose.getY(), 0);
                 // System.out.println("dist "+);
             }
         } else {

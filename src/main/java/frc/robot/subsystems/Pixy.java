@@ -195,15 +195,22 @@ public class Pixy {
         byte[] request = { (byte) 174, (byte) 193, 16, 1, (byte) brightness };
         pixyPort.write(request, 5);
     }
-    public void setLamps(boolean on){
+    public void setLamps(boolean top, boolean bottom){
         byte[] request;
-        if(on){
-            request=new byte[]{ (byte) 174, (byte) 193, 22, 2,1,1 };
-        }else{
-            request=new byte[]{ (byte) 174, (byte) 193, 22, 2,0,0 };
+        
+        request=new byte[]{ (byte) 174, (byte) 193, 22, 2,0,0 };
+        if(top){
+            request[4] = 1;
         }
+        if(bottom){
+            request[5] =1;
+        }
+        
         pixyPort.write(request, 6);
        
+    }
+    public void setLamps(boolean on){
+        setLamps(on, false);
     }
 
 }

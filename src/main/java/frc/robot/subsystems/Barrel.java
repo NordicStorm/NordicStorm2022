@@ -52,13 +52,14 @@ public class Barrel extends SubsystemBase {
         topStage.enableVoltageCompensation(12);
         topStage.setIdleMode(IdleMode.kBrake);
 
+        screwEncoder.setPositionConversionFactor(0.296);
+
         screw.enableVoltageCompensation(12);
         screw.setIdleMode(IdleMode.kBrake);
         screwPID.setFeedbackDevice(screwEncoder);
-        screwPID.setP(0);
-        screwPID.setI(0);
-        screwEncoder.setPositionConversionFactor(0.3);
-        
+        //screwPID.setP(25);
+        //screwPID.setI(0);
+        screw.setInverted(false);
 
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
@@ -79,16 +80,16 @@ public class Barrel extends SubsystemBase {
 
     long bottomHandoffDuration = 500;
     long bottomHandoffDeadzone = bottomHandoffDuration - 200;
-    long bottomShiftDuration = 100;
+    long bottomShiftDuration = 00;
 
     long topStopIntake = 0;
     long topStopHandoff = 0;
     long topStopFinalShift = 0;
 
-    long topIntakeDuration = 5000;
+    long topIntakeDuration = 500;
     long topHandoffDuration = 500;
     long topHandoffDeadzone = topHandoffDuration - 200;
-    long topShiftDuration = 00;
+    long topShiftDuration = 50;
 
     boolean topBallAvailable = false;
 
@@ -110,7 +111,7 @@ public class Barrel extends SubsystemBase {
         double desTopSpeed = 0;
 
         if (topStopIntake > now) {
-            desTopSpeed = 1;
+            desTopSpeed = 0.5;
             long timeLeft = topStopHandoff - now;
             // if the handoff time left is passed the deadzone
             if(timeLeft < topHandoffDeadzone && topBall){
@@ -119,7 +120,7 @@ public class Barrel extends SubsystemBase {
             }
         }
         if (topStopFinalShift > now) {
-            desTopSpeed = 1;
+            desTopSpeed = 0.75;
         }
         if (topStopHandoff > now) {
             desTopSpeed = 9;
@@ -146,7 +147,11 @@ public class Barrel extends SubsystemBase {
         if (bottomStopFinalShift > now) {
             runBottom = true;
         }
-        
+        if(RobotContainer.leftJoystick.getRawButton(11)){
+            topStage.set(-1);
+            bottomStage.set(-1);
+            return;
+        }
         if (runBottom) {
             bottomStage.set(1);
         }else{
@@ -161,9 +166,9 @@ public class Barrel extends SubsystemBase {
 
     public void setIntake(boolean running){
         if(running){
-            bottomStopIntake = System.currentTimeMillis() + 100;
+            bottomStopIntake = System.currentTimeMillis() + 300;
         }else{
-            bottomStopIntake = 0;
+            //bottomStopIntake = 0;
 
         }
     }
@@ -187,30 +192,38 @@ public class Barrel extends SubsystemBase {
 
     //tilt stuff
     private final double angToRotConvert = 360;
+    public final double maxAngle = 78.5;
+    public final double minAngle = 30;
     private void updateTilt() {
         SmartDashboard.putNumber("tiltang", getTiltAngle());
+        SmartDashboard.putNumber("rawAng", screwEncoder.getPosition());
+        //intakeHeight=79.4 degrees
         double x = RobotContainer.leftJoystick.getZ();
         if(Math.abs(x)>0.8){
-            screw.set(x*0.3);
+            screw.set(x*0.6);
         }else{
             screw.set(0);
         }
-        //screwPID.setReference(Util.leftDebug()*12, CANSparkMax.ControlType.kVoltage);
-    }
+        //setTiltAngle(Util.map(x, -1, 1, minAngle, maxAngle));
+   }
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.
      * @return
      */
     public void setTiltAngle(double angle){
-        screwPID.setReference(angle/angToRotConvert, ControlType.kPosition);
+        double adj = ((angle+(213.5-28))/angToRotConvert);
+        //System.out.println(adj);
+        SmartDashboard.putNumber("target", adj);
+        screwPID.setReference(adj, ControlType.kSmartMotion);
     }
     /**
      * 
      * @return the current measured barrel angle in degrees, where 90 would be straight up.
      */
     public double getTiltAngle(){
-        return screwEncoder.getPosition()*-angToRotConvert - 1*(226.8-118);
+        
+        return screwEncoder.getPosition()*angToRotConvert - 1*(0);
     }
 
     //Shooter stuff
@@ -228,10 +241,10 @@ public class Barrel extends SubsystemBase {
         motor.setInverted(true);
         motor.enableVoltageCompensation(12);
         motor.setIdleMode(IdleMode.kCoast);
-        pid.setP(0);
-        pid.setI(0);
-        pid.setD(0);
-        pid.setFF(0);
+        //pid.setP(0);
+        //pid.setI(0);
+        //pid.setD(0);
+        //pid.setFF(0);
         
     }
     /**

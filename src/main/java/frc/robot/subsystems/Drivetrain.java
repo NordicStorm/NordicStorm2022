@@ -46,8 +46,8 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     private Climbers climbers;
 
     private static final double MAX_VOLTAGE = 12.0;
-    public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.64;
-
+    public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.00;
+    //Ticks: -18000
     private final SwerveModule frontLeftModule;
     private final SwerveModule frontRightModule;
     private final SwerveModule backLeftModule;
@@ -71,9 +71,9 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     // this is basically the 'privilege level' the rotation control ability is at.
     // So 0 means it will take anything, 1 means 1 or higher.
-    // when a raw "drive" is used, privilege level is 0, so if this is set higher it
-    // won't be take rotation control
-    public int currentRotationPrivilegeNeeded = 0;
+    // when a raw "drive" is used, privilege level is 0.
+    // Each tick, whatever thing gave the highest rotation privilege gets used.
+    private int currentRotationPrivilegeNeeded = 0;
 
     Pixy pixy;
 
@@ -113,14 +113,14 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
             TalonFX driveMotor = module.getTalonDriveMotor();
 
             driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
-            driveMotor.config_kF(0, 0.047);
-            driveMotor.config_kP(0, 0.02);
+            driveMotor.config_kF(0, 0.048);
+            driveMotor.config_kP(0, 0.04);
 
         }
-        drivetrainConfig.maxAcceleration = 2.5; // 2.5
+        drivetrainConfig.maxAcceleration = 2; // 2.5
         drivetrainConfig.maxVelocity = 4; // 4
-        drivetrainConfig.maxAnglularVelocity = 20;
-        drivetrainConfig.maxAngularAcceleration = 12;
+        drivetrainConfig.maxAnglularVelocity = 5;
+        drivetrainConfig.maxAngularAcceleration = 4;
         drivetrainConfig.rotationCorrectionP = 2;
         drivetrainConfig.maxCentripetalAcceleration = 11;
 
@@ -168,6 +168,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     public void resetAngle() {
         navx.reset();
+        
     }
 
     @Override
@@ -200,16 +201,13 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
                 Util.stateFromModule(frontRightModule), Util.stateFromModule(backLeftModule),
                 Util.stateFromModule(backRightModule));
         driveActualMotors(targetChassisSpeeds);
-        if (currentRotationPrivilegeNeeded != 0) {
-            rotateTowardTarget();
-        }
+        currentRotationPrivilegeNeeded = 0;
 
         double speed = frontLeftModule.getDriveVelocity();
         SmartDashboard.putNumber("speed", speed);
 
         double rawSpeed = frontLeftModule.getTalonDriveMotor().getSelectedSensorVelocity();
         SmartDashboard.putNumber("rawSpeed", rawSpeed);
-
         SmartDashboard.putNumber("odo_x", pose.getX());
         SmartDashboard.putNumber("odo_y", pose.getY());
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
@@ -225,6 +223,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         targetChassisSpeeds.vxMetersPerSecond = chassisSpeeds.vxMetersPerSecond;
         targetChassisSpeeds.vyMetersPerSecond = chassisSpeeds.vyMetersPerSecond;
         if (rotPrivilege >= currentRotationPrivilegeNeeded) {
+            currentRotationPrivilegeNeeded = rotPrivilege;
             targetChassisSpeeds.omegaRadiansPerSecond = chassisSpeeds.omegaRadiansPerSecond;
         }
     }
@@ -245,11 +244,11 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         boolean vWalls = false;// Robot.vision.hasSeenTarget;
         var currentLocalSpeeds = getSpeeds();
 
-        double maxAccelLocal = drivetrainConfig.maxAcceleration;
+        double maxAccelLocal = 3;
         localSpeeds.vxMetersPerSecond = doAccelerationLimit(currentLocalSpeeds.vxMetersPerSecond,
                 localSpeeds.vxMetersPerSecond, maxAccelLocal, maxAccelLocal);
         localSpeeds.vyMetersPerSecond = doAccelerationLimit(currentLocalSpeeds.vyMetersPerSecond,
-                localSpeeds.vyMetersPerSecond, maxAccelLocal, maxAccelLocal * 0.6);
+                localSpeeds.vyMetersPerSecond, maxAccelLocal, maxAccelLocal);
 
         var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroDegrees());
 
@@ -319,15 +318,19 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         return targetSpeed;
     }
 
+    /**
+     * Raw drive the motors, units in VOLTS!
+     * @param chassisSpeeds
+     */
     public void driveVolts(ChassisSpeeds chassisSpeeds) {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
-        frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        frontLeftModule.set(states[0].speedMetersPerSecond,
                 states[0].angle.getRadians());
-        frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        frontRightModule.set(states[1].speedMetersPerSecond,
                 states[1].angle.getRadians());
-        backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        backLeftModule.set(states[2].speedMetersPerSecond,
                 states[2].angle.getRadians());
-        backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE,
+        backRightModule.set(states[3].speedMetersPerSecond,
                 states[3].angle.getRadians());
     }
 
@@ -343,15 +346,9 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     public void setRotationSpeed(double speed, int rotPrivilege) {
         if (rotPrivilege >= currentRotationPrivilegeNeeded) {
             targetChassisSpeeds.omegaRadiansPerSecond = speed;
+            currentRotationPrivilegeNeeded = rotPrivilege;
         }
     }
 
-    public void rotateTowardTarget() {
-        double angleNeeded = 0;// Math.toDegrees(Util.angleBetweenPoses(pose, Robot.vision.targetToField));
-        double diff = Util.angleDiff(getGyroDegrees(), angleNeeded);
-        double correction = diff * 0.2;
-        correction = Util.absClamp(correction, 2.5);
-        setRotationSpeed(correction, 1);
-    }
 
 }
