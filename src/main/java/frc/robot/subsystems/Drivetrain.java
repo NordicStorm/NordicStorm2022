@@ -350,5 +350,13 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         }
     }
 
+    /**
+     * 
+     * @return meters away from the center of the target
+     */
+    public double getDistanceToTarget(){
+        return Util.distance(pose, vision.targetToField);
+    }
+
 
 }

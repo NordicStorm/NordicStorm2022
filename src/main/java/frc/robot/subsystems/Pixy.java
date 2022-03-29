@@ -168,7 +168,7 @@ public class Pixy {
             //System.out.println(knownObjects);
         }
     }
-
+    
     public void startUpdatingPixy() {
         Timer timer = new Timer();
         timer.schedule(new UpdatePixy(this), 0, 16);

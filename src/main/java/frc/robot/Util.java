@@ -91,4 +91,24 @@ public class Util {
         }
         return 0;
     }
+    /**
+     * Returns true if a and b are within tolerance of each other
+     * @param a
+     * @param b
+     * @param tolerance will pass if diff is <= tolerance
+     * @return
+     */
+    public static boolean close(double a, double b, double tolerance) {
+        return Math.abs(a-b)<=tolerance;
+    }
+
+    /**
+     * Get distance in meters between 2 poses
+     * @return
+     */
+    public static double distance(Pose2d a, Pose2d b){
+        double dx = b.getX() - a.getX();
+        double dy = b.getY() - a.getY();
+        return Math.sqrt(dx*dx+dy*dy);
+    }
 }

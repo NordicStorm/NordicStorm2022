@@ -2,8 +2,11 @@ import csv
 import matplotlib.pyplot as plt
 import easygui
 import pygame
+import datetime
 from pygame.color import THECOLORS as COLORS
 import numpy as np
+from datetime import datetime
+
 class Curve:
     def __init__(self, points, name):
         self.points = points
@@ -53,8 +56,9 @@ def write_java_file(curve_object):
                 indent = len(l)-len(l.lstrip())
                 name = l.split("CURVE:")[1]
                 name = name.split(",")[0]
-                if name == curve_object.name: 
-                    meta = f"//CURVE:{name},now"
+                if name == curve_object.name:
+                    now = datetime.now().strftime(r'%I:%M,%m/%d')
+                    meta = f"//CURVE:{name},{now}"
                     expr = curve_object.get_expr()
                     l = " "*indent + f"double result = {expr}; {meta}"
             if i!= len(orig_lines)-1: l+="\n"
@@ -172,8 +176,11 @@ while running:
                 graph_all_points(curves, graphSurf)
             if e.key == pygame.K_o:
                 choice = easygui.choicebox("which to change order of?", choices=curves.keys())
+                if choice is None: continue
                 curve = curves[choice]
-                curve.set_order(easygui.integerbox(f"What order for {curve.name}?"))
+                new_order = easygui.integerbox(f"What order for {curve.name}?")
+                if new_order is not None:
+                    curve.set_order(new_order)
                 graph_all_points(curves, graphSurf)
 
             if e.key == pygame.K_w:

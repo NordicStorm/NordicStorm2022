@@ -69,7 +69,7 @@ public class DriveToObject{
         double turnValue=Util.absClamp(asPercent*pVal, maxTurn);
  
         
-        double forwardValue=Math.max(0,(1-Math.abs(asPercent*1))*forwardMod*proximitySlow);
+        double forwardValue=Math.max(0,(1-Math.abs(asPercent*2))*forwardMod*proximitySlow);
 
         //System.out.println(proximitySlow);
 

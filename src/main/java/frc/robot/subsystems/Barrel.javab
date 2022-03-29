@@ -237,7 +237,7 @@ public class Barrel extends SubsystemBase {
     private double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = 431.1797752808984*x + -2201.9662921348286; //CURVE:TSPEED,now
+        double result = 431.1797752808984*x + -2201.9662921348286; //CURVE:TSPEED,04:49,03/28
         return result;
     }
     /**

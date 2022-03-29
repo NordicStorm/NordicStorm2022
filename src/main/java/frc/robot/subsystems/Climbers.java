@@ -59,7 +59,7 @@ public class Climbers extends SubsystemBase {
         //checkResetPos(leftEncoder, leftLimitSwitch);
         //checkResetPos(rightEncoder, rightLimitSwitch);
 
-        setVoltages(Util.leftDebug()*12);
+        //setVoltages(Util.leftDebug()*12);
         double pos = -SmartDashboard.getNumber("climbPos", 0);
         //leftPID.setReference(pos, CANSparkMax.ControlType.kPosition, pidSlot);
         SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());

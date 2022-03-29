@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.TurnAndShoot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Barrel;
@@ -72,6 +73,8 @@ public class RobotContainer {
             }
           });
         new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 6));
+        new JoystickButton(leftJoystick, 1).whenPressed(new TurnAndShoot(drivetrain, barrel, vision, 9999999999l));
+
     }
 
     /**

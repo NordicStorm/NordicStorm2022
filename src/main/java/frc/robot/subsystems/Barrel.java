@@ -52,7 +52,7 @@ public class Barrel extends SubsystemBase {
         topStage.enableVoltageCompensation(12);
         topStage.setIdleMode(IdleMode.kBrake);
 
-        screwEncoder.setPositionConversionFactor(0.296);
+        screwEncoder.setPositionConversionFactor(0.296*360);
 
         screw.enableVoltageCompensation(12);
         screw.setIdleMode(IdleMode.kBrake);
@@ -166,7 +166,7 @@ public class Barrel extends SubsystemBase {
 
     public void setIntake(boolean running){
         if(running){
-            bottomStopIntake = System.currentTimeMillis() + 300;
+            bottomStopIntake = System.currentTimeMillis() + 1000;
         }else{
             //bottomStopIntake = 0;
 
@@ -182,7 +182,7 @@ public class Barrel extends SubsystemBase {
     /**
      * Move the top stage so the ball enters the flywheels. Will do nothing if there is not ballAvailableToShoot()
      */
-    public void sendBallToShooter(){
+    private void sendBallToShooter(){
         if(ballAvailableToShoot()){
             topStopHandoff = System.currentTimeMillis()+topHandoffDuration;
         }else{
@@ -191,9 +191,9 @@ public class Barrel extends SubsystemBase {
     }
 
     //tilt stuff
-    private final double angToRotConvert = 360;
-    public final double maxAngle = 78.5;
+    public final double maxAngle = 76.9;
     public final double minAngle = 30;
+    double targetTilt = 0;
     private void updateTilt() {
         SmartDashboard.putNumber("tiltang", getTiltAngle());
         SmartDashboard.putNumber("rawAng", screwEncoder.getPosition());
@@ -212,10 +212,12 @@ public class Barrel extends SubsystemBase {
      * @return
      */
     public void setTiltAngle(double angle){
-        double adj = ((angle+(213.5-28))/angToRotConvert);
+        angle = Util.clamp(angle, minAngle, maxAngle);
+        targetTilt = angle;
+        double adj = ((angle+(213.5-28)));
         //System.out.println(adj);
         SmartDashboard.putNumber("target", adj);
-        screwPID.setReference(adj, ControlType.kSmartMotion);
+        screwPID.setReference(adj, ControlType.kPosition);
     }
     /**
      * 
@@ -223,10 +225,13 @@ public class Barrel extends SubsystemBase {
      */
     public double getTiltAngle(){
         
-        return screwEncoder.getPosition()*angToRotConvert - 1*(0);
+        return screwEncoder.getPosition() - 1*(201-67.5);
     }
 
+    
     //Shooter stuff
+    double topTargetRPM = 0;
+    double bottomTargetRPM = 0;
     private void updateShooter() {
         double velo = topWheelEncoder.getVelocity();
         SmartDashboard.putNumber("topShooterVelo", velo);
@@ -255,13 +260,15 @@ public class Barrel extends SubsystemBase {
             System.out.println("ERROR: Tried to set shooter RPM to negative");
             return;
         }
+        topTargetRPM = topRPM;
+        bottomTargetRPM = bottomRPM;
         topWheelPID.setReference(topRPM, CANSparkMax.ControlType.kVelocity);
         bottomWheelPID.setReference(bottomRPM, CANSparkMax.ControlType.kVelocity);
     }
 
     public void setFlywheelsRaw(double top, double bottom){
         if(top<0 || bottom<0){
-            System.out.println("ERROR: Tried to set shooter RPM to negative");
+            System.out.println("ERROR: Tried to set shooter power to negative");
             return;
         }
         topWheelPID.setReference(top, CANSparkMax.ControlType.kDutyCycle);
@@ -275,14 +282,47 @@ public class Barrel extends SubsystemBase {
         double result = 0.1*x*x*x + 0;//CURVE:TSPEED,UPD:2022
         return result;
     }
+    private double getShootingBottomSpeed(double meters){
+        double x = meters;
+
+        double result = 0.1*x*x*x + 0;//CURVE:BSPEED,UPD:2022
+        return result;
+    }
     /**
      * 
      * @param meters from target's center
      * @return
      */
     private double getShootingAngle(double meters){
-        return 0;
+        double x = meters;
+        double result = 0;//CURVE:TILT
+        return result;
     }
-    
+    /**
+     * If everything is ready to shoot: RPM, Tilt, and sensor
+     * @return
+     */
+    public boolean readyToShoot(){
+        double topSpeed = topWheelEncoder.getVelocity();
+        double bottomSpeed = bottomWheelEncoder.getVelocity();
+        double tilt = getTiltAngle();
+        if(Util.close(topSpeed, topTargetRPM, 15) &&
+           Util.close(bottomSpeed, bottomTargetRPM, 15) &&
+           Util.close(tilt, targetTilt, 2) &&
+           ballAvailableToShoot()
+        ){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Feed and actually shoot the ball
+     */
+    public void shoot(){
+        
+        sendBallToShooter();
+        
+    }
+   
 
 }
