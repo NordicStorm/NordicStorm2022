@@ -306,9 +306,9 @@ public class Barrel extends SubsystemBase {
         double topSpeed = topWheelEncoder.getVelocity();
         double bottomSpeed = bottomWheelEncoder.getVelocity();
         double tilt = getTiltAngle();
-        if(Util.close(topSpeed, topTargetRPM, 15) &&
-           Util.close(bottomSpeed, bottomTargetRPM, 15) &&
-           Util.close(tilt, targetTilt, 2) &&
+        if(Util.close(topSpeed, topTargetRPM, 60) &&
+           Util.close(bottomSpeed, bottomTargetRPM, 60) &&
+           Util.close(tilt, targetTilt, 2*999) &&
            ballAvailableToShoot()
         ){
             return true;
@@ -322,6 +322,10 @@ public class Barrel extends SubsystemBase {
         
         sendBallToShooter();
         
+    }
+
+    public boolean hasBottomBall() {
+        return bottomSensor.get();
     }
    
 

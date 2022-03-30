@@ -74,9 +74,10 @@ public class TurnAndShoot extends CommandBase {
     public void execute() {
         if (SmartDashboard.getBoolean("go", false)) {
             SmartDashboard.putBoolean("go", false);
-            double tilt = SmartDashboard.getNumber("sTilt", 76.9);
-            double topRPM = SmartDashboard.getNumber("sTop", 1000);
-            double bottomRPM = SmartDashboard.getNumber("sBottom", 1000);
+            tilt = SmartDashboard.getNumber("sTilt", 76.9);
+            topRPM = SmartDashboard.getNumber("sTop", 1000);
+            bottomRPM = SmartDashboard.getNumber("sBottom", 1000);
+            SmartDashboard.putString("csv", vision.lastDistance+","+bottomRPM+","+topRPM+","+175); //175 fake angles
             barrel.setFlywheels(topRPM, bottomRPM);
         }
         // barrel.setTiltAngle(titl);

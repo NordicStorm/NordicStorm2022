@@ -153,8 +153,8 @@ def load_curves():
 pygame.init()
 font = pygame.font.SysFont("Arial", 10)
 point_colors = [COLORS['red'], COLORS['green'], COLORS['blue'], COLORS['purple'], COLORS['orange'], COLORS['yellow']]
-store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\distcurves.txt"
-file_path =  r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\src\main\java\frc\robot\subsystems\Barrel.javab"
+store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\shootingcurves.txt"
+file_path =  r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\src\main\java\frc\robot\subsystems\Barrel.java"
 curves = load_curves()
 
 screen = pygame.display.set_mode([640,480])

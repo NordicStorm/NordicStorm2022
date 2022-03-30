@@ -77,7 +77,7 @@ public class FollowBall extends CommandBase {
     double pVal = 4.00; // 5
     double proxPVal = 0.07 * 0;
     double stopWidth = 100;
-    double forwardMod = 3;
+    double forwardMod = 2;
     boolean fullAuto = true;
     boolean hasGotABall = false;
     boolean shouldStop = false;
@@ -202,6 +202,9 @@ public class FollowBall extends CommandBase {
             forwardValue = 2;
             turnValue = 0;
             System.out.println("charge!");
+        }
+        if(barrel.hasBottomBall()){
+            forwardValue = 0;
         }
         drivetrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.2, -turnValue), 2);
         if (doIntake) {

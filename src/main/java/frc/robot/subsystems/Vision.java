@@ -40,7 +40,7 @@ public class Vision extends SubsystemBase {
         camera.setPipelineIndex(2);
     }
 
-    double distance = 0;
+    public double lastDistance = 0;
     double targetCenter = 0;
     Pose2d pose = null;
     boolean lightOn = true;
@@ -78,8 +78,10 @@ public class Vision extends SubsystemBase {
                         camHeight, targetHeight, camAngle, Math.toRadians(target.getPitch()),
                         Rotation2d.fromDegrees(-target.getYaw()), botRotation, targetToField,
                         camToRobot);
-
-                SmartDashboard.putNumber("vis_dist", Units.metersToInches(distance));
+                distance = visToRealDist(distance);
+                lastDistance=distance;
+                SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(distance));
+                SmartDashboard.putNumber("vis_dist", (distance));
 
                 SmartDashboard.putNumber("vis_x", estPose.getX());
                 SmartDashboard.putNumber("vis_y", estPose.getY());
@@ -93,9 +95,9 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    public double visToRealDist(double distanceV){
+    public static double visToRealDist(double distanceV){
         double x = distanceV;
-        double result = 0;//CURVE:distance
+        double result = 1.1608113266065743*x + -0.21172960362220683; //CURVE:distance,08:13,03/29
         return result;
     }
     public void setOtherSubsystems(Drivetrain drivetrain, Climbers climbers, Barrel barrel){
@@ -163,10 +165,10 @@ public class Vision extends SubsystemBase {
         return PhotonUtils.estimateFieldToRobot(
                 PhotonUtils.estimateCameraToTarget(
                         PhotonUtils.estimateCameraToTargetTranslation(
-                                PhotonUtils.calculateDistanceToTargetMeters(
+                            visToRealDist(PhotonUtils.calculateDistanceToTargetMeters(
                                         cameraHeightMeters, targetHeightMeters,
                                         cameraPitchRadians, targetPitchRadians)
-                                        + 0.68,
+                                        + 0.68),
                                 targetYaw),
                         fieldToTarget,
                         gyroAngle),
