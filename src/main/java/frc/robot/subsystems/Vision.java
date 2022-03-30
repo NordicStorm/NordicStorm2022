@@ -44,9 +44,9 @@ public class Vision extends SubsystemBase {
     double targetCenter = 0;
     Pose2d pose = null;
     boolean lightOn = true;
-    double camHeight = Units.inchesToMeters(27);
-    double targetHeight = Units.inchesToMeters(104);
-    double camAngle = Math.toRadians(30);
+    double camHeight = Units.inchesToMeters(27); //27
+    double targetHeight = Units.inchesToMeters(104); //104
+    double camAngle = Math.toRadians(29.7);
 
     // Position of robot relative to cam
     Transform2d camToRobot = new Transform2d(new Translation2d(Units.inchesToMeters(12), 0),
@@ -68,18 +68,18 @@ public class Vision extends SubsystemBase {
             if (usable) {
                 hasSeenTarget = true;
                 SmartDashboard.putNumber("visUpdate", Math.random());
-                /*double distance = PhotonUtils.calculateDistanceToTargetMeters(
+                double distance = PhotonUtils.calculateDistanceToTargetMeters(
                         camHeight,
                         targetHeight,
                         camAngle,
-                        Math.toRadians(res.getBestTarget().getPitch()));*/
+                        Math.toRadians(res.getBestTarget().getPitch()))+0.68;
                 Rotation2d botRotation = Rotation2d.fromDegrees(drivetrain.getGyroDegrees()+180);
                 var estPose = estimateFieldToRobot(
                         camHeight, targetHeight, camAngle, Math.toRadians(target.getPitch()),
                         Rotation2d.fromDegrees(-target.getYaw()), botRotation, targetToField,
                         camToRobot);
 
-                SmartDashboard.putNumber("vis_dist", Units.metersToFeet(distance));
+                SmartDashboard.putNumber("vis_dist", Units.metersToInches(distance));
 
                 SmartDashboard.putNumber("vis_x", estPose.getX());
                 SmartDashboard.putNumber("vis_y", estPose.getY());
@@ -93,6 +93,11 @@ public class Vision extends SubsystemBase {
         }
     }
 
+    public double visToRealDist(double distanceV){
+        double x = distanceV;
+        double result = 0;//CURVE:distance
+        return result;
+    }
     public void setOtherSubsystems(Drivetrain drivetrain, Climbers climbers, Barrel barrel){
         this.drivetrain = drivetrain;
         this.barrel = barrel;

@@ -153,7 +153,7 @@ def load_curves():
 pygame.init()
 font = pygame.font.SysFont("Arial", 10)
 point_colors = [COLORS['red'], COLORS['green'], COLORS['blue'], COLORS['purple'], COLORS['orange'], COLORS['yellow']]
-store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\shootingcurves.txt"
+store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\distcurves.txt"
 file_path =  r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\src\main\java\frc\robot\subsystems\Barrel.javab"
 curves = load_curves()
 
@@ -178,6 +178,7 @@ while running:
                 choice = easygui.choicebox("which to change order of?", choices=curves.keys())
                 if choice is None: continue
                 curve = curves[choice]
+                
                 new_order = easygui.integerbox(f"What order for {curve.name}?")
                 if new_order is not None:
                     curve.set_order(new_order)

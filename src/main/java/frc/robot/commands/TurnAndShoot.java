@@ -80,7 +80,7 @@ public class TurnAndShoot extends CommandBase {
             barrel.setFlywheels(topRPM, bottomRPM);
         }
         // barrel.setTiltAngle(titl);
-        rotateTowardTarget();
+        //rotateTowardTarget();
         // barrel.setTiltFromVision();
 
         if (barrel.readyToShoot() && RobotContainer.leftJoystick.getTrigger()) {

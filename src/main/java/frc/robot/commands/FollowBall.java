@@ -203,7 +203,7 @@ public class FollowBall extends CommandBase {
             turnValue = 0;
             System.out.println("charge!");
         }
-        drivetrain.limitDrive(new ChassisSpeeds(forwardValue, turnValue * 0, -turnValue), 2);
+        drivetrain.limitDrive(new ChassisSpeeds(forwardValue, -turnValue * 0.2, -turnValue), 2);
         if (doIntake) {
             barrel.setIntake(true);
         }
