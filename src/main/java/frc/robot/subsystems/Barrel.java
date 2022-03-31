@@ -26,7 +26,7 @@ public class Barrel extends SubsystemBase {
     private Vision vision;
     private Climbers climbers;
 
-    private CANSparkMax bottomStage = new CANSparkMax(10, MotorType.kBrushed);
+    private CANSparkMax bottomStage = new CANSparkMax(10, MotorType.kBrushless);
     private CANSparkMax topStage = new CANSparkMax(11, MotorType.kBrushless);
     
     private RelativeEncoder topStageEncoder = topStage.getEncoder();
@@ -166,7 +166,7 @@ public class Barrel extends SubsystemBase {
 
     public void setIntake(boolean running){
         if(running){
-            bottomStopIntake = System.currentTimeMillis() + 1000;
+            bottomStopIntake = System.currentTimeMillis() + 500;
         }else{
             //bottomStopIntake = 0;
 
@@ -200,12 +200,13 @@ public class Barrel extends SubsystemBase {
         //intakeHeight=79.4 degrees
         double x = RobotContainer.leftJoystick.getZ();
         if(Math.abs(x)>0.8){
-            screw.set(x*0.6);
+            screw.set(x*1);
         }else{
             screw.set(0);
         }
         //setTiltAngle(Util.map(x, -1, 1, minAngle, maxAngle));
    }
+   private final double angleOffset = (178-42);
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.
@@ -214,7 +215,7 @@ public class Barrel extends SubsystemBase {
     public void setTiltAngle(double angle){
         angle = Util.clamp(angle, minAngle, maxAngle);
         targetTilt = angle;
-        double adj = ((angle+(213.5-28)));
+        double adj = ((angle+angleOffset));
         //System.out.println(adj);
         SmartDashboard.putNumber("target", adj);
         screwPID.setReference(adj, ControlType.kPosition);
@@ -225,7 +226,7 @@ public class Barrel extends SubsystemBase {
      */
     public double getTiltAngle(){
         
-        return screwEncoder.getPosition() - 1*(201-67.5);
+        return screwEncoder.getPosition() - 1*angleOffset;
     }
 
     

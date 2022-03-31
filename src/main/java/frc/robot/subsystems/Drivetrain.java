@@ -66,6 +66,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     private final SwerveDriveOdometry odometry;
     private ChassisSpeeds targetChassisSpeeds;
+    private SwerveModuleState currentSwerveStates [] = new SwerveModuleState[4];
     private Pose2d pose;
     private final AHRS navx = new AHRS(Port.kMXP);
 
@@ -117,12 +118,12 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
             driveMotor.config_kP(0, 0.04);
 
         }
-        drivetrainConfig.maxAcceleration = 2; // 2.5
-        drivetrainConfig.maxVelocity = 4; // 4
+        drivetrainConfig.maxAcceleration = 2; 
+        drivetrainConfig.maxVelocity = 2; 
         drivetrainConfig.maxAnglularVelocity = 5;
         drivetrainConfig.maxAngularAcceleration = 4;
         drivetrainConfig.rotationCorrectionP = 2;
-        drivetrainConfig.maxCentripetalAcceleration = 11;
+        drivetrainConfig.maxCentripetalAcceleration = 8;
 
         pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
         odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), pose);
@@ -173,9 +174,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     @Override
     public ChassisSpeeds getSpeeds() {
-        return kinematics.toChassisSpeeds(Util.stateFromModule(frontLeftModule),
-                Util.stateFromModule(frontRightModule), Util.stateFromModule(backLeftModule),
-                Util.stateFromModule(backRightModule));
+        return kinematics.toChassisSpeeds(currentSwerveStates);
     }
 
     @Override
@@ -196,10 +195,11 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     public void periodic() {
         drivetrainConfig.maxAcceleration = SmartDashboard.getNumber("MaxAccel", 0);
 
+        for(int i = 0; i<swerveModules.size(); i++){
+            currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
+        }
         // Update the pose
-        pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), Util.stateFromModule(frontLeftModule),
-                Util.stateFromModule(frontRightModule), Util.stateFromModule(backLeftModule),
-                Util.stateFromModule(backRightModule));
+        pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), currentSwerveStates);
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
 
@@ -212,7 +212,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         SmartDashboard.putNumber("odo_y", pose.getY());
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         if (RobotContainer.rightJoystick.getRawButton(8)) {
-            resetPose(2, -2, 0);
+            resetPose(0, 0, 0);
         }
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();

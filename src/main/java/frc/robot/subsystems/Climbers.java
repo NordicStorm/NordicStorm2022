@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -55,16 +56,16 @@ public class Climbers extends SubsystemBase {
     //Max up = 51
     @Override
     public void periodic() {
-        double velo = leftEncoder.getVelocity();
+        //double velo = leftEncoder.getVelocity();
         //checkResetPos(leftEncoder, leftLimitSwitch);
         //checkResetPos(rightEncoder, rightLimitSwitch);
 
-        //setVoltages(Util.leftDebug()*12);
+        //setRaw(-Util.leftDebug());
         double pos = -SmartDashboard.getNumber("climbPos", 0);
         //leftPID.setReference(pos, CANSparkMax.ControlType.kPosition, pidSlot);
-        SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
+        //SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
 
-        SmartDashboard.putNumber("temp", leftMotor.getMotorTemperature());
+        //SmartDashboard.putNumber("temp", leftMotor.getMotorTemperature());
         SmartDashboard.putNumber("leftPos", leftEncoder.getPosition());
         SmartDashboard.putNumber("rightPos", rightEncoder.getPosition());
         
@@ -79,7 +80,10 @@ public class Climbers extends SubsystemBase {
     }
     private void configureClimberSpark(CANSparkMax spark){
         SparkMaxPIDController pid = spark.getPIDController();
-        
+        spark.setSoftLimit(SoftLimitDirection.kForward, 51.8f);
+        spark.setSoftLimit(SoftLimitDirection.kReverse, 0.2f);
+        spark.disableVoltageCompensation();
+        spark.setInverted(true);
         pid.setP(0, 0);
         pid.setI(0, 0);
         pid.setD(0, 0);

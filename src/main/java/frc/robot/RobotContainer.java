@@ -7,8 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
+import frc.robot.commands.PathAuto;
+import frc.robot.commands.ShootingUtil;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -47,7 +50,7 @@ public class RobotContainer {
         barrel.setOtherSubsystems(drivetrain, climbers, vision);
         climbers.setOtherSubsystems(drivetrain, barrel, vision);
         vision.setOtherSubsystems(drivetrain, climbers, barrel);
-
+        ShootingUtil.setSubsystems(drivetrain, barrel, vision);
         // Configure the button bindings
         configureButtonBindings();
         CommandScheduler.getInstance().setDefaultCommand(drivetrain, new OperatorControl(drivetrain, barrel, climbers, vision));
@@ -83,7 +86,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-
-        return new InstantCommand();
+        AutoWithInit auto = new PathAuto(drivetrain);
+        auto.initializeCommands();
+        return auto;
     }
 }

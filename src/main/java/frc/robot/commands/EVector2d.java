@@ -19,7 +19,13 @@ public class EVector2d extends Vector2d{
         y/=d;
     }
 
-    public EVector2d multipliedBy(double factor){
+    public EVector2d normalized(){
+        var other = new EVector2d(x, y);
+        other.normalize();
+        return other;
+    }
+
+    public EVector2d times(double factor){
         return new EVector2d(x*factor, y*factor);
     }
     /**

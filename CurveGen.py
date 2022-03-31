@@ -99,7 +99,7 @@ def graph_points(curve, surf, color, label_pos, all_ax_width, draw_frame):
     surf.blit(text, [label_pos, x_label_pos+10])
 
     draw_points = []
-    for x_val in range(int(min(x))*100, int(max(x))*100, 1):
+    for x_val in range(int(min(x))*100, int(max(x)+1)*100, 1):
         x_val/=100
         y_val = curve.line(x_val)
         dx = x_ax(x_val)
@@ -153,7 +153,7 @@ def load_curves():
 pygame.init()
 font = pygame.font.SysFont("Arial", 10)
 point_colors = [COLORS['red'], COLORS['green'], COLORS['blue'], COLORS['purple'], COLORS['orange'], COLORS['yellow']]
-store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\shootingcurves.txt"
+store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\distcurves.txt"
 file_path =  r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\src\main\java\frc\robot\subsystems\Barrel.java"
 curves = load_curves()
 

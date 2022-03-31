@@ -44,19 +44,9 @@ public class TurnAndShoot extends CommandBase {
     public void initialize() {
         this.endingTime = System.currentTimeMillis() + timeout;
     }
-
+    
     public void rotateTowardTarget() {
-        Pose2d currentPose = drivetrain.getPose();
-        Pose2d visionPose = vision.targetToField;
-        ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
-        EVector2d speedsVector = new EVector2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
-        EVector2d normalVector = new EVector2d(visionPose.getX() - currentPose.getX(),
-                visionPose.getY() - currentPose.getY());
-        normalVector.normalize();
-        EVector2d perpPart = normalVector.multipliedBy(speedsVector.dot(normalVector));
-        EVector2d paraPart = speedsVector.minus(perpPart);
-
-        Pose2d futurePose = currentPose;
+        futurePose = getFuturePose();
 
         double angleNeeded = Math.toDegrees(Util.angleBetweenPoses(futurePose, vision.targetToField));
 
