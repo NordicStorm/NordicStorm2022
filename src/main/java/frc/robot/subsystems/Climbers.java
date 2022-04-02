@@ -37,8 +37,8 @@ public class Climbers extends SubsystemBase {
     int pidSlot = 0; // 0 is for pulling up, 1 is for extending with no load
     public Climbers() {
 
-        configureClimberSpark(leftMotor);
-        configureClimberSpark(rightMotor);
+        configureClimberSpark(leftMotor, false);
+        configureClimberSpark(rightMotor, true);
         SmartDashboard.putNumber("climbPos", 0);
         
     }
@@ -57,7 +57,7 @@ public class Climbers extends SubsystemBase {
         //checkResetPos(leftEncoder, leftLimitSwitch);
         //checkResetPos(rightEncoder, rightLimitSwitch);
 
-        //setRaw(-Util.leftDebug());
+        setRaw(-Util.leftDebug());
         //leftPID.setReference(pos, CANSparkMax.ControlType.kPosition, pidSlot);
         //SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
 
@@ -74,12 +74,16 @@ public class Climbers extends SubsystemBase {
             }
         }
     }
-    private void configureClimberSpark(CANSparkMax spark){
+    private void configureClimberSpark(CANSparkMax spark, boolean reverse){
         SparkMaxPIDController pid = spark.getPIDController();
-        spark.setSoftLimit(SoftLimitDirection.kForward, 51.8f);
-        spark.setSoftLimit(SoftLimitDirection.kReverse, 0.2f);
         spark.disableVoltageCompensation();
-        spark.setInverted(true);
+        spark.setInverted(reverse);
+        int sign = reverse?-1:1;
+        spark.setSoftLimit(SoftLimitDirection.kReverse, -50.0f);
+        spark.setSoftLimit(SoftLimitDirection.kForward, -0.2f);
+        spark.enableSoftLimit(SoftLimitDirection.kForward, true);
+        spark.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
         pid.setP(0, 0);
         pid.setI(0, 0);
         pid.setD(0, 0);
@@ -102,11 +106,11 @@ public class Climbers extends SubsystemBase {
      */
     public void setVoltages(double volts){
         leftPID.setReference(volts, CANSparkMax.ControlType.kVoltage);
-        rightPID.setReference(-volts, CANSparkMax.ControlType.kVoltage);
+        rightPID.setReference(volts, CANSparkMax.ControlType.kVoltage);
     }
     public void setRaw(double power){
         leftMotor.set(power);
-        rightMotor.set(-power);
+        rightMotor.set(power);
     }
 
     public void setPositions(double pos){

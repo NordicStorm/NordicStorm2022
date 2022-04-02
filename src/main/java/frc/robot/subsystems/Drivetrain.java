@@ -80,8 +80,8 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     private int currentRotationPrivilegeNeeded = 0;
 
     Pixy pixy;
-    int myBallColor = 0;
-    int enemyBallColor = 0;
+    public int myBallColor = 0;
+    public int enemyBallColor = 0;
     public Drivetrain() {
         pixy = new Pixy();
         pixy.startUpdatingPixy();
@@ -173,8 +173,13 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
         return pose;
     }
-
-    public void resetPose(double x, double y, double rot) {
+    /**
+     * Resets the position
+     * @param x
+     * @param y
+     * @param rot in radians, but this is ignored.
+     */
+    public void setPose(double x, double y, double rot) {
         // navx.reset();
         odometry.resetPosition(new Pose2d(x, y, new Rotation2d(rot)), new Rotation2d(rot));
     }
@@ -220,7 +225,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         SmartDashboard.putNumber("Pixy Num", FollowBall.countTargets( pixy.readObjects(), myBallColor));
         if (RobotContainer.rightJoystick.getRawButton(8)) {
-            resetPose(0, 0, 0);
+            setPose(0, 0, 0);
         }
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
@@ -258,7 +263,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         localSpeeds.vyMetersPerSecond = doAccelerationLimit(currentLocalSpeeds.vyMetersPerSecond,
                 localSpeeds.vyMetersPerSecond, maxAccelLocal, maxAccelLocal);
 
-        var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroDegrees());
+        var targetFieldSpeeds = Util.rotateSpeeds(localSpeeds, -getGyroRadians());
 
         double fixX = enforceWalls(targetFieldSpeeds.vxMetersPerSecond, drivetrainConfig.maxAcceleration,
                 pose.getX(), 1, 4.2);
@@ -364,6 +369,11 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
      */
     public double getDistanceToTarget(){
         return Util.distance(pose, vision.targetToField);
+    }
+    @Override
+    public void setPose(Pose2d pose) {
+        setPose(pose.getX(), pose.getY(), pose.getRotation().getRadians());
+        
     }
 
 

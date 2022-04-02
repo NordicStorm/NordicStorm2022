@@ -11,13 +11,13 @@ public class Util {
         return new SwerveModuleState(module.getDriveVelocity(), new Rotation2d(module.getSteerAngle()));
     }
     /**
-     * angle unit is degrees!
+     * angle unit is radians!
      * @param speeds
-     * @param degrees
+     * @param radians
      * @return
      */
-    public static ChassisSpeeds rotateSpeeds(ChassisSpeeds speeds, double degrees){
-        return ChassisSpeeds.fromFieldRelativeSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, Rotation2d.fromDegrees(degrees));
+    public static ChassisSpeeds rotateSpeeds(ChassisSpeeds speeds, double radians){
+        return ChassisSpeeds.fromFieldRelativeSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, new Rotation2d(radians));
     }
 
     public static double map(double x, double in_min, double in_max, double out_min, double out_max) {

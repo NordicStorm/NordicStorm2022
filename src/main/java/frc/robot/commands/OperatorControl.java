@@ -61,13 +61,17 @@ public class OperatorControl extends CommandBase {
 
         forward = Util.applyDeadzone(forward, 0.1) * throttle;
         sideways = Util.applyDeadzone(sideways, 0.1) * throttle;
-        rot = Util.applyDeadzone(rot, 0.3)*0.3;
+        rot = Util.applyDeadzone(rot, 0.3)*1;
         
-        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getGyroDegrees());
+        ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getGyroRadians());
         
         
         drivetrain.limitDrive(localSpeeds, 0);
         SmartDashboard.putNumber("comX", localSpeeds.vxMetersPerSecond);
         barrel.setIntake(leftStick.getRawButton(4));
+
+        if(ShootingUtil.getTimeToReady()<750){
+            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
+        }
     }
 }

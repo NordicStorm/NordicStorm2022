@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -63,7 +64,22 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         Pose2d currentPose = drivetrain.getPose();
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
         double speed = PathUtil.linearSpeedFromChassisSpeeds(currentSpeeds);
+        ChassisSpeeds globalSpeeds = PathUtil.rotateSpeeds(currentSpeeds, drivetrain.getGyroRadians());
         List<Translation2d> interiorPoints = new ArrayList<>();
+        Rotation2d startMovementDirection = null;
+        if (Math.abs(speed) < 0.3) {
+
+        } else {
+            // the time to stop times 1/2 to allow curve
+            double futureMultiplier = 0.5/drivetrainConfig.maxAcceleration; 
+            Pose2d futurePose = currentPose
+                    .plus(new Transform2d(new Translation2d(globalSpeeds.vxMetersPerSecond * futureMultiplier,
+                            globalSpeeds.vyMetersPerSecond * futureMultiplier), new Rotation2d()));
+            interiorPoints.add(futurePose.getTranslation());
+            startMovementDirection = new Rotation2d(globalSpeeds.vxMetersPerSecond, globalSpeeds.vyMetersPerSecond);
+        }
+        currentPose = new Pose2d(currentPose.getTranslation(), startMovementDirection);
+
         for (int i = 0; i < waypoints.size() - 1; i++) { // don't add the last waypoint, it is not interior.
             interiorPoints.add(waypoints.get(i).getPoint());
         }
@@ -85,12 +101,15 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(drivetrainConfig.maxVelocity,
                 drivetrainConfig.maxAcceleration);
         trajectoryConfig.setStartVelocity(speed);
-        trajectoryConfig.addConstraint(new CentripetalAccelerationConstraint(drivetrainConfig.maxCentripetalAcceleration));
+        trajectoryConfig
+                .addConstraint(new CentripetalAccelerationConstraint(drivetrainConfig.maxCentripetalAcceleration));
         trajectoryConfig.setEndVelocity(endVelocity);
         trajectory = TrajectoryGenerator.generateTrajectory(currentPose, interiorPoints, endPose, trajectoryConfig);
 
         List<State> states = trajectory.getStates();
         for (int i = 0; i < waypoints.size(); i++) {
+            // TODO this is all wrong, states does not equal waypoints
+
             SequentialCommandGroup group = new SequentialCommandGroup();
             State state = states.get(i + 1); // +1 because state 0 is start position, there cannot be commands
                                              // there.

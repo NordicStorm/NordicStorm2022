@@ -47,7 +47,7 @@ public class ShootingUtil {
         return angleNeeded;
         
     }
-    public static double checkTimeToReady(){
+    public static double getTimeToReady(){
         double meters = vision.lastDistance; //TODO
         double topRPMDiff = Math.abs(getShootingTopSpeed(meters)-barrel.getTopRPM());
         double bottomRPMDiff = Math.abs(getShootingBottomSpeed(meters));

@@ -94,7 +94,7 @@ public class Vision extends SubsystemBase {
                 SmartDashboard.putNumber("vis_x_ft", Units.metersToFeet(estPose.getX()));
                 SmartDashboard.putNumber("vis_y_ft", Units.metersToFeet(estPose.getY()));
                 if(Util.distance(estPose, drivetrain.getPose())<3){
-                    drivetrain.resetPose(estPose.getX(), estPose.getY(), 0);
+                    drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
                 }else{
                     SmartDashboard.putString("Message", "Vision desync");
                 }
