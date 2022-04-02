@@ -20,6 +20,12 @@ public interface PathableDrivetrain {
     Pose2d getPose();
 
     /**
+     * Reset the pose to the given one
+     * @param pose
+     */
+    void setPose(Pose2d pose);
+
+    /**
      * Set the speeds of the robot. Uses a ChassisSpeeds object, with speeds given
      * in meters per second and radians per second.
      * 

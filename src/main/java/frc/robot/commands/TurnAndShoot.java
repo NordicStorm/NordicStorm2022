@@ -1,7 +1,10 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,6 +23,8 @@ public class TurnAndShoot extends CommandBase {
     private long endingTime;
 
     boolean done = false;
+    Constraints constraints = new Constraints(2.5, 2);
+    ProfiledPIDController rotController = new ProfiledPIDController(0.05, 0, 0, constraints);
 
     /**
      * Take control of the drivetrain and barrel to take the shot
@@ -38,6 +43,8 @@ public class TurnAndShoot extends CommandBase {
         SmartDashboard.putNumber("sBottom", 1000);
         SmartDashboard.putBoolean("go", false);
 
+        rotController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
+
     }
 
     @Override
@@ -46,14 +53,12 @@ public class TurnAndShoot extends CommandBase {
     }
     
     public void rotateTowardTarget() {
-        futurePose = getFuturePose();
+        double angleNeeded = ShootingUtil.getNeededTurnAngle();
 
-        double angleNeeded = Math.toDegrees(Util.angleBetweenPoses(futurePose, vision.targetToField));
 
-        double diff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
-        double correction = -diff * 0.005;
+        double correction = -rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
         correction = Util.absClamp(correction, 2.5);
-        drivetrain.setRotationSpeed(correction, 3);
+        drivetrain.setRotationSpeed(correction, 1);
     }
 
     double tilt = 76;

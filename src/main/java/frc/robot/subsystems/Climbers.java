@@ -34,9 +34,6 @@ public class Climbers extends SubsystemBase {
     private RelativeEncoder leftEncoder = leftMotor.getEncoder();
     private RelativeEncoder rightEncoder = rightMotor.getEncoder();
 
-    private DigitalInput leftLimitSwitch = new DigitalInput(0);
-    private DigitalInput rightLimitSwitch = new DigitalInput(1);
-
     int pidSlot = 0; // 0 is for pulling up, 1 is for extending with no load
     public Climbers() {
 
@@ -61,7 +58,6 @@ public class Climbers extends SubsystemBase {
         //checkResetPos(rightEncoder, rightLimitSwitch);
 
         //setRaw(-Util.leftDebug());
-        double pos = -SmartDashboard.getNumber("climbPos", 0);
         //leftPID.setReference(pos, CANSparkMax.ControlType.kPosition, pidSlot);
         //SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
 

@@ -27,12 +27,15 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.FollowBall;
 import frc.robot.commands.paths.DrivetrainConfig;
 import frc.robot.commands.paths.PathableDrivetrain;
 
@@ -77,11 +80,20 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     private int currentRotationPrivilegeNeeded = 0;
 
     Pixy pixy;
-
+    int myBallColor = 0;
+    int enemyBallColor = 0;
     public Drivetrain() {
         pixy = new Pixy();
         pixy.startUpdatingPixy();
-        
+
+        if(DriverStation.getAlliance() == Alliance.Blue){
+            myBallColor = 1;
+            enemyBallColor = 2;
+        }else{
+            myBallColor= 2;
+            enemyBallColor = 1;
+        }
+
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
                 Mk3SwerveModuleHelper.GearRatio.FAST, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR,
@@ -203,14 +215,10 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
 
-        double speed = frontLeftModule.getDriveVelocity();
-        SmartDashboard.putNumber("speed", speed);
-
-        double rawSpeed = frontLeftModule.getTalonDriveMotor().getSelectedSensorVelocity();
-        SmartDashboard.putNumber("rawSpeed", rawSpeed);
         SmartDashboard.putNumber("odo_x", pose.getX());
         SmartDashboard.putNumber("odo_y", pose.getY());
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
+        SmartDashboard.putNumber("Pixy Num", FollowBall.countTargets( pixy.readObjects(), myBallColor));
         if (RobotContainer.rightJoystick.getRawButton(8)) {
             resetPose(0, 0, 0);
         }

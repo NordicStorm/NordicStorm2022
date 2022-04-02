@@ -78,7 +78,7 @@ public class Barrel extends SubsystemBase {
     long bottomStopHandoff = 0;
     long bottomStopFinalShift = 0;
 
-    long bottomHandoffDuration = 500;
+    long bottomHandoffDuration = 300;
     long bottomHandoffDeadzone = bottomHandoffDuration - 200;
     long bottomShiftDuration = 00;
 
@@ -153,7 +153,7 @@ public class Barrel extends SubsystemBase {
             return;
         }
         if (runBottom) {
-            bottomStage.set(1);
+            bottomStage.set(0.5);
         }else{
             bottomStage.set(0);
         }
@@ -168,7 +168,7 @@ public class Barrel extends SubsystemBase {
         if(running){
             bottomStopIntake = System.currentTimeMillis() + 500;
         }else{
-            //bottomStopIntake = 0;
+            //bottomStopIntake = 0; // don't do because this way all intake finishes first
 
         }
     }
@@ -233,9 +233,13 @@ public class Barrel extends SubsystemBase {
     //Shooter stuff
     double topTargetRPM = 0;
     double bottomTargetRPM = 0;
+    double topCurrentRPM = 0;
+    double bottomCurrentRPM = 0;
     private void updateShooter() {
-        double velo = topWheelEncoder.getVelocity();
-        SmartDashboard.putNumber("topShooterVelo", velo);
+        topCurrentRPM = topWheelEncoder.getVelocity();
+        bottomCurrentRPM = bottomWheelEncoder.getVelocity();
+
+        SmartDashboard.putNumber("topShooterVelo", topCurrentRPM);
         //setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
         
     }
@@ -276,39 +280,21 @@ public class Barrel extends SubsystemBase {
         bottomWheelPID.setReference(bottom, CANSparkMax.ControlType.kDutyCycle);
     }
 
-
-    private double getShootingTopSpeed(double meters){
-        double x = meters;
-
-        double result = 0.1*x*x*x + 0;//CURVE:TSPEED,UPD:2022
-        return result;
+    public double getTopRPM(){
+        return topCurrentRPM;
     }
-    private double getShootingBottomSpeed(double meters){
-        double x = meters;
-
-        double result = 0.1*x*x*x + 0;//CURVE:BSPEED,UPD:2022
-        return result;
-    }
-    /**
-     * 
-     * @param meters from target's center
-     * @return
-     */
-    private double getShootingAngle(double meters){
-        double x = meters;
-        double result = 0;//CURVE:TILT
-        return result;
+    public double getBottomRPM(){
+        return bottomCurrentRPM;
     }
     /**
      * If everything is ready to shoot: RPM, Tilt, and sensor
      * @return
      */
     public boolean readyToShoot(){
-        double topSpeed = topWheelEncoder.getVelocity();
-        double bottomSpeed = bottomWheelEncoder.getVelocity();
+        
         double tilt = getTiltAngle();
-        if(Util.close(topSpeed, topTargetRPM, 60) &&
-           Util.close(bottomSpeed, bottomTargetRPM, 60) &&
+        if(Util.close(topCurrentRPM, topTargetRPM, 60) &&
+           Util.close(bottomCurrentRPM, bottomTargetRPM, 60) &&
            Util.close(tilt, targetTilt, 2*999) &&
            ballAvailableToShoot()
         ){

@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.paths.DrivetrainConfig;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.Climbers;
 import frc.robot.subsystems.Drivetrain;
@@ -20,9 +21,11 @@ public class OperatorControl extends CommandBase {
     private final Vision vision;
     private final Barrel barrel;
     private final Climbers climbers;
+    private DrivetrainConfig config;
 
     public OperatorControl(Drivetrain drivetrain, Barrel barrel, Climbers climbers, Vision vision) {
         this.drivetrain = drivetrain;
+        this.config = drivetrain.getConfig();
         this.barrel = barrel;
         this.vision = vision;
         this.climbers = climbers;
@@ -53,14 +56,16 @@ public class OperatorControl extends CommandBase {
             drivetrain.driveVolts(new ChassisSpeeds(12, 0, 0));
             return;
         }
-        throttle*=4;//config.maxVelocity;
+        throttle*=config.maxVelocity;
         
 
         forward = Util.applyDeadzone(forward, 0.1) * throttle;
         sideways = Util.applyDeadzone(sideways, 0.1) * throttle;
-        rot = Util.applyDeadzone(rot, 0.3) * throttle;
-
+        rot = Util.applyDeadzone(rot, 0.3)*0.3;
+        
         ChassisSpeeds localSpeeds = Util.rotateSpeeds(new ChassisSpeeds(forward, sideways, rot), drivetrain.getGyroDegrees());
+        
+        
         drivetrain.limitDrive(localSpeeds, 0);
         SmartDashboard.putNumber("comX", localSpeeds.vxMetersPerSecond);
         barrel.setIntake(leftStick.getRawButton(4));

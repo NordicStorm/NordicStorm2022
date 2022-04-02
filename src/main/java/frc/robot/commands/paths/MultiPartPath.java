@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -100,7 +102,7 @@ public class MultiPartPath {
     /**
      * Set the heading that the robot wants to achieve. Note, this will NOT just
      * stop and pivot to there. It will take effect when moving between waypoints.
-     * To stop and pivot, use the pivotInPlace method.
+     * To stop and pivot, use the pivotInPlace method (todo).
      * 
      * @param degrees
      */
@@ -151,6 +153,16 @@ public class MultiPartPath {
      */
     public void changeDrivetrainConfigProperty(String name, double value) {
         addCommand(new ConfigPropertySetPiece(this, name, value));
+    }
+
+    /**
+     * When this part is run, it will overwrite where the robot thinks it is
+     * with the new coordinates.
+     * @param x meters
+     * @param y meters
+     */
+    public void resetPosition(double x, double y){
+        addCommand(new ResetPosePiece(this, new Pose2d(x, y, new Rotation2d()))); // the rot 
     }
 
     public SequentialCommandGroup finalizePath() {

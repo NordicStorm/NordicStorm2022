@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Util;
+import frc.robot.commands.RollingAverage;
 
 /**
  *
@@ -41,11 +43,13 @@ public class Vision extends SubsystemBase {
     }
 
     public double lastDistance = 0;
+    private RollingAverage distanceAverage = new RollingAverage(5);
+    public boolean canSeeTarget = false;
     double targetCenter = 0;
     Pose2d pose = null;
     boolean lightOn = true;
-    double camHeight = Units.inchesToMeters(27); //27
-    double targetHeight = Units.inchesToMeters(104); //104
+    double camHeight = Units.inchesToMeters(27); // 27
+    double targetHeight = Units.inchesToMeters(104); // 104
     double camAngle = Math.toRadians(29.7);
 
     // Position of robot relative to cam
@@ -68,43 +72,56 @@ public class Vision extends SubsystemBase {
             if (usable) {
                 hasSeenTarget = true;
                 SmartDashboard.putNumber("visUpdate", Math.random());
-                double distance = PhotonUtils.calculateDistanceToTargetMeters(
+                double recentDistance = PhotonUtils.calculateDistanceToTargetMeters(
                         camHeight,
                         targetHeight,
                         camAngle,
-                        Math.toRadians(res.getBestTarget().getPitch()))+0.68;
-                Rotation2d botRotation = Rotation2d.fromDegrees(drivetrain.getGyroDegrees()+180);
-                var estPose = estimateFieldToRobot(
-                        camHeight, targetHeight, camAngle, Math.toRadians(target.getPitch()),
+                        Math.toRadians(res.getBestTarget().getPitch())) + 0.68;
+                Rotation2d botRotation = Rotation2d.fromDegrees(drivetrain.getGyroDegrees() + 180);
+                recentDistance = visToRealDist(recentDistance);
+                distanceAverage.put(recentDistance);
+                lastDistance = distanceAverage.get();
+
+                var estPose = estimateFieldToRobot(lastDistance,
                         Rotation2d.fromDegrees(-target.getYaw()), botRotation, targetToField,
                         camToRobot);
-                distance = visToRealDist(distance);
-                lastDistance=distance;
-                SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(distance));
-                SmartDashboard.putNumber("vis_dist", (distance));
+
+                SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(lastDistance));
+                SmartDashboard.putNumber("vis_dist", lastDistance);
 
                 SmartDashboard.putNumber("vis_x", estPose.getX());
                 SmartDashboard.putNumber("vis_y", estPose.getY());
                 SmartDashboard.putNumber("vis_x_ft", Units.metersToFeet(estPose.getX()));
                 SmartDashboard.putNumber("vis_y_ft", Units.metersToFeet(estPose.getY()));
-                drivetrain.resetPose(estPose.getX(), estPose.getY(), 0);
+                if(Util.distance(estPose, drivetrain.getPose())<3){
+                    drivetrain.resetPose(estPose.getX(), estPose.getY(), 0);
+                }else{
+                    SmartDashboard.putString("Message", "Vision desync");
+                }
                 // System.out.println("dist "+);
+            }else{
+                distanceAverage.clear();
+                canSeeTarget = false;
             }
         } else {
+            distanceAverage.clear();
+            canSeeTarget = false;
             // System.out.println("no target");
         }
     }
 
-    public static double visToRealDist(double distanceV){
+    public static double visToRealDist(double distanceV) {
         double x = distanceV;
-        double result = 1.1608113266065743*x + -0.21172960362220683; //CURVE:distance,08:13,03/29
+        double result = 1.1608113266065743 * x + -0.21172960362220683; // CURVE:distance,08:13,03/29
         return result;
     }
-    public void setOtherSubsystems(Drivetrain drivetrain, Climbers climbers, Barrel barrel){
+
+    public void setOtherSubsystems(Drivetrain drivetrain, Climbers climbers, Barrel barrel) {
         this.drivetrain = drivetrain;
         this.barrel = barrel;
         this.climbers = climbers;
     }
+
     public void toggleLight() {
         setLight(!lightOn);
     }
@@ -112,10 +129,6 @@ public class Vision extends SubsystemBase {
     public void setLight(boolean on) {
         lightOn = on;
         camera.setLED(on ? VisionLEDMode.kDefault : VisionLEDMode.kOff);
-    }
-
-    public double getCenterOfTarget() {
-        return 0;
     }
 
     public Pose2d getEstimatedPose() {
@@ -126,20 +139,8 @@ public class Vision extends SubsystemBase {
      * Estimate the position of the robot in the field. Adds to the distance so it
      * represents the center of the target
      *
-     * @param cameraHeightMeters The physical height of the camera off the floor in
-     *                           meters.
-     * @param targetHeightMeters The physical height of the target off the floor in
-     *                           meters. This
-     *                           should be the height of whatever is being targeted
-     *                           (i.e. if the targeting region is set to
-     *                           top, this should be the height of the top of the
-     *                           target).
-     * @param cameraPitchRadians The pitch of the camera from the horizontal plane
-     *                           in radians.
-     *                           Positive values up.
-     * @param targetPitchRadians The pitch of the target in the camera's lens in
-     *                           radians. Positive
-     *                           values up.
+     * @param distanceToCenter   The distance from the camera to the center of the target
+ 
      * @param targetYaw          The observed yaw of the target. Note that this
      *                           *must* be CCW-positive, and
      *                           Photon returns CW-positive.
@@ -154,10 +155,7 @@ public class Vision extends SubsystemBase {
      * @return The position of the robot in the field.
      */
     public static Pose2d estimateFieldToRobot(
-            double cameraHeightMeters,
-            double targetHeightMeters,
-            double cameraPitchRadians,
-            double targetPitchRadians,
+            double distanceToCenter,
             Rotation2d targetYaw,
             Rotation2d gyroAngle,
             Pose2d fieldToTarget,
@@ -165,10 +163,7 @@ public class Vision extends SubsystemBase {
         return PhotonUtils.estimateFieldToRobot(
                 PhotonUtils.estimateCameraToTarget(
                         PhotonUtils.estimateCameraToTargetTranslation(
-                            visToRealDist(PhotonUtils.calculateDistanceToTargetMeters(
-                                        cameraHeightMeters, targetHeightMeters,
-                                        cameraPitchRadians, targetPitchRadians)
-                                        + 0.68),
+                                distanceToCenter,
                                 targetYaw),
                         fieldToTarget,
                         gyroAngle),
