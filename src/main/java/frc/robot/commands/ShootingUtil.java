@@ -11,7 +11,7 @@ public class ShootingUtil {
     private static Drivetrain drivetrain;
     private static Barrel barrel;
     private static Vision vision;
-    
+
     private static double getOffsetPara(double distance, double magnitude){
         double x = 0;
         double result = 0;//CURVE:para
@@ -34,7 +34,7 @@ public class ShootingUtil {
         normalVector.normalize();
         EVector2d perpPart = normalVector.times(speedsVector.dot(normalVector));
         EVector2d paraPart = speedsVector.minus(perpPart);
-        
+
         //perpPart.normalized().times();
 
         Pose2d futurePose = currentPose;
@@ -45,17 +45,17 @@ public class ShootingUtil {
 
         double angleNeeded = Math.toDegrees(Util.angleBetweenPoses(futurePose, vision.targetToField));
         return angleNeeded;
-        
+
     }
     public static double getTimeToReady(){
         double meters = vision.lastDistance; //TODO
         double topRPMDiff = Math.abs(getShootingTopSpeed(meters)-barrel.getTopRPM());
         double bottomRPMDiff = Math.abs(getShootingBottomSpeed(meters));
         double tiltDiff = Math.abs(getShootingTilt(meters));
-        
+
         double turnDiff = Math.abs(Util.angleDiff(drivetrain.getGyroDegrees(), getNeededTurnAngle()));
 
-        
+
         return 999;
     }
     public static void setSubsystems(Drivetrain the_drivetrain, Barrel the_barrel, Vision the_vision) {
@@ -64,27 +64,27 @@ public class ShootingUtil {
         barrel = the_barrel;
     }
 
-    
+
     public static double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = 0.1*x*x*x + 0;//CURVE:TSPEED,UPD:2022
+        double result = -20.748448193695662*x*x + 311.9649788180637*x + 0.3237476579643795; //CURVE:TSPEED,11:29,04/02
         return result;
     }
     public static double getShootingBottomSpeed(double meters){
         double x = meters;
 
-        double result = 0.1*x*x*x + 0;//CURVE:BSPEED,UPD:2022
+        double result = -32.060765399047035*x*x + 437.4155079954175*x + 812.5758207596833; //CURVE:BSPEED,11:29,04/02
         return result;
     }
     /**
-     * 
+     *
      * @param meters from target's center
      * @return
      */
     public static double getShootingTilt(double meters){
         double x = meters;
-        double result = 0;//CURVE:TILT
+        double result = -0.09229764095572934*x*x*x*x*x + 2.20533797489179*x*x*x*x + -20.193627209804923*x*x*x + 87.335434603262*x*x + -178.8701042643679*x + 211.20395403399414; //CURVE:TILT,11:29,04/02
         return result;
     }
 }

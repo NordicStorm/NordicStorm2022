@@ -37,9 +37,5 @@ public class ConfigPropertySetPiece extends CommandBase implements CommandPathPi
         
     }
 
-    @Override
-    public boolean interruptsTrajectory() {
-        return false;
-    }
     
 }

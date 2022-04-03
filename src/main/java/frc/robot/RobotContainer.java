@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutoWithInit;
+import frc.robot.commands.BallAutonomous;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.PathAuto;
@@ -75,7 +76,7 @@ public class RobotContainer {
               return true;
             }
           });
-        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2.5, drivetrain.myBallColor));
+        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2.5, drivetrain.myBallColor, 2));
         new JoystickButton(leftJoystick, 1).whenPressed(new TurnAndShoot(drivetrain, barrel, vision, 9999999999l));
 
     }
@@ -86,7 +87,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        AutoWithInit auto = new PathAuto(drivetrain);
+        AutoWithInit auto = new BallAutonomous(drivetrain, barrel, vision);
         auto.initializeCommands();
         return auto;
     }

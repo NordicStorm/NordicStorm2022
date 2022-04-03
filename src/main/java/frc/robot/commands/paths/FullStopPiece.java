@@ -32,10 +32,7 @@ public class FullStopPiece extends CommandBase implements CommandPathPiece {
                 && speeds.omegaRadiansPerSecond <= path.drivetrainConfig.stopAngularVelocityTolerance;
     }
 
-    @Override
-    public boolean interruptsTrajectory() {
-        return true;
-    }
+   
 
     @Override
     public double getRequestedStartSpeed() {

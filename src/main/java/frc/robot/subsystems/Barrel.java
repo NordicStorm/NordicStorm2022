@@ -57,10 +57,11 @@ public class Barrel extends SubsystemBase {
         screw.enableVoltageCompensation(12);
         screw.setIdleMode(IdleMode.kBrake);
         screwPID.setFeedbackDevice(screwEncoder);
+        
         //screwPID.setP(25);
         //screwPID.setI(0);
         screw.setInverted(false);
-
+        //screw.burnFlash();
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
         
@@ -166,7 +167,7 @@ public class Barrel extends SubsystemBase {
 
     public void setIntake(boolean running){
         if(running){
-            bottomStopIntake = System.currentTimeMillis() + 500;
+            bottomStopIntake = System.currentTimeMillis() + 900;
         }else{
             //bottomStopIntake = 0; // don't do because this way all intake finishes first
 
@@ -191,20 +192,32 @@ public class Barrel extends SubsystemBase {
     }
 
     //tilt stuff
-    public final double maxAngle = 76.9;
-    public final double minAngle = 30;
+    public final double maxAngle = 76.0;
+    public final double minAngle = 20;
+    public final double intakePos = 71.5;
     double targetTilt = 0;
+    double currentTiltAng = 0;
     private void updateTilt() {
-        SmartDashboard.putNumber("tiltang", getTiltAngle());
-        SmartDashboard.putNumber("rawAng", screwEncoder.getPosition());
-        //intakeHeight=79.4 degrees
+        currentTiltAng = getTiltAngleFromSensor();
+        if(targetTilt == 0){
+            targetTilt = currentTiltAng;
+        }
+        SmartDashboard.putNumber("tiltang", currentTiltAng);
         double x = RobotContainer.leftJoystick.getZ();
-        if(Math.abs(x)>0.8){
-            screw.set(x*1);
-        }else{
+
+        //setTiltAngle(Util.map(x, -1, 1, minAngle, maxAngle));
+
+        if(Math.abs(currentTiltAng-targetTilt)<1){
             screw.set(0);
         }
-        //setTiltAngle(Util.map(x, -1, 1, minAngle, maxAngle));
+
+        //intakeHeight=79.4 degrees
+        
+        if(Math.abs(x)>0.8){
+            //screw.set(x*1);
+        }else{
+            //screw.set(0);
+        }
    }
    private final double angleOffset = (178-42);
     /**
@@ -213,6 +226,9 @@ public class Barrel extends SubsystemBase {
      * @return
      */
     public void setTiltAngle(double angle){
+        if(Math.abs(angle-currentTiltAng)<0.5){
+            return;
+        }
         angle = Util.clamp(angle, minAngle, maxAngle);
         targetTilt = angle;
         double adj = ((angle+angleOffset));
@@ -224,11 +240,17 @@ public class Barrel extends SubsystemBase {
      * 
      * @return the current measured barrel angle in degrees, where 90 would be straight up.
      */
-    public double getTiltAngle(){
+    private double getTiltAngleFromSensor(){
         
         return screwEncoder.getPosition() - 1*angleOffset;
     }
-
+   /**
+     * 
+     * @return the current measured barrel angle in degrees, where 90 would be straight up.
+     */
+    public double getTiltAngle(){
+        return currentTiltAng;
+    }
     
     //Shooter stuff
     double topTargetRPM = 0;
@@ -240,6 +262,8 @@ public class Barrel extends SubsystemBase {
         bottomCurrentRPM = bottomWheelEncoder.getVelocity();
 
         SmartDashboard.putNumber("topShooterVelo", topCurrentRPM);
+        SmartDashboard.putNumber("bottomShooterVelo", bottomCurrentRPM);
+
         //setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
         
     }
@@ -251,10 +275,10 @@ public class Barrel extends SubsystemBase {
         motor.setInverted(true);
         motor.enableVoltageCompensation(12);
         motor.setIdleMode(IdleMode.kCoast);
-        //pid.setP(0);
+        //pid.setP(0); 0.0003699999942909926
         //pid.setI(0);
         //pid.setD(0);
-        //pid.setFF(0);
+        //pid.setFF(0);0.00019000006432179362
         
     }
     /**
@@ -295,7 +319,7 @@ public class Barrel extends SubsystemBase {
         double tilt = getTiltAngle();
         if(Util.close(topCurrentRPM, topTargetRPM, 60) &&
            Util.close(bottomCurrentRPM, bottomTargetRPM, 60) &&
-           Util.close(tilt, targetTilt, 2*999) &&
+           Util.close(tilt, targetTilt, 2) &&
            ballAvailableToShoot()
         ){
             return true;

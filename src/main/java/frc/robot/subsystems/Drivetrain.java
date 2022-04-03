@@ -132,8 +132,8 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         }
         drivetrainConfig.maxAcceleration = 2; 
         drivetrainConfig.maxVelocity = 2; 
-        drivetrainConfig.maxAnglularVelocity = 5;
-        drivetrainConfig.maxAngularAcceleration = 4;
+        drivetrainConfig.maxAnglularVelocity = 10;
+        drivetrainConfig.maxAngularAcceleration = 5;
         drivetrainConfig.rotationCorrectionP = 2;
         drivetrainConfig.maxCentripetalAcceleration = 8;
 
@@ -186,7 +186,17 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     public void resetAngle() {
         navx.reset();
+        navx.setAngleAdjustment(0);
         
+    }
+    /**
+     * This will get added to the angle result to offset it.
+     * A positive
+     * value means that the robot is pointing x degrees counterclockwise
+     * @param degrees
+     */
+    public void setAngleOffset(double degrees){
+        navx.setAngleAdjustment(-degrees);
     }
 
     @Override

@@ -18,10 +18,6 @@ public class PathPieceWrapper extends SequentialCommandGroup implements CommandP
         addCommands(command);
     }
 
-    @Override
-    public boolean interruptsTrajectory() {
-        return interruptsTrajectory;
-    }
 
     @Override
     public double getRequestedStartSpeed() {

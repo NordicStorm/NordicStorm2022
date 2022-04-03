@@ -6,11 +6,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.paths.CommandPathPiece;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 
-public class TurnAndShoot extends CommandBase {
+public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     private Drivetrain drivetrain;
     private Barrel barrel;
@@ -19,6 +20,7 @@ public class TurnAndShoot extends CommandBase {
     private long endingTime;
 
     boolean done = false;
+    boolean manual = false;
     Constraints constraints = new Constraints(2.5, 2);
     ProfiledPIDController rotController = new ProfiledPIDController(0.05, 0, 0, constraints);
 
@@ -34,9 +36,12 @@ public class TurnAndShoot extends CommandBase {
         this.barrel = barrel;
         this.vision = vision;
         this.timeout = timeout;
-        SmartDashboard.putNumber("sTilt", 79.6);
+        this.manual = timeout > 99999;
+        SmartDashboard.putNumber("sTilt", barrel.intakePos);
         SmartDashboard.putNumber("sTop", 1000);
         SmartDashboard.putNumber("sBottom", 1000);
+        SmartDashboard.putNumber("spin", 0.30);
+
         SmartDashboard.putBoolean("go", false);
 
         rotController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
@@ -55,6 +60,7 @@ public class TurnAndShoot extends CommandBase {
         double correction = -rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
         correction = Util.absClamp(correction, 2.5);
         drivetrain.setRotationSpeed(correction, 1);
+        
     }
 
     double tilt = 76;
@@ -63,20 +69,43 @@ public class TurnAndShoot extends CommandBase {
 
     @Override
     public void execute() {
-        if (SmartDashboard.getBoolean("go", false)) {
+        double lastDistance = vision.lastDistance;
+        if (SmartDashboard.getBoolean("go", false) && manual) {
             SmartDashboard.putBoolean("go", false);
-            tilt = SmartDashboard.getNumber("sTilt", 76.9);
-            topRPM = SmartDashboard.getNumber("sTop", 1000);
+            tilt = SmartDashboard.getNumber("sTilt", barrel.intakePos);
             bottomRPM = SmartDashboard.getNumber("sBottom", 1000);
-            SmartDashboard.putString("csv", vision.lastDistance+","+bottomRPM+","+topRPM+","+175); //175 fake angles
+            topRPM = bottomRPM*SmartDashboard.getNumber("spin", 0.6);;
+            
+            SmartDashboard.putNumber("sTop", topRPM);
+            //distance is all to lense!
+            SmartDashboard.putString("csv", vision.lastDistance+","+bottomRPM+","+topRPM+","+tilt); //175 fake angles
             barrel.setFlywheels(topRPM, bottomRPM);
+            barrel.setTiltAngle(tilt);
+        }else{
+            
         }
-        // barrel.setTiltAngle(titl);
+        if(RobotContainer.leftJoystick.getRawButton(5)){
+            topRPM = ShootingUtil.getShootingTopSpeed(lastDistance);
+            bottomRPM = ShootingUtil.getShootingBottomSpeed(lastDistance);
+            tilt = ShootingUtil.getShootingTilt(lastDistance);
+            barrel.setFlywheels(topRPM, bottomRPM);
+            barrel.setTiltAngle(tilt);
+            SmartDashboard.putNumber("sTilt", tilt);
+            SmartDashboard.putNumber("sTop", topRPM);
+            SmartDashboard.putNumber("sBottom", bottomRPM);
+            SmartDashboard.putNumber("spin", topRPM/bottomRPM);
+        }
+        
+
+        if(!manual){
+            barrel.setFlywheels(500, 500);
+        }
         //rotateTowardTarget();
         // barrel.setTiltFromVision();
 
-        if (barrel.readyToShoot() && RobotContainer.leftJoystick.getTrigger()) {
+        if (barrel.readyToShoot() && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
             barrel.shoot();
+            done = true;
         }
 
     }

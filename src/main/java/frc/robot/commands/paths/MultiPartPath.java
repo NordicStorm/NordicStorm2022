@@ -3,10 +3,14 @@ package frc.robot.commands.paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.commands.paths.PathPiece.PieceType;
@@ -41,8 +45,8 @@ public class MultiPartPath {
     ProfiledPIDController rotationController;
 
     private MultiPartPath parent;
-    private List<PathPiece> pieces = new ArrayList<PathPiece>();
-
+    //contains the piece and if it interrupts
+    private List<Pair<PathPiece, Boolean>> pieces = new ArrayList<>();
     /**
      * Constructs a path.
      * 
@@ -73,13 +77,29 @@ public class MultiPartPath {
      * @param y meters
      */
     public void addWaypoint(double x, double y) {
-        pieces.add(new WaypointPiece(x, y));
+        pieces.add(new Pair<>(new WaypointPiece(x, y), false));
     }
 
-    public void addCommand(CommandPathPiece command) {
-        pieces.add(command);
-    }
+    /**
+     * If the piece will have an effect on the trajectory, so it needs to be
+     * interrupted. You should use addParallelCommand if it is an instant instruction, such as setting
+     * shooter speed.
+     * 
+     */
 
+    public void addSequentialCommand(CommandPathPiece command) {
+        pieces.add(new Pair<>(command, true));
+    }
+    /**
+     * If the piece will not have an effect on the trajectory, so it can keep going.
+     * You should use addSequentialCommand if it is an driving instruction, such as 
+     * following a ball.
+     * 
+     */
+
+    public void addParallelCommand(CommandPathPiece command) {
+        pieces.add(new Pair<>(command, false));
+    }
     /**
      * Bring the robot to a complete stop, and wait for the specified number of
      * milliseconds.
@@ -87,7 +107,7 @@ public class MultiPartPath {
      * @param milliseconds Milliseconds. 1000ms = 1 second
      */
     public void stop(int milliseconds) {
-        addCommand(new FullStopPiece(this, milliseconds));
+        addSequentialCommand(new FullStopPiece(this, milliseconds));
     }
 
     /**
@@ -107,7 +127,7 @@ public class MultiPartPath {
      * @param degrees
      */
     public void setHeading(double degrees) {
-        addCommand(new HeadingSetPiece(this, degrees, false));
+        addParallelCommand(new HeadingSetPiece(this, degrees, false));
     }
 
     /**
@@ -118,7 +138,7 @@ public class MultiPartPath {
      *                      Positive is counterclockwise
      */
     public void setHeadingFollowMovement(double offsetDegrees) {
-        addCommand(new HeadingSetPiece(this, offsetDegrees, true));
+        addParallelCommand(new HeadingSetPiece(this, offsetDegrees, true));
     }
 
     /**
@@ -152,7 +172,7 @@ public class MultiPartPath {
      * @param value the new value of the property
      */
     public void changeDrivetrainConfigProperty(String name, double value) {
-        addCommand(new ConfigPropertySetPiece(this, name, value));
+        addParallelCommand(new ConfigPropertySetPiece(this, name, value));
     }
 
     /**
@@ -162,19 +182,21 @@ public class MultiPartPath {
      * @param y meters
      */
     public void resetPosition(double x, double y){
-        addCommand(new ResetPosePiece(this, new Pose2d(x, y, new Rotation2d()))); // the rot 
+        addParallelCommand(new ResetPosePiece(this, new Pose2d(x, y, new Rotation2d()))); // the rot 
     }
 
     public SequentialCommandGroup finalizePath() {
         SequentialCommandGroup group = new SequentialCommandGroup();
         List<WaypointPiece> waypoints = new ArrayList<>();
-        List<CommandPathPiece> actualCommands = new ArrayList<>();
-        for (var piece : pieces) {
+        List<Command> actualCommands = new ArrayList<>();
+        for (var pieceInfo : pieces) {
+            var piece = pieceInfo.getFirst();
+            boolean interrupts = pieceInfo.getSecond();
             if (piece.getPieceType() == PieceType.Waypoint) {
                 waypoints.add((WaypointPiece) piece);
             } else {
                 var commandPiece = (CommandPathPiece) piece;
-                if (commandPiece.interruptsTrajectory()) { // ok, this takes over driving so we should make the
+                if (interrupts) { // ok, this takes over driving so we should make the
                                                            // trajectory leading up to here.
                     if (waypoints.size() > 0) {
                         actualCommands.add(new TrajectoryFollowPiece(drivetrain, new ArrayList<WaypointPiece>(waypoints), //copy of current list
@@ -183,12 +205,13 @@ public class MultiPartPath {
                     }
                     actualCommands.add(commandPiece);
                 } else {
-
+                    //TODO make this work on waypoints!!
+                    actualCommands.add(new ScheduleCommand(commandPiece));
                 }
             }
         }
 
-        for (var command : actualCommands) {
+        for (Command command : actualCommands) {
             group.addCommands(command);
         }
         group.addRequirements((Subsystem)drivetrain);

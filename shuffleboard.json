@@ -11,17 +11,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "0,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/temp",
-              "_title": "temp"
-            }
-          },
           "1,0": {
             "size": [
               1,
@@ -112,17 +101,6 @@
               "_title": "tiltang"
             }
           },
-          "1,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/rawSpeed",
-              "_title": "rawSpeed"
-            }
-          },
           "2,1": {
             "size": [
               1,
@@ -158,28 +136,6 @@
               "_title": "rightPos"
             }
           },
-          "5,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/currentLeft",
-              "_title": "currentLeft"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/speed",
-              "_title": "speed"
-            }
-          },
           "3,3": {
             "size": [
               1,
@@ -189,17 +145,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/comX",
               "_title": "comX"
-            }
-          },
-          "0,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target",
-              "_title": "target"
             }
           },
           "1,2": {
@@ -357,6 +302,61 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/vis_dist_in",
               "_title": "vis_dist_in"
+            }
+          },
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Pixy Num",
+              "_title": "Pixy Num"
+            }
+          },
+          "2,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Message",
+              "_title": "Message"
+            }
+          },
+          "0,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/target",
+              "_title": "target"
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/spin",
+              "_title": "spin"
+            }
+          },
+          "5,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/bottomShooterVelo",
+              "_title": "bottomShooterVelo"
             }
           }
         }

@@ -26,14 +26,34 @@ import frc.robot.subsystems.PixyObject;
 public class FollowBall extends CommandBase implements CommandPathPiece{
 
 
+    int camWidth = 315;
+    int camHeight = 207;
+
+    double turnValue = 0;
+    double forwardValue = 0;
+    double maxTurn = 3;
+    double pVal = 4.00; // 5
+    double proxPVal = 0.07 * 0;
+    double stopWidth = 80;
+    double forwardMod = 2;
+    boolean fullAuto = true;
+    boolean hasGotABall = false;
+    boolean shouldStop = false;
+    static double minAspect = 0.8;
+    static double maxAspect = 2;
+    static double abortMaxAspect = 3;
+    int currentFollowingID = -1;
+    long timeToEndDrive = 0;
+    long chargeTime = 0;
+
     boolean doIntake;
     boolean endWhenClose;
     Drivetrain drivetrain;
     Barrel barrel;
     int targetColor = 0;
-
+    double chargeSpeed = 0;
     public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
-            double forwardMod, int targetColor) {
+            double forwardMod, int targetColor, double chargeSpeed) {
 
         this.targetColor = targetColor;
         this.doIntake = handleIntake;
@@ -41,6 +61,8 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         this.forwardMod = forwardMod;
         this.drivetrain = drivetrain;
         this.barrel = barrel;
+        this.chargeSpeed = chargeSpeed;
+        chargeTime = (long) ((2/chargeSpeed)*300);
     }
 
     // Called just before this Command runs the first time
@@ -56,24 +78,6 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
 
     }
 
-    int camWidth = 315;
-    int camHeight = 207;
-
-    double turnValue = 0;
-    double forwardValue = 0;
-    double maxTurn = 3;
-    double pVal = 4.00; // 5
-    double proxPVal = 0.07 * 0;
-    double stopWidth = 100;
-    double forwardMod = 2;
-    boolean fullAuto = true;
-    boolean hasGotABall = false;
-    boolean shouldStop = false;
-    static double minAspect = 0.8;
-    static double maxAspect = 3;
-    static double abortMaxAspect = 6;
-    int currentFollowingID = -1;
-    long timeToEndDrive = 0;
 
     /**
      * 
@@ -176,7 +180,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                         hasGotABall = true;
                     }
 
-                    timeToEndDrive = System.currentTimeMillis() + 300;
+                    timeToEndDrive = System.currentTimeMillis() + chargeTime;
                 }
             }
             if (object != null) {
@@ -201,7 +205,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                 }
             }
         } else {
-            forwardValue = 2;
+            forwardValue = chargeSpeed;
             turnValue = 0;
             System.out.println("charge!");
         }
@@ -221,10 +225,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
 
         return shouldStop;
     }
-    @Override
-    public boolean interruptsTrajectory() {
-        return true;
-    }
+
     
     @Override
     public double getRequestedStartSpeed() {

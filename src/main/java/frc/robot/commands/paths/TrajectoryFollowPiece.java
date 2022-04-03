@@ -15,13 +15,14 @@ import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.math.Pair;
 
 public class TrajectoryFollowPiece extends CommandBase implements CommandPathPiece {
 
-    private List<Pair<Double, CommandPathPiece>> commandTriggerTimes = new ArrayList<>();
+    private List<Pair<Double, Command>> commandTriggerTimes = new ArrayList<>();
     private boolean done = false;
     private PathableDrivetrain drivetrain;
     private List<WaypointPiece> waypoints;
@@ -49,10 +50,6 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         this.drivetrainConfig = path.getDrivetrainConfig();
     }
 
-    @Override
-    public boolean interruptsTrajectory() {
-        return true;
-    }
 
     @Override
     public double getRequestedStartSpeed() {
@@ -68,7 +65,7 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         List<Translation2d> interiorPoints = new ArrayList<>();
         Rotation2d startMovementDirection = null;
         if (Math.abs(speed) < 0.3) {
-
+            startMovementDirection = new Rotation2d(0);
         } else {
             // the time to stop times 1/2 to allow curve
             double futureMultiplier = 0.5/drivetrainConfig.maxAcceleration; 
@@ -118,7 +115,7 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
             }
             if (waypoints.get(i).parallelCommands.size() > 0) {
                 commandTriggerTimes
-                        .add(new Pair<>(Double.valueOf(state.timeSeconds), new PathPieceWrapper(group, false, 0)));
+                        .add(new Pair<>(Double.valueOf(state.timeSeconds), group));
             }
 
         }

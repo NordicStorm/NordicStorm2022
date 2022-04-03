@@ -16,9 +16,5 @@ public class ResetPosePiece extends CommandBase implements CommandPathPiece{
         
     }
 
-    @Override
-    public boolean interruptsTrajectory() {
-        return false;
-    }
     
 }

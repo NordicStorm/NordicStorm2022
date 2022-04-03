@@ -68,6 +68,7 @@ def write_java_file(curve_object):
         f.writelines(lines)
 
 def make_map(in_min, in_max, out_min, out_max):
+    in_min+=0.01
     def f(x):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
     return f
@@ -92,7 +93,7 @@ def graph_points(curve, surf, color, label_pos, all_ax_width, draw_frame):
             pygame.draw.line(surf, [0,0,0], [all_ax_width, 5], [all_ax_width, x_label_pos]) # y axis
             pygame.draw.line(surf, [0,0,0], [all_ax_width, x_label_pos], [surf.get_width()-15, x_label_pos]) # x axis
 
-            xtext = font.render(str(x[ind]), 1, [0,0,0])
+            xtext = font.render(str(round(x[ind],4)), 1, [0,0,0])
             surf.blit(xtext, [dx, x_label_pos])
             
     text = font.render(curve.name, 1, color)
@@ -130,6 +131,7 @@ def load_curves():
     with open(store_path,'r') as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
+            if len(row)<2 or len(row)>5:continue
             if row[0] == 'x':
                 current_labels = list(row)
                 curves = {}
@@ -153,8 +155,8 @@ def load_curves():
 pygame.init()
 font = pygame.font.SysFont("Arial", 10)
 point_colors = [COLORS['red'], COLORS['green'], COLORS['blue'], COLORS['purple'], COLORS['orange'], COLORS['yellow']]
-store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\distcurves.txt"
-file_path =  r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\src\main\java\frc\robot\subsystems\Barrel.java"
+store_path = r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\shootingcurves.txt"
+file_path =  r"C:\Users\Nordic Storm 3018\FRC\NordicStorm2022\src\main\java\frc\robot\commands\ShootingUtil.java"
 curves = load_curves()
 
 screen = pygame.display.set_mode([640,480])
