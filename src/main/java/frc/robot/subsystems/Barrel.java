@@ -192,7 +192,7 @@ public class Barrel extends SubsystemBase {
     }
 
     //tilt stuff
-    public final double maxAngle = 76.0;
+    public final double maxAngle = 75.0;
     public final double minAngle = 20;
     public final double intakePos = 71.5;
     double targetTilt = 0;

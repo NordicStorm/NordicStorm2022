@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -21,9 +19,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     boolean done = false;
     boolean manual = false;
-    Constraints constraints = new Constraints(5, 5);
-    ProfiledPIDController rotController = new ProfiledPIDController(0.5, 0, 0, constraints);
-
+  
     /**
      * Take control of the drivetrain and barrel to take the shot
      * 
@@ -44,8 +40,6 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
         SmartDashboard.putBoolean("go", false);
 
-        rotController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
-
     }
 
     @Override
@@ -60,33 +54,33 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         correction = Util.absClamp(correction, 10);
 
         drivetrain.setRotationSpeed(correction, 1);
+        rotateDone = Math.abs(angleDiff)<3;
         
     }
 
     double tilt = 76;
     double topRPM = 0;
     double bottomRPM = 0;
-
+    boolean rotateDone = false;
     @Override
     public void execute() {
-        double x= ShootingUtil.getCurrentDistance();
-        double lastDistance = vision.lastDistance;
-        SmartDashboard.putNumber("diff", x-lastDistance);
+
+        double lastDistance = ShootingUtil.getCurrentDistance();
         if (SmartDashboard.getBoolean("go", false) && manual) {
             SmartDashboard.putBoolean("go", false);
             tilt = SmartDashboard.getNumber("sTilt", barrel.intakePos);
             bottomRPM = SmartDashboard.getNumber("sBottom", 1000);
-            topRPM = bottomRPM*SmartDashboard.getNumber("spin", 0.6);;
+            topRPM = bottomRPM*SmartDashboard.getNumber("spin", 0.6);
             
             SmartDashboard.putNumber("sTop", topRPM);
-            //distance is all to lense!
-            SmartDashboard.putString("csv", vision.lastDistance+","+bottomRPM+","+topRPM+","+tilt); //175 fake angles
+            //distance is all to lens!
+            SmartDashboard.putString("csv", lastDistance+","+bottomRPM+","+topRPM+","+tilt); //175 fake angles
             barrel.setFlywheels(topRPM, bottomRPM);
             barrel.setTiltAngle(tilt);
         }else{
             
         }
-        if(RobotContainer.leftJoystick.getRawButton(5)){
+        if(RobotContainer.leftJoystick.getRawButton(5) || !manual){
             topRPM = ShootingUtil.getShootingTopSpeed(lastDistance);
             bottomRPM = ShootingUtil.getShootingBottomSpeed(lastDistance);
             tilt = ShootingUtil.getShootingTilt(lastDistance);
@@ -98,29 +92,28 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             SmartDashboard.putNumber("spin", topRPM/bottomRPM);
         }
         
-
-        if(!manual){
-            barrel.setFlywheels(500, 500);
-        }
-        if(RobotContainer.leftJoystick.getRawButton(2)){
+        if(RobotContainer.leftJoystick.getRawButton(2)||!manual){
             rotateTowardTarget();
         }
-        // barrel.setTiltFromVision();
-
-        if (barrel.readyToShoot() && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
+        System.out.println("waiting");
+        if (barrel.readyToShoot() && rotateDone && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
             barrel.shoot();
-            done = true;
+            System.out.println("shot");
+            endingTime = System.currentTimeMillis() + 200;
         }
 
     }
 
     @Override
     public boolean isFinished() {
+        if(manual){
+            return false;
+        }
         if (System.currentTimeMillis() > endingTime) {
             // cleanup here todo
             return true;
         }
-        return done && !manual;
+        return false;
     }
 
     @Override

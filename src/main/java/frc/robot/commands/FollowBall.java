@@ -51,9 +51,10 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     Drivetrain drivetrain;
     Barrel barrel;
     int targetColor = 0;
+    boolean canAbort = false;
     double chargeSpeed = 0;
     public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
-            double forwardMod, int targetColor, double chargeSpeed) {
+            double forwardMod, int targetColor, double chargeSpeed, boolean canAbort) {
 
         this.targetColor = targetColor;
         this.doIntake = handleIntake;
@@ -62,9 +63,14 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         this.drivetrain = drivetrain;
         this.barrel = barrel;
         this.chargeSpeed = chargeSpeed;
+        this.canAbort = canAbort;
         chargeTime = (long) ((2/chargeSpeed)*300);
     }
-
+    public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
+    double forwardMod, int targetColor, double chargeSpeed) {
+        this(drivetrain, barrel, handleIntake, endWhenClose,
+        forwardMod, targetColor, chargeSpeed, false);
+    }
     // Called just before this Command runs the first time
     DriveToObject targetTracker;
 
@@ -111,7 +117,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         double y = possible.y;
         double maxWidth = 0;
         if (possible.width >= 200) {
-            System.out.println("Abort because too wide");
+            //System.out.println("Abort because too wide");
             return false;
         }
         return true;
@@ -130,7 +136,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         if (currentFollowingID != -1) {
             for (PixyObject possible : possibleTargets) {
                 if (possible.trackingIndex == currentFollowingID) {
-                    if (!isValidBall(possible, true, targetColor)) {
+                    if (canAbort && !isValidBall(possible, true, targetColor)) {
                         System.out.println("brek");
                         break;
                     }
@@ -161,6 +167,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
+        barrel.setTiltAngle(barrel.intakePos);
 
         if (timeToEndDrive < System.currentTimeMillis()) {
             if (turnValue == 0) {

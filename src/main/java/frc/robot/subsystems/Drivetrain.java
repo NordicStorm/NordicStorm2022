@@ -130,8 +130,8 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
             driveMotor.config_kP(0, 0.04);
 
         }
-        drivetrainConfig.maxAcceleration = 2; 
-        drivetrainConfig.maxVelocity = 2; 
+        drivetrainConfig.maxAcceleration = 3; 
+        drivetrainConfig.maxVelocity = 4; 
         drivetrainConfig.maxAnglularVelocity = 10;
         drivetrainConfig.maxAngularAcceleration = 5;
         drivetrainConfig.rotationCorrectionP = 2;

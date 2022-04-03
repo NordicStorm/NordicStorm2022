@@ -73,7 +73,7 @@ public class OperatorControl extends CommandBase {
         barrel.setIntake(leftStick.getRawButton(4));
 
         if(ShootingUtil.getTimeToReady()<750){
-            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
+            //new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
         }
     }
 }

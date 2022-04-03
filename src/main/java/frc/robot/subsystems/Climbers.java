@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Util;
 
 public class Climbers extends SubsystemBase {
@@ -57,7 +58,12 @@ public class Climbers extends SubsystemBase {
         //checkResetPos(leftEncoder, leftLimitSwitch);
         //checkResetPos(rightEncoder, rightLimitSwitch);
 
-        setRaw(-Util.leftDebug());
+        if(RobotContainer.leftJoystick.getRawButton(6)){
+            setRaw(-Util.leftDebug());
+        }else{
+            setRaw(0);
+
+        }
         //leftPID.setReference(pos, CANSparkMax.ControlType.kPosition, pidSlot);
         //SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
 

@@ -42,7 +42,7 @@ public class Vision extends SubsystemBase {
         camera.setPipelineIndex(2);
     }
 
-    public double lastDistance = 0;
+    private double lastDistance = 0;
     private RollingAverage distanceAverage = new RollingAverage(5);
     public boolean canSeeTarget = false;
     double targetCenter = 0;
