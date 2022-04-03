@@ -14,6 +14,7 @@ import frc.robot.commands.OperatorControl;
 import frc.robot.commands.PathAuto;
 import frc.robot.commands.ShootingUtil;
 import frc.robot.commands.TurnAndShoot;
+import frc.robot.commands.paths.MultiPartPath;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Barrel;
@@ -77,6 +78,15 @@ public class RobotContainer {
             }
           });
         new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2.5, drivetrain.myBallColor, 2));
+        new JoystickButton(rightJoystick, 7).whenPressed(new InstantCommand(){
+            @Override
+            public void initialize() {
+                MultiPartPath path = new MultiPartPath(drivetrain);
+                path.addWaypoint(3, 4);
+                path.stop();
+                path.finalizePath().schedule();
+            }
+        }, true);
         new JoystickButton(leftJoystick, 1).whenPressed(new TurnAndShoot(drivetrain, barrel, vision, 9999999999l));
 
     }

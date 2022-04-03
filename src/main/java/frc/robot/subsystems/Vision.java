@@ -53,7 +53,7 @@ public class Vision extends SubsystemBase {
     double camAngle = Math.toRadians(29.7);
 
     // Position of robot relative to cam
-    Transform2d camToRobot = new Transform2d(new Translation2d(Units.inchesToMeters(12), 0),
+    Transform2d camToRobot = new Transform2d(new Translation2d(Units.inchesToMeters(-13.75), 0),
             Rotation2d.fromDegrees(0));
     final public Pose2d targetToField = new Pose2d(Units.feetToMeters(27), Units.feetToMeters(13.5), new Rotation2d(0));
     public PhotonTrackedTarget bestTarget = null;
@@ -70,7 +70,6 @@ public class Vision extends SubsystemBase {
             double visPitch = target.getPitch();
             boolean usable = Math.abs(visYaw) < 4.5;
             if (usable) {
-                hasSeenTarget = true;
                 SmartDashboard.putNumber("visUpdate", Math.random());
                 double recentDistance = PhotonUtils.calculateDistanceToTargetMeters(
                         camHeight,
@@ -91,14 +90,16 @@ public class Vision extends SubsystemBase {
 
                 SmartDashboard.putNumber("vis_x", estPose.getX());
                 SmartDashboard.putNumber("vis_y", estPose.getY());
-                SmartDashboard.putNumber("vis_x_ft", Units.metersToFeet(estPose.getX()));
-                SmartDashboard.putNumber("vis_y_ft", Units.metersToFeet(estPose.getY()));
-                if(Util.distance(estPose, drivetrain.getPose())<3){
-                    //drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
+                SmartDashboard.putNumber("vis_x2", targetToField.getX()-lastDistance+camToRobot.getX());
+
+                if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
+                    drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
                 }else{
                     SmartDashboard.putString("Message", "Vision desync");
                 }
                 // System.out.println("dist "+);
+                hasSeenTarget = true;
+
             }else{
                 distanceAverage.clear();
                 canSeeTarget = false;

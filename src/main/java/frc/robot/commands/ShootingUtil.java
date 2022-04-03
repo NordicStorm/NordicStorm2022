@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Util;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.Drivetrain;
@@ -22,11 +23,18 @@ public class ShootingUtil {
         double result = 0;//CURVE:perp
         return result;
     }
+    /**
+     * Get the current measured distance from target to CAMERA!
+     * @return
+     */
+    public static double getCurrentDistance(){
+        return Util.distance(drivetrain.getPose(), vision.targetToField)-0.35;
+    }
     public static Pose2d getFuturePose(){
         Pose2d currentPose = drivetrain.getPose();
         Pose2d visionPose = vision.targetToField;
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
-        double distance = vision.lastDistance;
+        double distance = getCurrentDistance();
 
         EVector2d speedsVector = new EVector2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
         EVector2d normalVector = new EVector2d(visionPose.getX() - currentPose.getX(),
@@ -40,11 +48,12 @@ public class ShootingUtil {
         Pose2d futurePose = currentPose;
         return futurePose;
     }
+    /**Returns the angle needed in degrees */
     public static double getNeededTurnAngle(){
         Pose2d futurePose = ShootingUtil.getFuturePose();
 
-        double angleNeeded = Math.toDegrees(Util.angleBetweenPoses(futurePose, vision.targetToField));
-        return angleNeeded;
+        double angleNeeded = Util.angleBetweenPoses(futurePose, vision.targetToField)+Math.PI;
+        return Math.toDegrees(angleNeeded);
 
     }
     public static double getTimeToReady(){

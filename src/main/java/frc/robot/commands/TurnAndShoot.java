@@ -21,8 +21,8 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     boolean done = false;
     boolean manual = false;
-    Constraints constraints = new Constraints(2.5, 2);
-    ProfiledPIDController rotController = new ProfiledPIDController(0.05, 0, 0, constraints);
+    Constraints constraints = new Constraints(5, 5);
+    ProfiledPIDController rotController = new ProfiledPIDController(0.5, 0, 0, constraints);
 
     /**
      * Take control of the drivetrain and barrel to take the shot
@@ -55,10 +55,10 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     
     public void rotateTowardTarget() {
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
+        double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
+        double correction = angleDiff*0.16; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
+        correction = Util.absClamp(correction, 10);
 
-
-        double correction = -rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
-        correction = Util.absClamp(correction, 2.5);
         drivetrain.setRotationSpeed(correction, 1);
         
     }
@@ -69,7 +69,9 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     @Override
     public void execute() {
+        double x= ShootingUtil.getCurrentDistance();
         double lastDistance = vision.lastDistance;
+        SmartDashboard.putNumber("diff", x-lastDistance);
         if (SmartDashboard.getBoolean("go", false) && manual) {
             SmartDashboard.putBoolean("go", false);
             tilt = SmartDashboard.getNumber("sTilt", barrel.intakePos);
@@ -100,7 +102,9 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         if(!manual){
             barrel.setFlywheels(500, 500);
         }
-        //rotateTowardTarget();
+        if(RobotContainer.leftJoystick.getRawButton(2)){
+            rotateTowardTarget();
+        }
         // barrel.setTiltFromVision();
 
         if (barrel.readyToShoot() && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
@@ -116,7 +120,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             // cleanup here todo
             return true;
         }
-        return done;
+        return done && !manual;
     }
 
     @Override

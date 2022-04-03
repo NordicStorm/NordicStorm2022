@@ -321,7 +321,7 @@ public class Barrel extends SubsystemBase {
         double tilt = getTiltAngle();
         if(Util.close(topCurrentRPM, topTargetRPM, 60) &&
            Util.close(bottomCurrentRPM, bottomTargetRPM, 60) &&
-           Util.close(tilt, targetTilt, 2) &&
+           Util.close(tilt, targetTilt, 1) &&
            ballAvailableToShoot()
         ){
             return true;

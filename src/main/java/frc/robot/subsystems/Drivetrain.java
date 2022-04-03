@@ -235,7 +235,10 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         SmartDashboard.putNumber("Pixy Num", FollowBall.countTargets( pixy.readObjects(), myBallColor));
         if (RobotContainer.rightJoystick.getRawButton(8)) {
-            setPose(0, 0, 0);
+            //setPose(0, 0, 0);
+            double halfWidth = 0.46355;
+            setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
+
         }
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
