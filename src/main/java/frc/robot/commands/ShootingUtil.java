@@ -68,13 +68,13 @@ public class ShootingUtil {
     public static double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = -20.748448193695662*x*x + 311.9649788180637*x + 0.3237476579643795; //CURVE:TSPEED,11:29,04/02
+        double result = -23.949002766088412*x*x + 342.51851904890225*x + -58.80671457761888; //CURVE:TSPEED,11:56,04/02
         return result;
     }
     public static double getShootingBottomSpeed(double meters){
         double x = meters;
 
-        double result = -32.060765399047035*x*x + 437.4155079954175*x + 812.5758207596833; //CURVE:BSPEED,11:29,04/02
+        double result = -39.06579697403865*x*x + 504.28782940213927*x + 683.1573885364064; //CURVE:BSPEED,11:56,04/02
         return result;
     }
     /**
@@ -84,7 +84,7 @@ public class ShootingUtil {
      */
     public static double getShootingTilt(double meters){
         double x = meters;
-        double result = -0.09229764095572934*x*x*x*x*x + 2.20533797489179*x*x*x*x + -20.193627209804923*x*x*x + 87.335434603262*x*x + -178.8701042643679*x + 211.20395403399414; //CURVE:TILT,11:29,04/02
+        double result = -0.0937014192731562*x*x*x*x*x + 2.2437772636000606*x*x*x*x + -20.59687229539596*x*x*x + 89.34733054408112*x*x + -183.61201620232927*x + 215.42450215660352; //CURVE:TILT,11:56,04/02
         return result;
     }
 }

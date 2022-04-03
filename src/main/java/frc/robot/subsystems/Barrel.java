@@ -209,6 +209,8 @@ public class Barrel extends SubsystemBase {
 
         if(Math.abs(currentTiltAng-targetTilt)<1){
             screw.set(0);
+        }else{
+            setTiltAngle(targetTilt);
         }
 
         //intakeHeight=79.4 degrees
