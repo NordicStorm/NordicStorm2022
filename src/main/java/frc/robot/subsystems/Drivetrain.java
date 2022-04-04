@@ -85,14 +85,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     public Drivetrain() {
         pixy = new Pixy();
         pixy.startUpdatingPixy();
-
-        if(DriverStation.getAlliance() == Alliance.Blue){
-            myBallColor = 1;
-            enemyBallColor = 2;
-        }else{
-            myBallColor= 2;
-            enemyBallColor = 1;
-        }
+        setBallColors();
 
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
@@ -149,7 +142,15 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         this.barrel = barrel;
         this.climbers = climbers;
     }
-
+    public void setBallColors(){
+        if(DriverStation.getAlliance() == Alliance.Blue){
+            myBallColor = 1;
+            enemyBallColor = 2;
+        }else{
+            myBallColor= 2;
+            enemyBallColor = 1;
+        }
+    }
     public void zeroGyroscope() {
         navx.zeroYaw();
     }

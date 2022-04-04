@@ -76,4 +76,9 @@ public class OperatorControl extends CommandBase {
             //new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
         }
     }
+
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
+    }
 }

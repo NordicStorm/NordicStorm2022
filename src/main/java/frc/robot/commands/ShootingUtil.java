@@ -96,6 +96,9 @@ public class ShootingUtil {
     public static double getShootingTilt(double meters){
         double x = meters;
         double result = -0.0937014192731562*x*x*x*x*x + 2.2437772636000606*x*x*x*x + -20.59687229539596*x*x*x + 89.34733054408112*x*x + -183.61201620232927*x + 215.42450215660352; //CURVE:TILT,12:01,04/03
+        if(x<=3.6){
+            result = 71.5;
+        }
         return result;
     }
 }

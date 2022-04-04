@@ -97,6 +97,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        drivetrain.setBallColors();
         AutoWithInit auto = new BallAutonomous(drivetrain, barrel, vision);
         auto.initializeCommands();
         return auto;

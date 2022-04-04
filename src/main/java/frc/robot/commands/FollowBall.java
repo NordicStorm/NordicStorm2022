@@ -76,7 +76,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
 
     @Override
     public void initialize() {
-
+        targetColor = drivetrain.myBallColor;
         targetTracker = new DriveToObject(pVal, forwardMod, maxTurn, stopWidth * 0, proxPVal, camWidth, camHeight);
         targetTracker.setOffset(0);
         drivetrain.getPixy().setLamps(true);
