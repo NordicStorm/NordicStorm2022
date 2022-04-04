@@ -64,8 +64,19 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         ChassisSpeeds globalSpeeds = PathUtil.rotateSpeeds(currentSpeeds, drivetrain.getGyroRadians());
         List<Translation2d> interiorPoints = new ArrayList<>();
         Rotation2d startMovementDirection = null;
+
+        var end = waypoints.get(waypoints.size() - 1);
+        var endPosition = end.getPoint();
         if (Math.abs(speed) < 0.3) {
-            startMovementDirection = new Rotation2d(0);
+            Translation2d firstPoint; // calculate the direction from the second-to-last to the last point.
+
+            if(interiorPoints.size()>0){
+                firstPoint = interiorPoints.get(0);
+            }else{
+                firstPoint = endPosition;
+            }
+            startMovementDirection = new Rotation2d(Math.atan2(firstPoint.getY() - currentPose.getY(), firstPoint.getX() - currentPose.getX()));
+
         } else {
             // the time to stop times 1/2 to allow curve
             double futureMultiplier = 0.5/drivetrainConfig.maxAcceleration; 
@@ -80,8 +91,7 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         for (int i = 0; i < waypoints.size() - 1; i++) { // don't add the last waypoint, it is not interior.
             interiorPoints.add(waypoints.get(i).getPoint());
         }
-        var end = waypoints.get(waypoints.size() - 1);
-        var endPosition = end.getPoint();
+      
         double endDirection;
         if (end.forcedEndDirection == null) {
             Translation2d from; // calculate the direction from the second-to-last to the last point.
@@ -155,7 +165,7 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
 
         ChassisSpeeds speeds = controller.calculate(currentPose, goal, new Rotation2d(targetRotation));
         drivetrain.drive(speeds);
-        System.out.println(speeds);
+        //System.out.println(speeds);
         if (timeProgressSeconds >= trajectory.getTotalTimeSeconds()) {
             controller.setTolerance(new Pose2d(
                     new Translation2d(drivetrainConfig.endOfTrajectoryPositionTolerance,

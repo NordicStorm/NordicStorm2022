@@ -84,8 +84,10 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             topRPM = ShootingUtil.getShootingTopSpeed(lastDistance);
             bottomRPM = ShootingUtil.getShootingBottomSpeed(lastDistance);
             tilt = ShootingUtil.getShootingTilt(lastDistance);
-            barrel.setFlywheels(topRPM, bottomRPM);
+            //topRPM = 5000;
+            //barrel.setFlywheels(topRPM, bottomRPM);
             barrel.setTiltAngle(tilt);
+
             SmartDashboard.putNumber("sTilt", tilt);
             SmartDashboard.putNumber("sTop", topRPM);
             SmartDashboard.putNumber("sBottom", bottomRPM);
@@ -95,7 +97,10 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         if(RobotContainer.leftJoystick.getRawButton(2)||!manual){
             rotateTowardTarget();
         }
-        System.out.println("waiting");
+        if(rotateDone){
+            System.out.println("waiting");
+
+        }
         if (barrel.readyToShoot() && rotateDone && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
             barrel.shoot();
             System.out.println("shot");

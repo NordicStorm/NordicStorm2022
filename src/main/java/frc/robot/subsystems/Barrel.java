@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.ShootingUtil;
 
 public class Barrel extends SubsystemBase {
     private Drivetrain drivetrain;
@@ -106,7 +107,7 @@ public class Barrel extends SubsystemBase {
         boolean bottomBall = bottomSensor.get();
         boolean topBall = topSensor.get();
         double topVelo = topStageEncoder.getVelocity();
-        boolean topIsOpen = (!topBall) && topVelo<5; // we can move a ball into top if there is not a ball there and it is not spinning fast
+        boolean topIsOpen = (!topBall) && topVelo<100; // we can move a ball into top if there is not a ball there and it is not spinning fast
         long now = System.currentTimeMillis();
         boolean runBottom = false;
         double desTopSpeed = 0;
@@ -221,7 +222,7 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private final double angleOffset = (178-42);
+   private final double angleOffset = (178-36.5);
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.
@@ -266,6 +267,11 @@ public class Barrel extends SubsystemBase {
         SmartDashboard.putNumber("topShooterVelo", topCurrentRPM);
         SmartDashboard.putNumber("bottomShooterVelo", bottomCurrentRPM);
 
+        double distance = ShootingUtil.getCurrentDistance();
+        double topRPM = ShootingUtil.getShootingTopSpeed(distance);
+        double bottomRPM = ShootingUtil.getShootingBottomSpeed(distance);
+            //topRPM = 5000;
+        setFlywheels(topRPM, bottomRPM);
         //setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
         
     }
@@ -312,21 +318,30 @@ public class Barrel extends SubsystemBase {
     public double getBottomRPM(){
         return bottomCurrentRPM;
     }
+    int timesGood = 0;
     /**
      * If everything is ready to shoot: RPM, Tilt, and sensor
      * @return
      */
     public boolean readyToShoot(){
+        System.out.println("top"+topCurrentRPM);
+        System.out.println("bottom"+bottomCurrentRPM);
+        System.out.println("bottomtarget"+bottomTargetRPM);
         
         double tilt = getTiltAngle();
+        System.out.println("tilt"+tilt);
+
         if(Util.close(topCurrentRPM, topTargetRPM, 60) &&
            Util.close(bottomCurrentRPM, bottomTargetRPM, 60) &&
            Util.close(tilt, targetTilt, 1) &&
            ballAvailableToShoot()
         ){
-            return true;
+            timesGood+=1;
+        }else{
+            timesGood = 0;
         }
-        return false;
+
+        return timesGood>=5;
     }
     /**
      * Feed and actually shoot the ball

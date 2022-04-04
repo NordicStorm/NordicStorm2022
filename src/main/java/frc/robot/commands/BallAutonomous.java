@@ -28,45 +28,50 @@ public class BallAutonomous extends AutoWithInit{
         drivetrain.setAngleOffset(-90);
         drivetrain.setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
         DrivetrainConfig config = drivetrain.getConfig().makeClone();
-        config.maxVelocity = 3;
-        config.maxAcceleration = 2;
+        config.maxVelocity = 5;
+        config.maxAcceleration = 5;
+        config.maxCentripetalAcceleration = 11;
+        
         MultiPartPath pathA;
 
         pathA = new MultiPartPath(drivetrain, config, null);
-        pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.652,1.807
+        pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.717,1.874
         pathA.setHeading(-90);
         pathA.addWaypoint(7.669, 1.514);
-        pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 1, drivetrain.myBallColor, 1));//ENDPOS:7.621,0.220
-        pathA.addWaypoint(7.657, 0.759);
+        pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1));//ENDPOS:7.621,0.220
+        pathA.setHeading(-120);
+        pathA.addWaypoint(7.130, 1.538);
         pathA.stop();
-        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:7.621,0.747
-        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:7.549,0.759
+        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:7.034,1.562
+        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.914,1.514
         
         pathA.setHeading(170);
-        pathA.addWaypoint(6.052, 1.634);
-        pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 2));//ENDPOS:4.734,2.053
-        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:4.507,2.113
+        pathA.addWaypoint(6.555, 1.538);
+        pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2));//ENDPOS:4.734,2.053
+        //pathA.stop();
+        //pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:4.507,2.113
         pathA.setHeading(-135);
         
-        pathA.addWaypoint(2.099, 2.425);
-        pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 1, drivetrain.myBallColor, 1));//ENDPOS:1.128,1.143
-        pathA.addWaypoint(1.739, 1.909);
+        pathA.addWaypoint(2.140, 2.294);
+        pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:1.128,1.143
+        pathA.addWaypoint(2.290, 1.718);
+        pathA.addWaypoint(4.842, 1.454);
+        pathA.addWaypoint(6.348, 1.926);
         pathA.stop();
-        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:2.075,2.484
+        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.351,2.041
+        pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.471,2.101
 
         pathA.setHeading(-90);
         pathA.stop(4000);
-        pathA.addWaypoint(7.477, 1.874);
         pathA.stop();
         
+        addCommands(pathA.finalizePath());
 
-        //addCommands(pathA.finalizePath());
+        //MultiPartPath pathB;
 
-        MultiPartPath pathB;
-
-        pathB = new MultiPartPath(drivetrain, config, null);
-        pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:7.652,1.807
-        addCommands(pathB.finalizePath());
+        //pathB = new MultiPartPath(drivetrain, config, null);
+        //pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:7.652,1.807
+        //addCommands(pathB.finalizePath());
 
     }
 

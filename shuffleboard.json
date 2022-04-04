@@ -271,17 +271,6 @@
               "_title": "Pixy Num"
             }
           },
-          "2,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Message",
-              "_title": "Message"
-            }
-          },
           "0,2": {
             "size": [
               1,
@@ -369,6 +358,17 @@
               "_source0": "network_table:///SmartDashboard/odo_y",
               "_title": "odo_y"
             }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/diff",
+              "_title": "diff"
+            }
           }
         }
       }
@@ -383,37 +383,7 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "titleType": 0,
-        "tiles": {
-          "2,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Graph",
-              "_source0": "network_table:///SmartDashboard/odo_x",
-              "_title": "SmartDashboard/odo_x",
-              "Graph/Visible time": 30.0,
-              "Graph/X-axis auto scrolling": true,
-              "Y-axis/Automatic bounds": true,
-              "Y-axis/Upper bound": 1.0,
-              "Y-axis/Lower bound": -1.0,
-              "Y-axis/Unit": "ul",
-              "Visible data/SmartDashboard/odo_x": true
-            }
-          },
-          "4,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/odo_y",
-              "_title": "SmartDashboard/odo_y"
-            }
-          }
-        }
+        "tiles": {}
       }
     },
     {
