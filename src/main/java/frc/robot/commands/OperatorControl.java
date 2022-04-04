@@ -72,8 +72,8 @@ public class OperatorControl extends CommandBase {
         SmartDashboard.putNumber("comX", localSpeeds.vxMetersPerSecond);
         barrel.setIntake(leftStick.getRawButton(4));
 
-        if(ShootingUtil.getTimeToReady()<750){
-            //new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
+        if(ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !rightStick.getRawButton(2)){
+            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
         }
     }
 

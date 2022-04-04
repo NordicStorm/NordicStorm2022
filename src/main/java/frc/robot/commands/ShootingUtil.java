@@ -59,14 +59,19 @@ public class ShootingUtil {
     public static double getTimeToReady(){
         double meters = getCurrentDistance();
         double topRPMDiff = Math.abs(getShootingTopSpeed(meters)-barrel.getTopRPM());
-        double bottomRPMDiff = Math.abs(getShootingBottomSpeed(meters));
-        double tiltDiff = Math.abs(getShootingTilt(meters));
+        double bottomRPMDiff = Math.abs(getShootingBottomSpeed(meters)-barrel.getBottomRPM());
+        double tiltDiff = Math.abs(getShootingTilt(meters)-barrel.getTiltAngle());
         double turnDiff = Math.abs(Util.angleDiff(drivetrain.getGyroDegrees(), getNeededTurnAngle()));
 
         double topTime = topRPMDiff * 0.002;
         double bottomTime = bottomRPMDiff*0.002;
         double tiltTime = tiltDiff*0.5;
-        double turnTime = turnDiff*(1/180);
+        double turnTime = turnDiff*(1.0/180);
+        System.out.println(topTime);
+        System.out.println(bottomTime);
+        System.out.println(tiltTime);
+        System.out.println(turnTime);
+        System.out.println("next");
         return Math.max(Math.max(Math.max(topTime, bottomTime), tiltTime), turnTime);
     }
     public static void setSubsystems(Drivetrain the_drivetrain, Barrel the_barrel, Vision the_vision) {

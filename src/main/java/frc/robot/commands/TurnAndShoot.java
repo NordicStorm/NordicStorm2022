@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
 import frc.robot.commands.paths.CommandPathPiece;
+import frc.robot.commands.paths.PathUtil;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Vision;
@@ -101,7 +102,8 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             System.out.println("waiting");
 
         }
-        if (barrel.readyToShoot() && rotateDone && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
+        boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<1;
+        if (barrel.readyToShoot() && rotateDone && speedGood && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
             barrel.shoot();
             System.out.println("shot");
             endingTime = System.currentTimeMillis() + 200;
