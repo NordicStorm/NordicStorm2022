@@ -65,6 +65,8 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         this.chargeSpeed = chargeSpeed;
         this.canAbort = canAbort;
         chargeTime = (long) ((2/chargeSpeed)*300);
+        addRequirements(barrel);
+
     }
     public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
     double forwardMod, int targetColor, double chargeSpeed) {
@@ -80,7 +82,6 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         targetTracker = new DriveToObject(pVal, forwardMod, maxTurn, stopWidth * 0, proxPVal, camWidth, camHeight);
         targetTracker.setOffset(0);
         drivetrain.getPixy().setLamps(true);
-        SmartDashboard.putString("currentCommand", "followBall()");
 
     }
 

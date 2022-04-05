@@ -11,28 +11,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/climbPos",
-              "_title": "climbPos"
-            }
-          },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/MaxAccel",
-              "_title": "MaxAccel"
-            }
-          },
           "3,0": {
             "size": [
               1,
@@ -55,7 +33,7 @@
               "_title": "leftPos"
             }
           },
-          "7,1": {
+          "1,1": {
             "size": [
               1,
               1
@@ -90,7 +68,7 @@
               "_title": "topShooterVelo"
             }
           },
-          "7,0": {
+          "1,0": {
             "size": [
               1,
               1
@@ -103,18 +81,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "4,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/rightPos",
-              "_title": "rightPos"
-            }
-          },
-          "2,2": {
+          "2,0": {
             "size": [
               1,
               1
@@ -159,39 +126,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/vis_y",
               "_title": "vis_y"
-            }
-          },
-          "6,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/vis_x_ft",
-              "_title": "vis_x_ft"
-            }
-          },
-          "7,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/vis_y_ft",
-              "_title": "vis_y_ft"
-            }
-          },
-          "0,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/currentCommand",
-              "_title": "currentCommand"
             }
           },
           "4,3": {
@@ -271,17 +205,6 @@
               "_title": "Pixy Num"
             }
           },
-          "0,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/target",
-              "_title": "target"
-            }
-          },
           "2,3": {
             "size": [
               1,
@@ -304,17 +227,6 @@
               "_title": "bottomShooterVelo"
             }
           },
-          "1,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/comX",
-              "_title": "comX"
-            }
-          },
           "3,1": {
             "size": [
               1,
@@ -324,17 +236,6 @@
               "_type": "Text View",
               "_source0": "network_table:///photonvision/picam/latencyMillis",
               "_title": "photonvision/picam/latencyMillis"
-            }
-          },
-          "1,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/vis_x2",
-              "_title": "vis_x2"
             }
           },
           "5,0": {
@@ -359,15 +260,26 @@
               "_title": "odo_y"
             }
           },
-          "2,1": {
+          "8,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/diff",
-              "_title": "diff"
+              "_source0": "network_table:///SmartDashboard/Message",
+              "_title": "Message"
+            }
+          },
+          "7,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/comX",
+              "_title": "comX"
             }
           }
         }

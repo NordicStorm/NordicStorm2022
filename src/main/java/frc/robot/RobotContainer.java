@@ -77,8 +77,20 @@ public class RobotContainer {
               return true;
             }
           });
-        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2.5, drivetrain.myBallColor, 2));
-        new JoystickButton(rightJoystick, 7).whenPressed(new InstantCommand(){
+        new JoystickButton(rightJoystick, 9).whenPressed(new InstantCommand(){
+            @Override
+            public void execute() {
+                for(int i = 0; i<600; ++i){
+                    drivetrain.drive(0, 0, 0);
+                }
+            }
+            @Override
+            public boolean runsWhenDisabled() {
+              return true;
+            }
+          });
+        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2, drivetrain.myBallColor, 2));
+        /*new JoystickButton(rightJoystick, 7).whenPressed(new InstantCommand(){
             @Override
             public void initialize() {
                 MultiPartPath path = new MultiPartPath(drivetrain);
@@ -86,8 +98,8 @@ public class RobotContainer {
                 path.stop();
                 path.finalizePath().schedule();
             }
-        }, true);
-        new JoystickButton(leftJoystick, 1).whenPressed(new TurnAndShoot(drivetrain, barrel, vision, 9999999999l));
+        }, true);*/
+        //new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181), false);
 
     }
 

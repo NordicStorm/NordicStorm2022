@@ -222,7 +222,7 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private final double angleOffset = (178-36.5);
+   private final double angleOffset = (178-37.5);//36.5
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.
@@ -236,7 +236,6 @@ public class Barrel extends SubsystemBase {
         targetTilt = angle;
         double adj = ((angle+angleOffset));
         //System.out.println(adj);
-        SmartDashboard.putNumber("target", adj);
         screwPID.setReference(adj, ControlType.kPosition);
     }
     /**
@@ -260,6 +259,7 @@ public class Barrel extends SubsystemBase {
     double bottomTargetRPM = 0;
     double topCurrentRPM = 0;
     double bottomCurrentRPM = 0;
+    public boolean autoAdjustRPM = true;
     private void updateShooter() {
         topCurrentRPM = topWheelEncoder.getVelocity();
         bottomCurrentRPM = bottomWheelEncoder.getVelocity();
@@ -271,7 +271,9 @@ public class Barrel extends SubsystemBase {
         double topRPM = ShootingUtil.getShootingTopSpeed(distance);
         double bottomRPM = ShootingUtil.getShootingBottomSpeed(distance);
             //topRPM = 5000;
-        setFlywheels(topRPM, bottomRPM);
+        if(autoAdjustRPM){
+            setFlywheels(topRPM, bottomRPM);
+        }
         //setFlywheelsRaw(Util.leftDebug(), Util.leftDebug());
         
     }
@@ -324,12 +326,12 @@ public class Barrel extends SubsystemBase {
      * @return
      */
     public boolean readyToShoot(){
-        System.out.println("top"+topCurrentRPM);
-        System.out.println("bottom"+bottomCurrentRPM);
-        System.out.println("bottomtarget"+bottomTargetRPM);
+        //System.out.println("top"+topCurrentRPM);
+        //System.out.println("bottom"+bottomCurrentRPM);
+        //System.out.println("bottomtarget"+bottomTargetRPM);
         
         double tilt = getTiltAngle();
-        System.out.println("tilt"+tilt);
+        //System.out.println("tilt"+tilt);
 
         if(Util.close(topCurrentRPM, topTargetRPM, 60) &&
            Util.close(bottomCurrentRPM, bottomTargetRPM, 60) &&

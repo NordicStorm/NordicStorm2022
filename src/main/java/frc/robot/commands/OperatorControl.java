@@ -69,11 +69,13 @@ public class OperatorControl extends CommandBase {
         
         
         drivetrain.limitDrive(localSpeeds, 0);
-        SmartDashboard.putNumber("comX", localSpeeds.vxMetersPerSecond);
-        barrel.setIntake(leftStick.getRawButton(4));
-
-        if(ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !rightStick.getRawButton(2)){
-            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule();
+        barrel.setIntake(leftStick.getRawButton(4) || rightStick.getRawButton(6));
+        boolean botReady = ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !TurnAndShoot.currentlyRunning;
+        if((botReady && !rightStick.getRawButton(2))){
+            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(true);
+        }
+        if(leftStick.getRawButton(1) && !TurnAndShoot.currentlyRunning){
+            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(false);
         }
     }
 

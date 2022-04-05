@@ -29,7 +29,9 @@ public class BallAutonomous extends AutoWithInit{
         config.maxVelocity = 4;
         config.maxAcceleration = 4;
         config.maxCentripetalAcceleration = 11;
-        if(false){
+        if(true){
+            config.maxVelocity = 5;
+            config.maxAcceleration = 5;
             drivetrain.setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
             drivetrain.setAngleOffset(-90);
 
@@ -66,7 +68,7 @@ public class BallAutonomous extends AutoWithInit{
             
             addCommands(pathA.finalizePath());
         }
-        if(true){
+        if(false){
             drivetrain.setPose(5.74,4.41517, 0);
             drivetrain.setAngleOffset(-180);
 

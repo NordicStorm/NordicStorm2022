@@ -40,7 +40,6 @@ public class Climbers extends SubsystemBase {
 
         configureClimberSpark(leftMotor, false);
         configureClimberSpark(rightMotor, true);
-        SmartDashboard.putNumber("climbPos", 0);
         
     }
     public void setOtherSubsystems(Drivetrain drivetrain, Barrel barrel, Vision vision){
@@ -58,7 +57,7 @@ public class Climbers extends SubsystemBase {
         //checkResetPos(leftEncoder, leftLimitSwitch);
         //checkResetPos(rightEncoder, rightLimitSwitch);
 
-        if(RobotContainer.leftJoystick.getRawButton(6)){
+        if(RobotContainer.leftJoystick.getRawButton(8)){
             setRaw(-Util.leftDebug());
         }else{
             setRaw(0);
@@ -68,8 +67,8 @@ public class Climbers extends SubsystemBase {
         //SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
 
         //SmartDashboard.putNumber("temp", leftMotor.getMotorTemperature());
-        SmartDashboard.putNumber("leftPos", leftEncoder.getPosition());
-        SmartDashboard.putNumber("rightPos", rightEncoder.getPosition());
+        //SmartDashboard.putNumber("leftPos", leftEncoder.getPosition());
+        //SmartDashboard.putNumber("rightPos", rightEncoder.getPosition());
         
     }
 

@@ -69,6 +69,8 @@ public class Vision extends SubsystemBase {
             double visYaw = target.getYaw();
             double visPitch = target.getPitch();
             boolean usable = Math.abs(visYaw) < 4.5;
+            canSeeTarget = true;
+
             if (usable) {
                 SmartDashboard.putNumber("visUpdate", Math.random());
                 double recentDistance = PhotonUtils.calculateDistanceToTargetMeters(
@@ -86,11 +88,10 @@ public class Vision extends SubsystemBase {
                         camToRobot);
 
                 SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(lastDistance));
-                SmartDashboard.putNumber("vis_dist", lastDistance);
+                //SmartDashboard.putNumber("vis_dist", lastDistance);
 
                 SmartDashboard.putNumber("vis_x", estPose.getX());
                 SmartDashboard.putNumber("vis_y", estPose.getY());
-                SmartDashboard.putNumber("vis_x2", targetToField.getX()-lastDistance+camToRobot.getX());
 
                 if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
                     drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
@@ -102,7 +103,6 @@ public class Vision extends SubsystemBase {
 
             }else{
                 distanceAverage.clear();
-                canSeeTarget = false;
             }
         } else {
             distanceAverage.clear();

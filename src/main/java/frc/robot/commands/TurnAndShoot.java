@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.nio.file.Path;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -12,6 +14,7 @@ import frc.robot.subsystems.Vision;
 
 public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
+    public static boolean currentlyRunning = false;
     private Drivetrain drivetrain;
     private Barrel barrel;
     private Vision vision;
@@ -20,6 +23,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     boolean done = false;
     boolean manual = false;
+    boolean manualEnd = false;
   
     /**
      * Take control of the drivetrain and barrel to take the shot
@@ -33,36 +37,52 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         this.barrel = barrel;
         this.vision = vision;
         this.timeout = timeout;
-        this.manual = timeout > 99999;
-        SmartDashboard.putNumber("sTilt", barrel.intakePos);
-        SmartDashboard.putNumber("sTop", 1000);
-        SmartDashboard.putNumber("sBottom", 1000);
-        SmartDashboard.putNumber("spin", 0.30);
+        this.manual = timeout == 30181;
+        this.manualEnd = timeout == 30182;
+        //SmartDashboard.putNumber("sTilt", barrel.intakePos);
+        //SmartDashboard.putNumber("sTop", 1000);
+        //SmartDashboard.putNumber("sBottom", 1000);
+        //SmartDashboard.putNumber("spin", 0.30);
 
         SmartDashboard.putBoolean("go", false);
+        addRequirements(barrel);
 
     }
+    
 
     @Override
     public void initialize() {
         this.endingTime = System.currentTimeMillis() + timeout;
+        currentlyRunning = true;
+        if(manual){
+            barrel.autoAdjustRPM = false;
+        }else{
+            barrel.autoAdjustRPM = true;
+
+        }
     }
     
     public void rotateTowardTarget() {
+        
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
         double correction = angleDiff*0.16; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
+        
+        if(vision.canSeeTarget && ShootingUtil.getCurrentLinearSpeed()<0.4){
+            angleDiff = -vision.bestTarget.getYaw();
+            correction = angleDiff*0.16;
+        }
         correction = Util.absClamp(correction, 10);
-
         drivetrain.setRotationSpeed(correction, 1);
-        rotateDone = Math.abs(angleDiff)<3;
+        rotateGood = Math.abs(angleDiff)<3;
         
     }
 
     double tilt = 76;
     double topRPM = 0;
     double bottomRPM = 0;
-    boolean rotateDone = false;
+    boolean rotateGood = false;
+    int timesRotGood = 0;
     @Override
     public void execute() {
 
@@ -98,23 +118,25 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         if(RobotContainer.leftJoystick.getRawButton(2)||!manual){
             rotateTowardTarget();
         }
-        if(rotateDone){
-            System.out.println("waiting");
-
+        if(rotateGood){
+            timesRotGood++;
+        }else{
+            timesRotGood = 0;
         }
-        boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<1;
-        if (barrel.readyToShoot() && rotateDone && speedGood && (RobotContainer.leftJoystick.getTrigger() || !manual)) {
+        boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<0.1 || RobotContainer.leftJoystick.getRawButton(10);
+        if (barrel.readyToShoot() && (rotateGood) && speedGood && (RobotContainer.leftJoystick.getRawButton(6) || !manual)) {
             barrel.shoot();
             System.out.println("shot");
             endingTime = System.currentTimeMillis() + 200;
+            new KeepMovingTime(drivetrain, drivetrain.getSpeeds(), 200);
         }
 
     }
 
     @Override
     public boolean isFinished() {
-        if(manual){
-            return false;
+        if(manualEnd){
+            return !RobotContainer.leftJoystick.getRawButton(6);
         }
         if (System.currentTimeMillis() > endingTime) {
             // cleanup here todo
@@ -125,6 +147,6 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     @Override
     public void end(boolean interrupted) {
-
+        currentlyRunning = false;
     }
 }
