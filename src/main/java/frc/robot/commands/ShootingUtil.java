@@ -19,12 +19,12 @@ public class ShootingUtil {
 
     private static double getOffsetPara(double distance, double magnitude){
         double x = 0;
-        double result = distance*magnitude;//CURVE:para
+        double result = 0*distance*magnitude;//CURVE:para
         return result;
     }
     private static double getOffsetPerp(double distance, double magnitude){
         double x = 0;
-        double result = 0;//CURVE:perp
+        double result = distance*magnitude;//CURVE:perp
         return result;
     }
     /**
@@ -43,7 +43,7 @@ public class ShootingUtil {
         Pose2d visionPose = vision.targetToField;
         Pose2d futurePose = currentPose;
 
-        ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
+        ChassisSpeeds currentSpeeds = Util.rotateSpeeds(drivetrain.getSpeeds(), -drivetrain.getGyroRadians());
         double distance = getCurrentDistance();
 
         EVector2d speedsVector = new EVector2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
@@ -52,11 +52,20 @@ public class ShootingUtil {
         normalVector.normalize();
         EVector2d perpPart = normalVector.times(speedsVector.dot(normalVector));
         EVector2d paraPart = speedsVector.minus(perpPart);
-        perpPart.multiply(getOffsetPerp(distance, perpPart.magnitude()));
-        paraPart.multiply(getOffsetPerp(distance, paraPart.magnitude()));
+        //System.out.println("normal"+normalVector);
+        //System.out.println("speeds"+speedsVector);
+        //System.out.println("dot"+speedsVector.dot(normalVector));
+
+        System.out.println("perp"+perpPart);
+        //System.out.println("para"+paraPart);
+        
+
+        perpPart.setMagnitude(getOffsetPerp(distance, perpPart.magnitude()));
+        paraPart.setMagnitude(getOffsetPara(distance, paraPart.magnitude()));
+        System.out.println("perp2"+perpPart);
 
         var transform = new Transform2d(new Translation2d(perpPart.x+paraPart.x, perpPart.y+paraPart.y), new Rotation2d());
-        futurePose.plus(transform);
+        //futurePose = futurePose.plus(transform);
 
         //perpPart.normalized().times();
 

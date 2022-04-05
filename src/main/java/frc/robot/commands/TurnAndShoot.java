@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.nio.file.Path;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -68,7 +69,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
         double correction = angleDiff*0.16; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
         
-        if(vision.canSeeTarget && ShootingUtil.getCurrentLinearSpeed()<0.4){
+        if(vision.canSeeTarget && ShootingUtil.getCurrentLinearSpeed()<0.1){
             angleDiff = -vision.bestTarget.getYaw();
             correction = angleDiff*0.16;
         }
@@ -128,7 +129,9 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             barrel.shoot();
             System.out.println("shot");
             endingTime = System.currentTimeMillis() + 200;
-            new KeepMovingTime(drivetrain, drivetrain.getSpeeds(), 200);
+            ChassisSpeeds localSpeeds = drivetrain.getSpeeds();
+
+            new KeepMovingTime(drivetrain, Util.rotateSpeeds(localSpeeds, -drivetrain.getGyroRadians()), 200);
         }
 
     }

@@ -8,18 +8,27 @@ import numpy as np
 from datetime import datetime
 
 class Curve:
-    def __init__(self, points, name):
+    def __init__(self, points, name multi=False):
         self.points = points
         self.name = name
         self.order = 2
+        self.multi = multi
         self.fit()
     def fit(self):
         if not self.points:return
-        x = [p[0] for p in self.points]
-        y = [p[1] for p in self.points]
-        self.line = np.poly1d(np.polyfit(x, y, self.order))
-        print(self.name)
-        print(self.get_expr())
+        if multi:
+            xs = [p[0] for p in self.points]
+            y = [p[1] for p in self.points]
+            self.line = multipolyfit(xs, y, self.order, full=False, model_out=False, powers_out=True)
+            print(self.line)
+            for i in self.line:
+                print(i)
+            
+        else:
+            x = [p[0] for p in self.points]
+            y = [p[1] for p in self.points]
+            self.line = np.poly1d(np.polyfit(x, y, self.order))
+
     def get_expr(self):
         terms = []
         exponent = len(self.line.c)-1
@@ -30,8 +39,7 @@ class Curve:
     def set_order(self, new_order):
         self.order = new_order
         self.fit()
-        
-        
+                
 def get_choice(title, choices):
     print(title)
     for i,c in enumerate(choices):

@@ -36,11 +36,20 @@ public class EVector2d extends Vector2d{
         x*=factor;
         y*=factor; 
     }
+    public void setMagnitude(double mag){
+        normalize();
+        multiply(mag);
+    }
     /**
      * returns new vector of this - other
      */
     public EVector2d minus(EVector2d other){
-        return new EVector2d(x-other.x, y*other.y);
+        return new EVector2d(x-other.x, y-other.y);
+    }
+
+    @Override
+    public String toString() {
+        return "("+x+", "+y+")";
     }
     
 }

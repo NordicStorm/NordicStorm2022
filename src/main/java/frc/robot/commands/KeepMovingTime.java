@@ -15,6 +15,7 @@ import java.util.List;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Util;
 import frc.robot.commands.paths.CommandPathPiece;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.Drivetrain;
@@ -36,9 +37,9 @@ public class KeepMovingTime extends CommandBase implements CommandPathPiece{
      * @param xSpeed
      * @param ySpeed
      */
-    public KeepMovingTime(Drivetrain drivetrain, ChassisSpeeds speeds, long timeout) {
+    public KeepMovingTime(Drivetrain drivetrain, ChassisSpeeds globalSpeeds, long timeout) {
 
-        this.speeds = speeds;
+        this.speeds = globalSpeeds;
         this.timeout=timeout;
         this.drivetrain= drivetrain;
         addRequirements(drivetrain);
@@ -56,8 +57,9 @@ public class KeepMovingTime extends CommandBase implements CommandPathPiece{
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        
-        drivetrain.limitDrive(speeds, 0);
+        ChassisSpeeds localSpeeds = Util.rotateSpeeds(speeds, drivetrain.getGyroRadians());
+
+        drivetrain.limitDrive(localSpeeds, 0);
         
 
     }

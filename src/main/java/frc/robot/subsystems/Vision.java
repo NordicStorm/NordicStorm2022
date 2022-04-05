@@ -93,11 +93,11 @@ public class Vision extends SubsystemBase {
                 SmartDashboard.putNumber("vis_x", estPose.getX());
                 SmartDashboard.putNumber("vis_y", estPose.getY());
 
-                if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
+                //if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
                     drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
-                }else{
-                    SmartDashboard.putString("Message", "Vision desync");
-                }
+                //}else{
+                //    SmartDashboard.putString("Message", "Vision desync");
+                //}
                 // System.out.println("dist "+);
                 hasSeenTarget = true;
 
