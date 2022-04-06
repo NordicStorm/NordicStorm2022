@@ -67,11 +67,11 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
-        double correction = angleDiff*0.16; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
+        double correction = angleDiff*0.13; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
         
-        if(vision.canSeeTarget && ShootingUtil.getCurrentLinearSpeed()<0.1){
+        if(vision.canSeeTarget){
             angleDiff = -vision.bestTarget.getYaw();
-            correction = angleDiff*0.16;
+            correction = angleDiff*0.13;
         }
         correction = Util.absClamp(correction, 10);
         drivetrain.setRotationSpeed(correction, 1);
@@ -141,6 +141,10 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         if(manualEnd){
             return !RobotContainer.leftJoystick.getRawButton(6);
         }
+        if(RobotContainer.rightJoystick.getRawButton(2)){
+            return true;
+        }
+        
         if (System.currentTimeMillis() > endingTime) {
             // cleanup here todo
             return true;

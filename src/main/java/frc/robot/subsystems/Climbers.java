@@ -10,6 +10,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -93,6 +94,9 @@ public class Climbers extends SubsystemBase {
         pid.setD(0, 1);
         
         spark.setIdleMode(IdleMode.kBrake);
+        
+        spark.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 503); 
+
 
     }
     private ProfiledPIDController makeProfiledPid(){

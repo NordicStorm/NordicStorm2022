@@ -92,7 +92,7 @@ public class ShootingUtil {
         double bottomTime = bottomRPMDiff*0.002;
         double tiltTime = tiltDiff*0.5;
         double turnTime = turnDiff*(1.4/180);
-        if(meters<=2.4){
+        if(meters<=1.5){
             turnTime = 99;
         }
         //System.out.println(topTime);

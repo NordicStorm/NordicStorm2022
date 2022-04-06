@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -52,6 +53,17 @@ public class Barrel extends SubsystemBase {
         bottomStage.setIdleMode(IdleMode.kBrake);
         topStage.enableVoltageCompensation(12);
         topStage.setIdleMode(IdleMode.kBrake);
+
+        bottomStage.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 505);
+        bottomStage.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 507);
+        bottomStage.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 509);
+        bottomStage.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 511);
+
+        topStage.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 513);
+        topStage.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 515);
+        topStage.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 517);
+
+
 
         screwEncoder.setPositionConversionFactor(0.296*360);
 

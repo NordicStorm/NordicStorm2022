@@ -86,11 +86,11 @@ public class Vision extends SubsystemBase {
                         Rotation2d.fromDegrees(-target.getYaw()), botRotation, targetToField,
                         camToRobot);
 
-                SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(lastDistance));
+                //SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(lastDistance));
                 //SmartDashboard.putNumber("vis_dist", lastDistance);
 
-                SmartDashboard.putNumber("vis_x", estPose.getX());
-                SmartDashboard.putNumber("vis_y", estPose.getY());
+                //SmartDashboard.putNumber("vis_x", estPose.getX());
+                //SmartDashboard.putNumber("vis_y", estPose.getY());
 
                 //if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
                     drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
