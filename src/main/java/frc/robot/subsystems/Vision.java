@@ -38,8 +38,7 @@ public class Vision extends SubsystemBase {
 
     public Vision() {
         camera = new PhotonCamera("picam");
-        setLight(true);
-        camera.setPipelineIndex(2);
+        resetCam();
     }
 
     private double lastDistance = 0;
@@ -170,5 +169,10 @@ public class Vision extends SubsystemBase {
                         gyroAngle),
                 fieldToTarget,
                 cameraToRobot);
+    }
+
+    public void resetCam() {
+        setLight(true);
+        camera.setPipelineIndex(1);
     }
 }

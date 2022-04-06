@@ -198,6 +198,7 @@ public class Barrel extends SubsystemBase {
     public final double intakePos = 71.5;
     double targetTilt = 0;
     double currentTiltAng = 0;
+    public boolean autoBarrel = true;
     private void updateTilt() {
         currentTiltAng = getTiltAngleFromSensor();
         if(targetTilt == 0){
@@ -207,12 +208,14 @@ public class Barrel extends SubsystemBase {
         double x = RobotContainer.leftJoystick.getZ();
 
         //setTiltAngle(Util.map(x, -1, 1, minAngle, maxAngle));
-
-        if(Math.abs(currentTiltAng-targetTilt)<1){
-            screw.set(0);
-        }else{
-            setTiltAngle(targetTilt);
+        if(autoBarrel){
+            if(Math.abs(currentTiltAng-targetTilt)<1){
+                screw.set(0);
+            }else{
+                setTiltAngle(targetTilt);
+            }
         }
+        
 
         //intakeHeight=79.4 degrees
         
@@ -222,7 +225,7 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private final double angleOffset = (178-37.5);//36.5
+   private final double angleOffset = (178-35.5);//36.5
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.
@@ -252,6 +255,10 @@ public class Barrel extends SubsystemBase {
      */
     public double getTiltAngle(){
         return currentTiltAng;
+    }
+
+    public void rawScrew(double power){
+        screw.set(power);
     }
     
     //Shooter stuff

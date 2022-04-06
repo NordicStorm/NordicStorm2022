@@ -8,7 +8,7 @@ import numpy as np
 from datetime import datetime
 
 class Curve:
-    def __init__(self, points, name multi=False):
+    def __init__(self, points, name, multi=False):
         self.points = points
         self.name = name
         self.order = 2
@@ -16,7 +16,7 @@ class Curve:
         self.fit()
     def fit(self):
         if not self.points:return
-        if multi:
+        if self.multi:
             xs = [p[0] for p in self.points]
             y = [p[1] for p in self.points]
             self.line = multipolyfit(xs, y, self.order, full=False, model_out=False, powers_out=True)

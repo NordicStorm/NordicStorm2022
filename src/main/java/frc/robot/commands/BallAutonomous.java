@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.paths.DrivetrainConfig;
 import frc.robot.commands.paths.FullStopPiece;
@@ -22,6 +23,8 @@ public class BallAutonomous extends AutoWithInit{
     public void initializeCommands() {
 // !PATHWEAVER_INFO: {"trackWidth":0.9271,"gameName":"Rapid React","outputDir":"C:\\Users\\Nordic Storm 3018\\FRC\\NordicStorm2022\\src\\main\\java\\frc\\robot\\commands\\BallAutonomous.java"}
         //36.5 inch / 2 = 0.46355 m
+        boolean is4Ball = SmartDashboard.getBoolean("Is4Ball?", true);
+        vision.resetCam();
         double halfWidth = 0.46355;
         barrel.setTiltAngle(barrel.intakePos);
         drivetrain.resetAngle();
@@ -29,7 +32,7 @@ public class BallAutonomous extends AutoWithInit{
         config.maxVelocity = 4;
         config.maxAcceleration = 4;
         config.maxCentripetalAcceleration = 11;
-        if(true){
+        if(is4Ball){
             config.maxVelocity = 5;
             config.maxAcceleration = 5;
             drivetrain.setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
@@ -61,14 +64,13 @@ public class BallAutonomous extends AutoWithInit{
             pathA.addWaypoint(4.842, 1.454);
             pathA.addWaypoint(6.348, 1.926);
             pathA.stop();
-            pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.351,2.041
+            pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 9000));//ENDPOS:6.351,2.041
             pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.471,2.101
     
             pathA.stop();
             
             addCommands(pathA.finalizePath());
-        }
-        if(false){
+        }else {
             drivetrain.setPose(5.74,4.41517, 0);
             drivetrain.setAngleOffset(-180);
 
@@ -91,8 +93,8 @@ public class BallAutonomous extends AutoWithInit{
             pathB.addWaypoint(3.512, 3.754);
             pathB.addWaypoint(5.860, 4.162);
             pathB.stop();
-            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.315,4.365
-
+            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 9000));//ENDPOS:6.315,4.365
+            pathB.stop();
             addCommands(pathB.finalizePath());
 
         }

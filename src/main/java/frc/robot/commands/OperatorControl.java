@@ -37,6 +37,7 @@ public class OperatorControl extends CommandBase {
     public void initialize() {
         
     }
+    boolean climbingUnlocked = false;
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -69,20 +70,39 @@ public class OperatorControl extends CommandBase {
         
         
         drivetrain.limitDrive(localSpeeds, 0);
-        barrel.setIntake(leftStick.getRawButton(4) || rightStick.getRawButton(6));
-        boolean botReady = ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !TurnAndShoot.currentlyRunning;
+        barrel.setIntake(leftStick.getRawButton(4) || rightStick.getRawButton(3));
+        boolean botReady = ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !TurnAndShoot.currentlyRunning && !climbingUnlocked;
         if((botReady && !rightStick.getRawButton(2))){
-            //new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(true);
+            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(true);
         }
-        if(leftStick.getRawButton(10)){
+        if(leftStick.getRawButton(11)){
 
-            new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 2, 0), 1000).schedule(true);
+            //new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 2, 0), 1000).schedule(true);
         }
         if(leftStick.getRawButton(1) && !TurnAndShoot.currentlyRunning){
             new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(false);
         }
-    }
 
+        if(leftStick.getRawButton(7) && leftStick.getRawButton(10)){
+            barrel.setTiltAngle(barrel.maxAngle);
+            barrel.autoAdjustRPM = false;
+            barrel.setFlywheelsRaw(0, 0);
+            if(!climbingUnlocked){
+                new WaitTime(2000).andThen(new RawBarrelForTime(barrel, 0.5, 500)).schedule();
+            }
+            climbingUnlocked = true;
+
+        }
+        if(climbingUnlocked){
+            climbers.setRaw(-Util.leftDebug());
+        }
+        if(rightStick.getRawButton(9) && rightStick.getRawButton(10)){
+            climbingUnlocked = false;
+            barrel.autoBarrel = true;
+            barrel.autoAdjustRPM = true;
+
+        }
+    }
     @Override
     public boolean runsWhenDisabled() {
         return true;

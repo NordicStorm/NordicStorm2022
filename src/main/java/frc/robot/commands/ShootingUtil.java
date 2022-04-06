@@ -56,15 +56,16 @@ public class ShootingUtil {
         //System.out.println("speeds"+speedsVector);
         //System.out.println("dot"+speedsVector.dot(normalVector));
 
-        System.out.println("perp"+perpPart);
+        //System.out.println("perp"+perpPart);
         //System.out.println("para"+paraPart);
         
 
         perpPart.setMagnitude(getOffsetPerp(distance, perpPart.magnitude()));
         paraPart.setMagnitude(getOffsetPara(distance, paraPart.magnitude()));
-        System.out.println("perp2"+perpPart);
+        //System.out.println("perp2"+perpPart);
 
         var transform = new Transform2d(new Translation2d(perpPart.x+paraPart.x, perpPart.y+paraPart.y), new Rotation2d());
+        transform = new Transform2d(new Translation2d(), new Rotation2d());
         //futurePose = futurePose.plus(transform);
 
         //perpPart.normalized().times();
@@ -90,7 +91,10 @@ public class ShootingUtil {
         double topTime = topRPMDiff * 0.002;
         double bottomTime = bottomRPMDiff*0.002;
         double tiltTime = tiltDiff*0.5;
-        double turnTime = turnDiff*(1.0/180);
+        double turnTime = turnDiff*(1.4/180);
+        if(meters<=2.4){
+            turnTime = 99;
+        }
         //System.out.println(topTime);
         //System.out.println(bottomTime);
         //System.out.println(tiltTime);

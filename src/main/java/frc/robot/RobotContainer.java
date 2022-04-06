@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.BallAutonomous;
 import frc.robot.commands.FollowBall;
@@ -56,6 +57,11 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         CommandScheduler.getInstance().setDefaultCommand(drivetrain, new OperatorControl(drivetrain, barrel, climbers, vision));
+        configureAutoOps();
+    }
+    
+    private void configureAutoOps(){
+        SmartDashboard.putBoolean("Is4Ball?", true);
     }
 
     /**
@@ -77,12 +83,23 @@ public class RobotContainer {
               return true;
             }
           });
-        new JoystickButton(rightJoystick, 9).whenPressed(new InstantCommand(){
+        new JoystickButton(rightJoystick, 11).whenPressed(new InstantCommand(){
             @Override
             public void execute() {
                 for(int i = 0; i<600; ++i){
                     drivetrain.drive(0, 0, 0);
                 }
+            }
+            @Override
+            public boolean runsWhenDisabled() {
+              return true;
+            }
+          });
+        new JoystickButton(rightJoystick, 7).whenPressed(new InstantCommand(){
+            @Override
+            public void execute() {
+                configureAutoOps();
+                vision.resetCam();
             }
             @Override
             public boolean runsWhenDisabled() {
