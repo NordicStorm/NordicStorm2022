@@ -70,7 +70,7 @@ public class OperatorControl extends CommandBase {
         
         
         drivetrain.limitDrive(localSpeeds, 0);
-        barrel.setIntake(leftStick.getRawButton(4) || rightStick.getRawButton(3));
+        barrel.setIntake(leftStick.getRawButton(4) || rightStick.getRawButton(3) || rightStick.getRawButton(6));
         boolean botReady = ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !TurnAndShoot.currentlyRunning && !climbingUnlocked;
         if((botReady && !rightStick.getRawButton(2))){
             new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(true);
@@ -94,7 +94,7 @@ public class OperatorControl extends CommandBase {
 
         }
         if(climbingUnlocked){
-            climbers.setRaw(-Util.leftDebug());
+            climbers.setRaw(Util.leftDebug());
         }
         if(rightStick.getRawButton(9) && rightStick.getRawButton(10)){
             climbingUnlocked = false;
@@ -105,6 +105,6 @@ public class OperatorControl extends CommandBase {
     }
     @Override
     public boolean runsWhenDisabled() {
-        return true;
+        return false;
     }
 }

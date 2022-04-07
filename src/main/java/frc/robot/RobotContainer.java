@@ -86,9 +86,7 @@ public class RobotContainer {
         new JoystickButton(rightJoystick, 11).whenPressed(new InstantCommand(){
             @Override
             public void execute() {
-                for(int i = 0; i<600; ++i){
-                    drivetrain.drive(0, 0, 0);
-                }
+                drivetrain.resetSwerve();
             }
             @Override
             public boolean runsWhenDisabled() {
@@ -107,7 +105,7 @@ public class RobotContainer {
             }
           });
         new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2, drivetrain.myBallColor, 2));
-        /*new JoystickButton(rightJoystick, 7).whenPressed(new InstantCommand(){
+        /*new JoystickButton(rightJoystick, 10).whenPressed(new InstantCommand(){
             @Override
             public void initialize() {
                 MultiPartPath path = new MultiPartPath(drivetrain);

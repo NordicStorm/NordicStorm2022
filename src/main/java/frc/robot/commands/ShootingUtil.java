@@ -94,7 +94,11 @@ public class ShootingUtil {
         double turnTime = turnDiff*(1.4/180);
         if(meters<=1.5){
             turnTime = 99;
+        }else{
+
         }
+        SmartDashboard.putNumber("ShootingRange", meters);
+
         //System.out.println(topTime);
         //System.out.println(bottomTime);
         //System.out.println(tiltTime);

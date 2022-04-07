@@ -23,6 +23,8 @@ public class BallAutonomous extends AutoWithInit{
     public void initializeCommands() {
 // !PATHWEAVER_INFO: {"trackWidth":0.9271,"gameName":"Rapid React","outputDir":"C:\\Users\\Nordic Storm 3018\\FRC\\NordicStorm2022\\src\\main\\java\\frc\\robot\\commands\\BallAutonomous.java"}
         //36.5 inch / 2 = 0.46355 m
+        //drivetrain.resetSwerve();
+
         boolean is4Ball = SmartDashboard.getBoolean("Is4Ball?", true);
         vision.resetCam();
         double halfWidth = 0.46355;
@@ -33,8 +35,8 @@ public class BallAutonomous extends AutoWithInit{
         config.maxAcceleration = 4;
         config.maxCentripetalAcceleration = 11;
         if(is4Ball){
-            config.maxVelocity = 5;
-            config.maxAcceleration = 5;
+            config.maxVelocity = 4;
+            config.maxAcceleration = 4;
             drivetrain.setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
             drivetrain.setAngleOffset(-90);
 
@@ -86,12 +88,12 @@ public class BallAutonomous extends AutoWithInit{
             pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.148,4.581
             pathB.setHeading(-135);
             pathB.addWaypoint(2.793, 4.042);
-            pathB.addWaypoint(2.374, 2.221);
-            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:1.284,1.215
+            pathB.addWaypoint(1.751, 2.568);
+            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:0.961,1.802
             pathB.setHeading(-180);
-            pathB.addWaypoint(2.530, 2.245);
-            pathB.addWaypoint(3.512, 3.754);
-            pathB.addWaypoint(5.860, 4.162);
+            pathB.addWaypoint(1.931, 2.652);
+            pathB.addWaypoint(3.896, 4.245);
+            pathB.addWaypoint(5.824, 4.365);
             pathB.stop();
             pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 9000));//ENDPOS:6.315,4.365
             pathB.stop();

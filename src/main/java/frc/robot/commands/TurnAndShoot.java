@@ -124,8 +124,9 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         }else{
             timesRotGood = 0;
         }
+        //System.out.println(timesRotGood);
         boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<0.1;
-        if (barrel.readyToShoot() && (rotateGood) && speedGood && (RobotContainer.leftJoystick.getRawButton(6) || !manual)) {
+        if (barrel.readyToShoot() && (timesRotGood>3) && speedGood && (RobotContainer.leftJoystick.getRawButton(6) || !manual)) {
             barrel.shoot();
             System.out.println("shot");
             endingTime = System.currentTimeMillis() + 200;

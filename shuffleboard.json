@@ -11,7 +11,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "3,0": {
+          "6,1": {
             "size": [
               1,
               1
@@ -22,7 +22,7 @@
               "_title": "driveAng"
             }
           },
-          "4,0": {
+          "5,1": {
             "size": [
               1,
               1
@@ -33,7 +33,7 @@
               "_title": "leftPos"
             }
           },
-          "1,1": {
+          "0,1": {
             "size": [
               1,
               1
@@ -46,29 +46,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "0,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/tiltang",
-              "_title": "tiltang"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/topShooterVelo",
-              "_title": "topShooterVelo"
-            }
-          },
-          "1,0": {
+          "0,0": {
             "size": [
               1,
               1
@@ -81,109 +59,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "2,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///SmartDashboard/visUpdate",
-              "_title": "visUpdate",
-              "Range/Min": 0.0,
-              "Range/Max": 1.0,
-              "Visuals/Show value": true
-            }
-          },
-          "3,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/vis_dist",
-              "_title": "vis_dist"
-            }
-          },
-          "4,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/vis_x",
-              "_title": "vis_x"
-            }
-          },
-          "5,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/vis_y",
-              "_title": "vis_y"
-            }
-          },
-          "4,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/sTilt",
-              "_title": "sTilt"
-            }
-          },
-          "5,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/sTop",
-              "_title": "sTop"
-            }
-          },
           "6,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/sBottom",
-              "_title": "sBottom"
-            }
-          },
-          "7,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Toggle Button",
-              "_source0": "network_table:///SmartDashboard/go",
-              "_title": "go"
-            }
-          },
-          "3,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/csv",
-              "_title": "csv"
-            }
-          },
-          "1,3": {
             "size": [
               1,
               1
@@ -194,7 +70,7 @@
               "_title": "vis_dist_in"
             }
           },
-          "0,0": {
+          "1,1": {
             "size": [
               1,
               1
@@ -203,50 +79,6 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Pixy Num",
               "_title": "Pixy Num"
-            }
-          },
-          "2,3": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/spin",
-              "_title": "spin"
-            }
-          },
-          "5,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/bottomShooterVelo",
-              "_title": "bottomShooterVelo"
-            }
-          },
-          "3,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///photonvision/picam/latencyMillis",
-              "_title": "photonvision/picam/latencyMillis"
-            }
-          },
-          "5,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/odo_x",
-              "_title": "SmartDashboard/odo_x"
             }
           },
           "6,0": {
@@ -260,15 +92,147 @@
               "_title": "odo_y"
             }
           },
-          "8,0": {
+          "5,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Message",
-              "_title": "Message"
+              "_source0": "network_table:///SmartDashboard/odo_x",
+              "_title": "odo_x"
+            }
+          },
+          "0,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///SmartDashboard/ShootingRange",
+              "_title": "ShootingRange",
+              "Range/Min": 1.5,
+              "Range/Max": 8.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///photonvision/picam/latencyMillis",
+              "_title": "photonvision/picam/latencyMillis"
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/visUpdate",
+              "_title": "visUpdate",
+              "Range/Min": 0.0,
+              "Range/Max": 1.0,
+              "Visuals/Show value": true
+            }
+          },
+          "7,0": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/Is4Ball?",
+                  "_title": "Is4Ball?"
+                }
+              ]
+            }
+          },
+          "4,0": {
+            "size": [
+              1,
+              2
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "List Layout",
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/bottomShooterVelo",
+                  "_title": "bottomShooterVelo"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/topShooterVelo",
+                  "_title": "topShooterVelo"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/tiltang",
+                  "_title": "tiltang"
+                }
+              ]
+            }
+          },
+          "7,2": {
+            "size": [
+              2,
+              2
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Grid Layout",
+              "Layout/Number of columns": 2,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "BOTTOM",
+              "_children": {
+                "0,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/sBottom",
+                  "_title": "sBottom"
+                },
+                "0,1": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/sTop",
+                  "_title": "sTop"
+                },
+                "1,0": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/sTilt",
+                  "_title": "sTilt"
+                },
+                "1,1": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/spin",
+                  "_title": "spin"
+                },
+                "0,2": {
+                  "_type": "Toggle Button",
+                  "_source0": "network_table:///SmartDashboard/go",
+                  "_title": "go"
+                },
+                "1,2": {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/csv",
+                  "_title": "csv"
+                }
+              }
             }
           }
         }

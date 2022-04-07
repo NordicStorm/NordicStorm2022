@@ -32,7 +32,7 @@ import frc.robot.commands.paths.PathPiece.PieceType;
  * <p>
  * It's like you are looking at the field from the stands.
  * <p>
- * In all cases, angle is in degrees. Positive = counterclockwise.
+ * In most cases, angle is in degrees. Positive = counterclockwise.
  */
 public class MultiPartPath {
 

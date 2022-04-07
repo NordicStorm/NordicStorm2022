@@ -61,13 +61,13 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         Pose2d currentPose = drivetrain.getPose();
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
         double speed = PathUtil.linearSpeedFromChassisSpeeds(currentSpeeds);
-        ChassisSpeeds globalSpeeds = PathUtil.rotateSpeeds(currentSpeeds, drivetrain.getGyroRadians());
+        ChassisSpeeds globalSpeeds = PathUtil.rotateSpeeds(currentSpeeds, -drivetrain.getGyroRadians());
         List<Translation2d> interiorPoints = new ArrayList<>();
         Rotation2d startMovementDirection = null;
 
         var end = waypoints.get(waypoints.size() - 1);
         var endPosition = end.getPoint();
-        if (Math.abs(speed) < 0.3) {
+        if (Math.abs(speed) < 1) {
             Translation2d firstPoint; // calculate the direction from the second-to-last to the last point.
 
             if(interiorPoints.size()>0){
@@ -79,11 +79,11 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
 
         } else {
             // the time to stop times 1/2 to allow curve
-            double futureMultiplier = 0.5/drivetrainConfig.maxAcceleration; 
+            double futureMultiplier = 2.5/drivetrainConfig.maxAcceleration; 
             Pose2d futurePose = currentPose
                     .plus(new Transform2d(new Translation2d(globalSpeeds.vxMetersPerSecond * futureMultiplier,
                             globalSpeeds.vyMetersPerSecond * futureMultiplier), new Rotation2d()));
-            interiorPoints.add(futurePose.getTranslation());
+            //interiorPoints.add(futurePose.getTranslation());
             startMovementDirection = new Rotation2d(globalSpeeds.vxMetersPerSecond, globalSpeeds.vyMetersPerSecond);
         }
         currentPose = new Pose2d(currentPose.getTranslation(), startMovementDirection);
@@ -136,7 +136,10 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
                 new PIDController(drivetrainConfig.positionCorrectionP, drivetrainConfig.positionCorrectionI,
                         drivetrainConfig.positionCorrectionD),
                 path.getRotationController()); // uses the path's rotation controller for consistency
-
+        controller.setTolerance(new Pose2d(
+                    new Translation2d(drivetrainConfig.endOfTrajectoryPositionTolerance,
+                            drivetrainConfig.endOfTrajectoryPositionTolerance),
+                    new Rotation2d(drivetrainConfig.endOfTrajectoryAngleTolerance)));
         startTime = System.currentTimeMillis();
 
     }
@@ -167,10 +170,7 @@ public class TrajectoryFollowPiece extends CommandBase implements CommandPathPie
         drivetrain.drive(speeds);
         //System.out.println(speeds);
         if (timeProgressSeconds >= trajectory.getTotalTimeSeconds()) {
-            controller.setTolerance(new Pose2d(
-                    new Translation2d(drivetrainConfig.endOfTrajectoryPositionTolerance,
-                            drivetrainConfig.endOfTrajectoryPositionTolerance),
-                    new Rotation2d(drivetrainConfig.endOfTrajectoryAngleTolerance)));
+            
             if (controller.atReference()) {
                 done = true;
             }

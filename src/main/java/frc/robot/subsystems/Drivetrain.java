@@ -221,7 +221,6 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
 
     @Override
     public void periodic() {
-        drivetrainConfig.maxAcceleration = SmartDashboard.getNumber("MaxAccel", 0);
 
         for(int i = 0; i<swerveModules.size(); i++){
             currentSwerveStates[i]=Util.stateFromModule(swerveModules.get(i));
@@ -235,12 +234,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         SmartDashboard.putNumber("odo_y", pose.getY());
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         SmartDashboard.putNumber("Pixy Num", FollowBall.countTargets( pixy.readObjects(), myBallColor));
-        if (RobotContainer.rightJoystick.getRawButton(8)) {
-            //setPose(0, 0, 0);
-            double halfWidth = 0.46355;
-            setPose(7.1882+halfWidth, 1.343025+halfWidth, 0);
-
-        }
+  
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
         }
@@ -388,6 +382,12 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     public void setPose(Pose2d pose) {
         setPose(pose.getX(), pose.getY(), pose.getRotation().getRadians());
         
+    }
+
+    public void resetSwerve(){
+        for(int i = 0; i<600; ++i){
+            driveActualMotors(new ChassisSpeeds());
+        }
     }
 
 
