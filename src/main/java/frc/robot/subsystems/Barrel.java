@@ -77,8 +77,7 @@ public class Barrel extends SubsystemBase {
         //screw.burnFlash();
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
-        
-        
+        SmartDashboard.putNumber("tiltOffset", angleOffset);
         
     }
 
@@ -212,6 +211,8 @@ public class Barrel extends SubsystemBase {
     double currentTiltAng = 0;
     public boolean autoBarrel = true;
     private void updateTilt() {
+        angleOffset = SmartDashboard.getNumber("tiltOffset", angleOffset);
+
         currentTiltAng = getTiltAngleFromSensor();
         if(targetTilt == 0){
             targetTilt = currentTiltAng;
@@ -237,7 +238,8 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private final double angleOffset = (178-35.5);//36.5
+   private double angleOffset = (178-43.0);//36.5
+   // increasing the subtraction moves the barrel up
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.

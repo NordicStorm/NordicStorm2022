@@ -98,7 +98,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         
         double aspect = ((double) possible.width) / possible.height;
         if(possible.y<50){
-            //return false;
+            return false;
         }
         if (alreadyTracking) {
             if (aspect >= abortMaxAspect && possible.y < 160) {

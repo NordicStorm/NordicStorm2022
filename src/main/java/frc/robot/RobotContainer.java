@@ -62,6 +62,9 @@ public class RobotContainer {
     
     private void configureAutoOps(){
         SmartDashboard.putBoolean("Is4Ball?", true);
+        SmartDashboard.putBoolean("DoAuto?", true);
+        SmartDashboard.getBoolean("DoLastBall?", true);
+
     }
 
     /**
@@ -97,7 +100,7 @@ public class RobotContainer {
             @Override
             public void execute() {
                 configureAutoOps();
-                vision.resetCam();
+                //vision.resetCam();
             }
             @Override
             public boolean runsWhenDisabled() {
@@ -114,7 +117,7 @@ public class RobotContainer {
                 path.finalizePath().schedule();
             }
         }, true);*/
-        //new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181), false);
+        new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181), false);
 
     }
 

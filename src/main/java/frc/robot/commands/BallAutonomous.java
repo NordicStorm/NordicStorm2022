@@ -26,7 +26,13 @@ public class BallAutonomous extends AutoWithInit{
         //drivetrain.resetSwerve();
 
         boolean is4Ball = SmartDashboard.getBoolean("Is4Ball?", true);
-        vision.resetCam();
+        boolean doAnything = SmartDashboard.getBoolean("DoAuto?", true);
+        boolean doLastBall = SmartDashboard.getBoolean("DoLastBall?", true);
+
+        if(!doAnything){
+            return;
+        }
+        //vision.resetCam();
         double halfWidth = 0.46355;
         barrel.setTiltAngle(barrel.intakePos);
         drivetrain.resetAngle();
@@ -46,7 +52,7 @@ public class BallAutonomous extends AutoWithInit{
             pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.717,1.874
             pathA.setHeading(-90);
             pathA.addWaypoint(7.669, 1.514);
-            pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1));//ENDPOS:7.621,0.220
+            pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1).withTimeout(5), 1);//ENDPOS:7.621,0.220
             pathA.setHeading(-120);
             pathA.addWaypoint(7.130, 1.538);
             pathA.stop();
@@ -57,7 +63,7 @@ public class BallAutonomous extends AutoWithInit{
             pathA.addWaypoint(6.555, 1.538);
             pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2));//ENDPOS:4.734,2.053
             //pathA.stop();
-            //pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:4.507,2.113
+
             pathA.setHeading(-135);
             
             pathA.addWaypoint(2.140, 2.294);
@@ -80,22 +86,26 @@ public class BallAutonomous extends AutoWithInit{
             pathB = new MultiPartPath(drivetrain, config, null);
             pathB.addSequentialCommand(new FullStopPiece(pathB, 1));//ENDPOS:5.950,4.578
             pathB.setHeading(-180);
+            
             pathB.addWaypoint(6.232, 6.126);
-            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2));//ENDPOS:4.614,6.210
-            pathB.addWaypoint(6.555, 4.868);
+            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2).withTimeout(5), 1);//ENDPOS:4.614,6.210
+            pathB.addWaypoint(5.453, 4.964);
             pathB.stop();
-            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.267,4.569
-            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:6.148,4.581
-            pathB.setHeading(-135);
-            pathB.addWaypoint(2.793, 4.042);
-            pathB.addWaypoint(1.751, 2.568);
-            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:0.961,1.802
-            pathB.setHeading(-180);
-            pathB.addWaypoint(1.931, 2.652);
-            pathB.addWaypoint(3.896, 4.245);
-            pathB.addWaypoint(5.824, 4.365);
-            pathB.stop();
-            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 9000));//ENDPOS:6.315,4.365
+            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:5.417,4.665
+            pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000));//ENDPOS:5.333,4.629
+            if(doLastBall){
+                pathB.setHeading(-135);
+                pathB.addWaypoint(2.793, 4.042);
+                pathB.addWaypoint(0.637, 2.556);
+                pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:0.278,1.921
+                pathB.setHeading(-180);
+                pathB.addWaypoint(1.224, 3.119);
+                pathB.addWaypoint(3.896, 4.245);
+                pathB.addWaypoint(5.824, 4.365);
+                pathB.stop();
+                pathB.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 9000));//ENDPOS:6.315,4.365
+            }
+            
             pathB.stop();
             addCommands(pathB.finalizePath());
 

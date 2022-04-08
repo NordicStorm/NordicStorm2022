@@ -38,7 +38,8 @@ public class Vision extends SubsystemBase {
 
     public Vision() {
         camera = new PhotonCamera("picam");
-        resetCam();
+        setLight(true);
+
     }
 
     private double lastDistance = 0;
@@ -173,6 +174,6 @@ public class Vision extends SubsystemBase {
 
     public void resetCam() {
         setLight(true);
-        camera.setPipelineIndex(1);
+        camera.setPipelineIndex(2);
     }
 }

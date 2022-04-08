@@ -112,8 +112,8 @@
               "_type": "Number Bar",
               "_source0": "network_table:///SmartDashboard/ShootingRange",
               "_title": "ShootingRange",
-              "Range/Min": 1.5,
-              "Range/Max": 8.0,
+              "Range/Min": 1.0,
+              "Range/Max": 11.0,
               "Range/Center": 0.0,
               "Visuals/Num tick marks": 5,
               "Visuals/Show text": true
@@ -151,13 +151,18 @@
             ],
             "content": {
               "_type": "List Layout",
-              "_title": "List Layout",
+              "_title": "Auto Config",
               "Layout/Label position": "BOTTOM",
               "_children": [
                 {
                   "_type": "Toggle Switch",
                   "_source0": "network_table:///SmartDashboard/Is4Ball?",
                   "_title": "Is4Ball?"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/DoAuto?",
+                  "_title": "DoAuto?"
                 }
               ]
             }
@@ -234,73 +239,23 @@
                 }
               }
             }
+          },
+          "2,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///SmartDashboard/tiltOffset",
+              "_title": "tiltOffset",
+              "Slider Settings/Min": 120.0,
+              "Slider Settings/Max": 150.0,
+              "Slider Settings/Block increment": 0.5,
+              "Visuals/Display value": true
+            }
           }
         }
-      }
-    },
-    {
-      "title": "Tab 2",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {}
-      }
-    },
-    {
-      "title": "Tab 3",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {}
-      }
-    },
-    {
-      "title": "Tab 4",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {}
-      }
-    },
-    {
-      "title": "Tab 5",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {}
-      }
-    },
-    {
-      "title": "Tab 6",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 128.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {}
       }
     },
     {
@@ -318,9 +273,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.333333492279053,
-    "y": -7.333333492279053,
-    "width": 1294.6666259765625,
-    "height": 694.6666870117188
+    "x": -6.666666507720947,
+    "y": 1.3333333730697632,
+    "width": 1292.0,
+    "height": 685.3333129882812
   }
 }

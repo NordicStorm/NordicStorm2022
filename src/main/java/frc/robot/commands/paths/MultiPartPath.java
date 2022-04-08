@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -89,6 +90,14 @@ public class MultiPartPath {
 
     public void addSequentialCommand(CommandPathPiece command) {
         pieces.add(new Pair<>(command, true));
+    }
+    
+    /**
+     * Wraps a plain command so it can be used in the path
+     * @param command
+     */
+    public void addSequentialCommand(Command command, double startSpeed) {
+        addSequentialCommand(new PathPieceWrapper(command, startSpeed));
     }
     /**
      * If the piece will not have an effect on the trajectory, so it can keep going.
@@ -248,4 +257,5 @@ public class MultiPartPath {
     public ProfiledPIDController getRotationController() {
         return rotationController;
     }
+
 }

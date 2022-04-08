@@ -32,7 +32,8 @@ public class ShootingUtil {
      * @return
      */
     public static double getCurrentDistance(){
-        return Util.distance(drivetrain.getPose(), vision.targetToField)-0.35;
+        double realDist = Util.distance(drivetrain.getPose(), vision.targetToField)-0.35;
+        return realDist - 0.3048;
     }
     public static double getCurrentLinearSpeed(){
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();
@@ -92,7 +93,7 @@ public class ShootingUtil {
         double bottomTime = bottomRPMDiff*0.002;
         double tiltTime = tiltDiff*0.5;
         double turnTime = turnDiff*(1.4/180);
-        if(meters<=1.5){
+        if(meters<=1.0){
             turnTime = 99;
         }else{
 

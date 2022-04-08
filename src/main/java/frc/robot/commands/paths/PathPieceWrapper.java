@@ -11,14 +11,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class PathPieceWrapper extends SequentialCommandGroup implements CommandPathPiece {
 
     private double startSpeed;
-    private boolean interruptsTrajectory;
-    public PathPieceWrapper(Command command, boolean interruptsTrajectory, double startSpeed) {
+    public PathPieceWrapper(Command command, double startSpeed) {
         this.startSpeed = startSpeed;
-        this.interruptsTrajectory = interruptsTrajectory;
         addCommands(command);
     }
 
-
+    
     @Override
     public double getRequestedStartSpeed() {
         return startSpeed;
