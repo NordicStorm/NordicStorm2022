@@ -102,7 +102,7 @@ public class Barrel extends SubsystemBase {
     long topIntakeDuration = 500;
     long topHandoffDuration = 500;
     long topHandoffDeadzone = topHandoffDuration - 200;
-    long topShiftDuration = 50;
+    long topShiftDuration = 0;
 
     boolean topBallAvailable = false;
 
@@ -118,7 +118,7 @@ public class Barrel extends SubsystemBase {
         boolean bottomBall = bottomSensor.get();
         boolean topBall = topSensor.get();
         double topVelo = topStageEncoder.getVelocity();
-        boolean topIsOpen = (!topBall) && topVelo<100; // we can move a ball into top if there is not a ball there and it is not spinning fast
+        boolean topIsOpen = (!topBall) && topVelo<5; // we can move a ball into top if there is not a ball there and it is not spinning fast
         long now = System.currentTimeMillis();
         boolean runBottom = false;
         double desTopSpeed = 0;
@@ -238,8 +238,8 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private double angleOffset = (178-43.0);//36.5
-   // increasing the subtraction moves the barrel up
+   private double angleOffset = 150.18; //(178-39.0);//36.5
+   // increasing the offset moves the barrel down
     /**
      * 
      * @param angle the angle in degrees, where 90 would be straight up.

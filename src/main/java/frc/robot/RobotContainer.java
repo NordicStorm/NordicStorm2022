@@ -63,7 +63,8 @@ public class RobotContainer {
     private void configureAutoOps(){
         SmartDashboard.putBoolean("Is4Ball?", true);
         SmartDashboard.putBoolean("DoAuto?", true);
-        SmartDashboard.getBoolean("DoLastBall?", true);
+        SmartDashboard.putBoolean("DoLastBall?", true);
+        SmartDashboard.putBoolean("SingleBall?", false);
 
     }
 

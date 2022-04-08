@@ -73,7 +73,7 @@ public class OperatorControl extends CommandBase {
         barrel.setIntake(leftStick.getRawButton(4) || rightStick.getRawButton(3) || rightStick.getRawButton(6));
         boolean botReady = ShootingUtil.getTimeToReady()<1 && barrel.ballAvailableToShoot() && !TurnAndShoot.currentlyRunning && !climbingUnlocked;
         if((botReady && !rightStick.getRawButton(2))){
-            //new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(true);
+            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(true);
         }
        
         if(leftStick.getRawButton(1) && !TurnAndShoot.currentlyRunning){
@@ -85,7 +85,7 @@ public class OperatorControl extends CommandBase {
             barrel.autoAdjustRPM = false;
             barrel.setFlywheelsRaw(0, 0);
             if(!climbingUnlocked){
-                new WaitTime(2000).andThen(new RawBarrelForTime(barrel, 0.5, 500)).schedule();
+                new WaitTime(2000).andThen(new RawBarrelForTime(barrel, 0.5, 900)).schedule();
             }
             climbingUnlocked = true;
 

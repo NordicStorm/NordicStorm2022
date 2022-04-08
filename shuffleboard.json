@@ -163,6 +163,11 @@
                   "_type": "Toggle Switch",
                   "_source0": "network_table:///SmartDashboard/DoAuto?",
                   "_title": "DoAuto?"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/DoLastBall?",
+                  "_title": "DoLastBall?"
                 }
               ]
             }
@@ -249,10 +254,21 @@
               "_type": "Number Slider",
               "_source0": "network_table:///SmartDashboard/tiltOffset",
               "_title": "tiltOffset",
-              "Slider Settings/Min": 120.0,
-              "Slider Settings/Max": 150.0,
+              "Slider Settings/Min": 10.0,
+              "Slider Settings/Max": 170.0,
               "Slider Settings/Block increment": 0.5,
               "Visuals/Display value": true
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Switch",
+              "_source0": "network_table:///SmartDashboard/SingleBall?",
+              "_title": "SingleBall?"
             }
           }
         }

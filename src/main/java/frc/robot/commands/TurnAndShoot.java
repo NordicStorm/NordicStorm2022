@@ -59,8 +59,8 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             barrel.autoAdjustRPM = false;
         }else{
             barrel.autoAdjustRPM = true;
-
         }
+        shot = false;
     }
     
     public void rotateTowardTarget() {
@@ -84,6 +84,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     double bottomRPM = 0;
     boolean rotateGood = false;
     int timesRotGood = 0;
+    boolean shot;
     @Override
     public void execute() {
 
@@ -124,11 +125,13 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         }else{
             timesRotGood = 0;
         }
+        long timeLeft = endingTime - System.currentTimeMillis();
         //System.out.println(timesRotGood);
         boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<0.1;
-        if (barrel.readyToShoot() && (timesRotGood>3) && speedGood && (RobotContainer.leftJoystick.getRawButton(6) || !manual)) {
+        if (((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || timeLeft<200) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
             barrel.shoot();
             System.out.println("shot");
+            shot = true;
             endingTime = System.currentTimeMillis() + 200;
             ChassisSpeeds localSpeeds = drivetrain.getSpeeds();
 

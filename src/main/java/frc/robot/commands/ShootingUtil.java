@@ -59,7 +59,7 @@ public class ShootingUtil {
 
         //System.out.println("perp"+perpPart);
         //System.out.println("para"+paraPart);
-        
+
 
         perpPart.setMagnitude(getOffsetPerp(distance, perpPart.magnitude()));
         paraPart.setMagnitude(getOffsetPara(distance, paraPart.magnitude()));
@@ -117,13 +117,13 @@ public class ShootingUtil {
     public static double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = -24.315074989591913*x*x + 343.6695206772309*x + -51.1121162065523; //CURVE:TSPEED,08:33,04/04
+        double result = -29.015981207960365*x*x + 385.86924509992025*x + -124.1033746412483; //CURVE:TSPEED,09:27,04/08
         return result;
     }
     public static double getShootingBottomSpeed(double meters){
         double x = meters;
 
-        double result = -39.88863141712235*x*x + 506.87497948626964*x + 700.4528295966724; //CURVE:BSPEED,08:33,04/04
+        double result = -39.95027002454564*x*x + 507.42830519119434*x + 699.4957631684132; //CURVE:BSPEED,09:27,04/08
         return result;
     }
     /**
