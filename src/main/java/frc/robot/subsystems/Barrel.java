@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
+import frc.robot.commands.RollingAverage;
 import frc.robot.commands.ShootingUtil;
 
 public class Barrel extends SubsystemBase {
@@ -66,7 +67,7 @@ public class Barrel extends SubsystemBase {
 
 
         screwEncoder.setPositionConversionFactor(0.296*360);
-
+        screwEncoder.setVelocityConversionFactor(0.296*360);
         screw.enableVoltageCompensation(12);
         screw.setIdleMode(IdleMode.kBrake);
         screwPID.setFeedbackDevice(screwEncoder);
@@ -207,12 +208,15 @@ public class Barrel extends SubsystemBase {
     public final double maxAngle = 75.0;
     public final double minAngle = 20;
     public final double intakePos = 71.5;
+    public RollingAverage posAverage = new RollingAverage(5);
     double targetTilt = 0;
     double currentTiltAng = 0;
     public boolean autoBarrel = true;
     private void updateTilt() {
         angleOffset = SmartDashboard.getNumber("tiltOffset", angleOffset);
-
+        
+        posAverage.put(screwEncoder.getPosition());
+        
         currentTiltAng = getTiltAngleFromSensor();
         if(targetTilt == 0){
             targetTilt = currentTiltAng;
@@ -238,7 +242,7 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private double angleOffset = 150.18; //(178-39.0);//36.5
+   private double angleOffset = 151.80; //(178-39.0);//36.5
    // increasing the offset moves the barrel down
     /**
      * 
@@ -261,7 +265,12 @@ public class Barrel extends SubsystemBase {
      */
     private double getTiltAngleFromSensor(){
         
-        return screwEncoder.getPosition() - 1*angleOffset;
+        return getRawTiltAngle() - 1*angleOffset;
+    }
+
+    private double getRawTiltAngle(){
+        
+        return posAverage.get();
     }
    /**
      * 
@@ -291,7 +300,8 @@ public class Barrel extends SubsystemBase {
         double distance = ShootingUtil.getCurrentDistance();
         double topRPM = ShootingUtil.getShootingTopSpeed(distance);
         double bottomRPM = ShootingUtil.getShootingBottomSpeed(distance);
-            //topRPM = 5000;
+        SmartDashboard.putNumber("velot", getTiltVelocity());
+        //topRPM = 5000;
         if(autoAdjustRPM){
             setFlywheels(topRPM, bottomRPM);
         }
@@ -377,6 +387,16 @@ public class Barrel extends SubsystemBase {
 
     public boolean hasBottomBall() {
         return bottomSensor.get();
+    }
+
+    public void resetToPos(double pos) {
+        angleOffset = getRawTiltAngle()-pos;
+        SmartDashboard.putNumber("tiltOffset", angleOffset);
+    }
+
+    public double getTiltVelocity(){
+        
+        return screwEncoder.getVelocity();
     }
    
 

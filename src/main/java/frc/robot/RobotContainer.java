@@ -13,6 +13,7 @@ import frc.robot.commands.BallAutonomous;
 import frc.robot.commands.FollowBall;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.PathAuto;
+import frc.robot.commands.ResetBarrel;
 import frc.robot.commands.ShootingUtil;
 import frc.robot.commands.TurnAndShoot;
 import frc.robot.commands.paths.MultiPartPath;
@@ -58,6 +59,7 @@ public class RobotContainer {
         configureButtonBindings();
         CommandScheduler.getInstance().setDefaultCommand(drivetrain, new OperatorControl(drivetrain, barrel, climbers, vision));
         configureAutoOps();
+        
     }
     
     private void configureAutoOps(){
@@ -65,6 +67,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("DoAuto?", true);
         SmartDashboard.putBoolean("DoLastBall?", true);
         SmartDashboard.putBoolean("SingleBall?", false);
+        SmartDashboard.putData(new ResetBarrel(drivetrain, barrel, vision, 3000));
 
     }
 

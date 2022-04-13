@@ -270,6 +270,28 @@
               "_source0": "network_table:///SmartDashboard/SingleBall?",
               "_title": "SingleBall?"
             }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/velot",
+              "_title": "velot"
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/ResetBarrel",
+              "_title": "ResetBarrel"
+            }
           }
         }
       }
@@ -289,9 +311,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -6.666666507720947,
-    "y": 1.3333333730697632,
-    "width": 1292.0,
-    "height": 685.3333129882812
+    "x": -7.333333492279053,
+    "y": -7.333333492279053,
+    "width": 1294.6666259765625,
+    "height": 694.6666870117188
   }
 }
