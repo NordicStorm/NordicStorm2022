@@ -33,7 +33,7 @@ import frc.robot.commands.paths.PathPiece.PieceType;
  * <p>
  * It's like you are looking at the field from the stands.
  * <p>
- * In most cases, angle is in degrees. Positive = counterclockwise.
+ * In most cases, angle is in degrees. Positive = counterclockwise!
  */
 public class MultiPartPath {
 
@@ -46,6 +46,7 @@ public class MultiPartPath {
     ProfiledPIDController rotationController;
 
     private MultiPartPath parent;
+    
     //contains the piece and if it interrupts
     private List<Pair<PathPiece, Boolean>> pieces = new ArrayList<>();
     /**
@@ -102,7 +103,7 @@ public class MultiPartPath {
     /**
      * If the piece will not have an effect on the trajectory, so it can keep going.
      * You should use addSequentialCommand if it is an driving instruction, such as 
-     * following a ball.
+     * auto-following a ball.
      * 
      */
 

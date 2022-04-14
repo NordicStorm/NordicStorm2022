@@ -78,7 +78,7 @@ public class ShootingUtil {
         Pose2d futurePose = ShootingUtil.getFuturePose();
 
         double angleNeeded = Util.angleBetweenPoses(futurePose, vision.targetToField)+Math.PI;
-
+        
         return Math.toDegrees(angleNeeded);
 
     }
@@ -139,4 +139,6 @@ public class ShootingUtil {
         }
         return result;
     }
+
+    
 }
