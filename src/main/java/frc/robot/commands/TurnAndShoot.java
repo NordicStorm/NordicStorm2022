@@ -66,14 +66,16 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     public void rotateTowardTarget() {
         
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
+        double distance = ShootingUtil.getCurrentDistance();
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
-        double correction = angleDiff*0.13; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
+        double p = 0.12;
         
-        if(vision.canSeeTarget){
+        if(vision.canSeeTarget && distance>2.5){ // make sure we can see the whole target
             angleDiff = -vision.bestTarget.getYaw();
-            correction = angleDiff*0.13;
         }
-        correction = Util.absClamp(correction, 10);
+        double correction = angleDiff*p; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
+
+        correction = Util.absClamp(correction, 5);
         drivetrain.setRotationSpeed(correction, 1);
         rotateGood = Math.abs(angleDiff)<3;
         
@@ -129,7 +131,8 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         //System.out.println(timesRotGood);
         boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<0.1;
         if (((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || timeLeft<200) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
-            barrel.shoot();
+            //barrel.shoot();
+            barrel.sendBothBallsUp();
             System.out.println("shot");
             shot = true;
             endingTime = System.currentTimeMillis() + 200;

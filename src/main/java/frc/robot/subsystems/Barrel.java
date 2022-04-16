@@ -78,7 +78,7 @@ public class Barrel extends SubsystemBase {
         //screw.burnFlash();
         configureFlywheelMotor(topWheel);
         configureFlywheelMotor(bottomWheel);
-        SmartDashboard.putNumber("tiltOffset", angleOffset);
+        //SmartDashboard.putNumber("tiltOffset", angleOffset);
         
     }
 
@@ -101,7 +101,7 @@ public class Barrel extends SubsystemBase {
     long topStopFinalShift = 0;
 
     long topIntakeDuration = 500;
-    long topHandoffDuration = 500;
+    long topHandoffDuration = 400;
     long topHandoffDeadzone = topHandoffDuration - 200;
     long topShiftDuration = 0;
 
@@ -203,6 +203,12 @@ public class Barrel extends SubsystemBase {
             
         }
     }
+    public void sendBothBallsUp(){
+        
+        topStopHandoff = System.currentTimeMillis()+topHandoffDuration*2;
+        bottomStopHandoff = System.currentTimeMillis()+topHandoffDuration*2;
+
+    }
 
     //tilt stuff
     public final double maxAngle = 75.0;
@@ -213,7 +219,7 @@ public class Barrel extends SubsystemBase {
     double currentTiltAng = 0;
     public boolean autoBarrel = true;
     private void updateTilt() {
-        angleOffset = SmartDashboard.getNumber("tiltOffset", angleOffset);
+        //angleOffset = SmartDashboard.getNumber("tiltOffset", angleOffset);
         
         posAverage.put(screwEncoder.getPosition());
         
@@ -242,7 +248,7 @@ public class Barrel extends SubsystemBase {
             //screw.set(0);
         }
    }
-   private double angleOffset = 151.80; //(178-39.0);//36.5
+   private double angleOffset = 152.79; //(178-39.0);//36.5
    // increasing the offset moves the barrel down
     /**
      * 
@@ -300,7 +306,6 @@ public class Barrel extends SubsystemBase {
         double distance = ShootingUtil.getCurrentDistance();
         double topRPM = ShootingUtil.getShootingTopSpeed(distance);
         double bottomRPM = ShootingUtil.getShootingBottomSpeed(distance);
-        SmartDashboard.putNumber("velot", getTiltVelocity());
         //topRPM = 5000;
         if(autoAdjustRPM){
             setFlywheels(topRPM, bottomRPM);
