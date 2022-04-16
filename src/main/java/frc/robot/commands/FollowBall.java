@@ -54,7 +54,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     boolean canAbort = false;
     double chargeSpeed = 0;
     public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
-            double forwardMod, int targetColor, double chargeSpeed, boolean canAbort) {
+            double forwardMod, int targetColor, double chargeSpeed, boolean canAbort, long chargeTime) {
 
         this.targetColor = targetColor;
         this.doIntake = handleIntake;
@@ -64,14 +64,15 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         this.barrel = barrel;
         this.chargeSpeed = chargeSpeed;
         this.canAbort = canAbort;
-        chargeTime = (long) ((2/chargeSpeed)*300);
+        //chargeTime = (long) ((2/chargeSpeed)*300);
+        this.chargeTime = chargeTime;
         addRequirements(barrel);
 
     }
     public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
-    double forwardMod, int targetColor, double chargeSpeed) {
+    double forwardMod, int targetColor, double chargeSpeed, long chargeTime) {
         this(drivetrain, barrel, handleIntake, endWhenClose,
-        forwardMod, targetColor, chargeSpeed, false);
+        forwardMod, targetColor, chargeSpeed, false, chargeTime);
     }
     // Called just before this Command runs the first time
     DriveToObject targetTracker;
@@ -187,6 +188,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                     if (endWhenClose) {
                         hasGotABall = true;
                     }
+                    System.out.println("charge!");
 
                     timeToEndDrive = System.currentTimeMillis() + chargeTime;
                 }
@@ -215,7 +217,6 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         } else {
             forwardValue = chargeSpeed;
             turnValue = 0;
-            //System.out.println("charge!");
         }
         if(barrel.hasBottomBall()){
             forwardValue = 0;

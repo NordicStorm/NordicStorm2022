@@ -30,6 +30,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -78,14 +81,18 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     // when a raw "drive" is used, privilege level is 0.
     // Each tick, whatever thing gave the highest rotation privilege gets used.
     private int currentRotationPrivilegeNeeded = 0;
-
+    
     Pixy pixy;
     public int myBallColor = 0;
     public int enemyBallColor = 0;
+
+    public Field2d fieldDisplay;
     public Drivetrain() {
         pixy = new Pixy();
         pixy.startUpdatingPixy();
         setBallColors();
+        fieldDisplay = new Field2d();
+        SmartDashboard.putData(fieldDisplay);
 
         frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
                 null, new Mk3ModuleConfiguration(),
@@ -227,17 +234,18 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         }
         // Update the pose
         pose = odometry.update(Rotation2d.fromDegrees(getGyroDegrees()), currentSwerveStates);
+        
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
+        fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
+        SmartDashboard.putNumber("Pitch", navx.getPitch());
 
-        SmartDashboard.putNumber("odo_x", pose.getX());
-        SmartDashboard.putNumber("odo_y", pose.getY());
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         SmartDashboard.putNumber("Pixy Num", FollowBall.countTargets( pixy.readObjects(), myBallColor));
-  
         if (RobotContainer.rightJoystick.getRawButton(12)) {
             resetAngle();
         }
+        
     }
 
     public void drive(ChassisSpeeds chassisSpeeds, int rotPrivilege) {

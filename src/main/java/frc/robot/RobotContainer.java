@@ -111,7 +111,7 @@ public class RobotContainer {
               return true;
             }
           });
-        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2, drivetrain.myBallColor, 2));
+        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 2, drivetrain.myBallColor, 2, 600));
         /*new JoystickButton(rightJoystick, 10).whenPressed(new InstantCommand(){
             @Override
             public void initialize() {

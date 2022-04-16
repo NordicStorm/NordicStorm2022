@@ -33,7 +33,7 @@ public class ShootingUtil {
      */
     public static double getCurrentDistance(){
         double realDist = Util.distance(drivetrain.getPose(), vision.targetToField)-0.35;
-        return realDist - 0.3048;
+        return realDist;// - 0.3048;
     }
     public static double getCurrentLinearSpeed(){
         ChassisSpeeds currentSpeeds = drivetrain.getSpeeds();

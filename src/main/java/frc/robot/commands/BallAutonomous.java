@@ -52,7 +52,7 @@ public class BallAutonomous extends AutoWithInit{
             pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.717,1.874
             pathA.setHeading(-90);
             pathA.addWaypoint(7.669, 1.514);
-            pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1).withTimeout(5), 1);//ENDPOS:7.621,0.220
+            pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1, 600).withTimeout(5), 1);//ENDPOS:7.621,0.220
             pathA.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false));
             pathA.setHeading(-120);
             pathA.addWaypoint(7.130, 1.538);
@@ -62,13 +62,13 @@ public class BallAutonomous extends AutoWithInit{
             if(doLastBall){
                 pathA.setHeading(170);
                 pathA.addWaypoint(6.555, 1.538);
-                pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2));//ENDPOS:4.734,2.053
+                pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2, 300));//ENDPOS:4.734,2.053
                 //pathA.stop();
     
                 pathA.setHeading(-135);
                 
                 pathA.addWaypoint(2.140, 2.294);
-                pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:1.128,1.143
+                pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1, 600));//ENDPOS:1.128,1.143
                 pathA.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false));
                 pathA.addWaypoint(2.290, 1.718);
                 pathA.addWaypoint(4.842, 1.454);
@@ -107,7 +107,7 @@ public class BallAutonomous extends AutoWithInit{
             pathB.setHeading(-180);
             
             pathB.addWaypoint(6.232, 6.126);
-            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2).withTimeout(5), 1);//ENDPOS:4.614,6.210
+            pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2, 300).withTimeout(5), 1);//ENDPOS:4.614,6.210
             pathB.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false));
             pathB.addWaypoint(5.597, 4.904);
             pathB.stop();
@@ -118,7 +118,7 @@ public class BallAutonomous extends AutoWithInit{
                 pathB.setHeading(-135);
                 pathB.addWaypoint(2.793, 4.042);
                 pathB.addWaypoint(0.697, 2.880);
-                pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:0.278,1.921
+                pathB.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1, 600));//ENDPOS:0.278,1.921
                 pathB.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false));
                 pathB.setHeading(-180);
                 pathB.addWaypoint(1.619, 3.946);

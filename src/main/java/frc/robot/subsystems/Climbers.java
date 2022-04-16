@@ -60,10 +60,10 @@ public class Climbers extends SubsystemBase {
 
         
         //leftPID.setReference(pos, CANSparkMax.ControlType.kPosition, pidSlot);
-        //SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
+        SmartDashboard.putNumber("currentLeft", leftMotor.getOutputCurrent());
 
         //SmartDashboard.putNumber("temp", leftMotor.getMotorTemperature());
-        //SmartDashboard.putNumber("leftPos", leftEncoder.getPosition());
+        SmartDashboard.putNumber("leftPos", leftEncoder.getPosition());
         //SmartDashboard.putNumber("rightPos", rightEncoder.getPosition());
         
     }

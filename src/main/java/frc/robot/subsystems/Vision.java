@@ -68,7 +68,7 @@ public class Vision extends SubsystemBase {
             bestTarget = target;
             double visYaw = target.getYaw();
             double visPitch = target.getPitch();
-            boolean usable = Math.abs(visYaw) < 4.5;
+            boolean usable = Math.abs(visYaw) < 4.5 && visPitch<20;
             canSeeTarget = true;
 
             if (usable) {
