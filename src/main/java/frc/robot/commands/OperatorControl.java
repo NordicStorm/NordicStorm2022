@@ -77,7 +77,7 @@ public class OperatorControl extends CommandBase {
         }
        
         if(leftStick.getRawButton(1) && !TurnAndShoot.currentlyRunning){
-            new TurnAndShoot(drivetrain, barrel, vision, 1000).schedule(false);
+            new TurnAndShoot(drivetrain, barrel, vision, 1000, true).schedule(false);
         }
 
         if(leftStick.getRawButton(7) && leftStick.getRawButton(10)){

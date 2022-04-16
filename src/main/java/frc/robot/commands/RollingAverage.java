@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+/**
+ * A class that averages out the last few samples collected
+ */
 public class RollingAverage {
     private final double[] samples;
     private final int numSamples;

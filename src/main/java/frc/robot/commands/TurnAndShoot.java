@@ -25,21 +25,33 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     boolean done = false;
     boolean manual = false;
     boolean manualEnd = false;
-  
+    boolean actuallyShoot;
+    boolean isStopper;
+    static boolean inActualShootingMode = false; // this global variable allows us to stop other TurnAndShoot instances when the mode changes
+    static boolean stopAllInstances = false;
+    /**
+     * Stop all shooting commands
+     */
+    public TurnAndShoot(boolean stop) {
+        isStopper = stop;
+    }
     /**
      * Take control of the drivetrain and barrel to take the shot
      * 
      * @param drivetrain
      * @param vision
      * @param timeout    in milliseconds
+     * @param actuallyShoot
      */
-    public TurnAndShoot(Drivetrain drivetrain, Barrel barrel, Vision vision, long timeout) {
+    public TurnAndShoot(Drivetrain drivetrain, Barrel barrel, Vision vision, long timeout, boolean actuallyShoot) {
         this.drivetrain = drivetrain;
         this.barrel = barrel;
         this.vision = vision;
         this.timeout = timeout;
         this.manual = timeout == 30181;
         this.manualEnd = timeout == 30182;
+        this.actuallyShoot = actuallyShoot;
+        this.isStopper = false;
         //SmartDashboard.putNumber("sTilt", barrel.intakePos);
         //SmartDashboard.putNumber("sTop", 1000);
         //SmartDashboard.putNumber("sBottom", 1000);
@@ -53,32 +65,39 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
 
     @Override
     public void initialize() {
-        this.endingTime = System.currentTimeMillis() + timeout;
-        currentlyRunning = true;
-        if(manual){
-            barrel.autoAdjustRPM = false;
+        if(isStopper){
+            stopAllInstances = true;
         }else{
-            barrel.autoAdjustRPM = true;
+            stopAllInstances = false;
+            this.endingTime = System.currentTimeMillis() + timeout;
+            currentlyRunning = true;
+            if(manual){
+                barrel.autoAdjustRPM = false;
+            }else{
+                barrel.autoAdjustRPM = true;
+            }
+            shot = false;
+            inActualShootingMode = actuallyShoot; // now if any others don't match this, they will end
         }
-        shot = false;
     }
-    
-    public void rotateTowardTarget() {
-        
+    /**
+     * Sets rotation power so we point toward the target (actually a little to the side to prevent bounce).
+     * Returns true if the current angle is within tolerance
+     */
+    public boolean rotateTowardTarget() {
+        double angleOffset = Math.atan2(0.3, ShootingUtil.getCurrentDistance()); // aim 12in to the side
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
-        double distance = ShootingUtil.getCurrentDistance();
-        double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded);
+
+        double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded+angleOffset);
         double p = 0.12;
-        
-        if(vision.canSeeTarget && distance>2.5){ // make sure we can see the whole target
-            angleDiff = -vision.bestTarget.getYaw();
+        if(vision.canSeeTarget){
+            angleDiff = -vision.bestTarget.getYaw()-angleOffset;
         }
         double correction = angleDiff*p; // rotController.calculate(drivetrain.getGyroRadians(), angleNeeded);
 
         correction = Util.absClamp(correction, 5);
         drivetrain.setRotationSpeed(correction, 1);
-        rotateGood = Math.abs(angleDiff)<3;
-        
+        return Math.abs(angleDiff)<3;
     }
 
     double tilt = 76;
@@ -111,7 +130,9 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             tilt = ShootingUtil.getShootingTilt(lastDistance);
             //topRPM = 5000;
             //barrel.setFlywheels(topRPM, bottomRPM);
-            barrel.setTiltAngle(tilt);
+            if(actuallyShoot){
+                barrel.setTiltAngle(tilt);
+            }
 
             SmartDashboard.putNumber("sTilt", tilt);
             SmartDashboard.putNumber("sTop", topRPM);
@@ -120,7 +141,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         }
         
         if(RobotContainer.leftJoystick.getRawButton(2)||!manual){
-            rotateTowardTarget();
+            rotateGood = rotateTowardTarget();
         }
         if(rotateGood){
             timesRotGood++;
@@ -130,15 +151,14 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         long timeLeft = endingTime - System.currentTimeMillis();
         //System.out.println(timesRotGood);
         boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<0.1;
-        if (((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || timeLeft<200) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
-            //barrel.shoot();
-            barrel.sendBothBallsUp();
+        if (actuallyShoot && ((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || timeLeft<200) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
+            barrel.shoot();
             System.out.println("shot");
             shot = true;
             endingTime = System.currentTimeMillis() + 200;
             ChassisSpeeds localSpeeds = drivetrain.getSpeeds();
 
-            new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 0, 0), 200);
+            new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 0, 0), 200).schedule(false);;
         }
 
     }
@@ -154,6 +174,12 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         
         if (System.currentTimeMillis() > endingTime) {
             // cleanup here todo
+            return true;
+        }
+        if(actuallyShoot != inActualShootingMode){
+            return true; // this instance has become outdated
+        }
+        if(stopAllInstances){
             return true;
         }
         return false;
