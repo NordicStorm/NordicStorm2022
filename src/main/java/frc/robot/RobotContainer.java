@@ -121,7 +121,7 @@ public class RobotContainer {
                 path.finalizePath().schedule();
             }
         }, true);*/
-        new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181), false);
+        new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181, true), false);
 
     }
 
