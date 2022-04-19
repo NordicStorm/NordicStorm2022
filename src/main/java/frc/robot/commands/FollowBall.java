@@ -44,6 +44,9 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     static double abortMaxAspect = 3;
     int currentFollowingID = -1;
     long timeToEndDrive = 0;
+    int widthMetFor = -1; // this takes an ID if the ball becomes wide enough to be chargeworthy
+
+
     long chargeTime = 0;
 
     boolean doIntake;
@@ -102,7 +105,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             return false;
         }
         if (alreadyTracking) {
-            if (aspect >= abortMaxAspect && possible.y < 160) {
+            if (aspect >= abortMaxAspect && possible.y < 170) {
                 System.out.println("abort because aspect: " + aspect);
                 return false;
             }
@@ -181,10 +184,16 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             List<PixyObject> objects = drivetrain.getPixy().readObjects();
             PixyObject object = findTarget(objects);
             if (object != null) {
-                //System.out.println("width:" + object.width);
-                //System.out.println("y:" + object.y);
+                System.out.println("width:" + object.width);
+                System.out.println("height:" + object.height);
+                System.out.println("y:" + object.y);
 
                 if (object.width > stopWidth && object.y+object.height >= 206) {// 207 is max/at the bottom of the bot
+                    widthMetFor = object.trackingIndex;
+                }else{
+                    //widthMetFor = -1;
+                }
+                if(widthMetFor == object.trackingIndex && object.y>195){
                     if (endWhenClose) {
                         hasGotABall = true;
                     }
@@ -205,6 +214,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                 }
                 // turnValue = 0;
                 forwardValue = 0;
+                widthMetFor = -1;
 
             }
             if (Math.abs(turnValue) > 0.1 && Math.abs(turnValue) < 0.15) {
