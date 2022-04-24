@@ -78,7 +78,7 @@ public class ShootingUtil {
         Pose2d futurePose = ShootingUtil.getFuturePose();
 
         double angleNeeded = Util.angleBetweenPoses(futurePose, vision.targetToField)+Math.PI;
-        
+
         return Math.toDegrees(angleNeeded);
 
     }
@@ -117,13 +117,13 @@ public class ShootingUtil {
     public static double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = -29.015981207960365*x*x + 385.86924509992025*x + -124.1033746412483; //CURVE:TSPEED,09:27,04/08
+        double result = 1.865309389106279*x*x*x + -26.26362452915182*x*x + 182.28595848492472*x + 401.66947061883366; //CURVE:TSPEED,10:42,04/23
         return result;
     }
     public static double getShootingBottomSpeed(double meters){
         double x = meters;
 
-        double result = -39.95027002454564*x*x + 507.42830519119434*x + 699.4957631684132; //CURVE:BSPEED,09:27,04/08
+        double result = 3.730618778212558*x*x*x + -52.52724905830364*x*x + 364.57191696984944*x + 803.3389412376673; //CURVE:BSPEED,10:42,04/23
         return result;
     }
     /**
@@ -133,12 +133,12 @@ public class ShootingUtil {
      */
     public static double getShootingTilt(double meters){
         double x = meters;
-        double result = 0.21913006142652056*x*x*x + -3.8869361329241414*x*x + 17.480770151592605*x + 48.48254195414914; //CURVE:TILT,08:33,04/04
+        double result = 0.11393176029556593*x*x + -4.871290125522591*x + 82.18778847953466; //CURVE:TILT,10:42,04/23
         if(x<=3.0){
             result = 71.5;
         }
         return result;
     }
 
-    
+
 }
