@@ -13,6 +13,7 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -128,7 +129,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
             driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 0);
             driveMotor.config_kF(0, 0.048);
             driveMotor.config_kP(0, 0.04);
-
+            
         }
         drivetrainConfig.maxAcceleration = 3; 
         drivetrainConfig.maxVelocity = 4; 

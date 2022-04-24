@@ -158,7 +158,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                 //System.out.println(possible);
                 if(isValidBall(possible, false, targetColor)){
                     currentFollowingID = possible.trackingIndex;
-                    System.out.println("was chosen!");
+                    //System.out.println("was chosen!");
                     return possible;
                 }
                 
@@ -184,9 +184,9 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             List<PixyObject> objects = drivetrain.getPixy().readObjects();
             PixyObject object = findTarget(objects);
             if (object != null) {
-                System.out.println("width:" + object.width);
-                System.out.println("height:" + object.height);
-                System.out.println("y:" + object.y);
+                //System.out.println("width:" + object.width);
+                //System.out.println("height:" + object.height);
+                //System.out.println("y:" + object.y);
 
                 if (object.width > stopWidth && object.y+object.height >= 206) {// 207 is max/at the bottom of the bot
                     widthMetFor = object.trackingIndex;
@@ -242,7 +242,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     @Override
     public boolean isFinished() {
 
-        return shouldStop;
+        return shouldStop || barrel.hasBottomBall();
     }
 
     

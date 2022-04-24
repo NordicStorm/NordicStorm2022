@@ -197,11 +197,11 @@ public class Barrel extends SubsystemBase {
      * Move the top stage so the ball enters the flywheels. Will do nothing if there is not ballAvailableToShoot()
      */
     private void sendBallToShooter(){
-        if(ballAvailableToShoot()){
-            topStopHandoff = System.currentTimeMillis()+topHandoffDuration;
-        }else{
+        //if(ballAvailableToShoot()){
+        topStopHandoff = System.currentTimeMillis()+topHandoffDuration;
+        //}else{
             
-        }
+        //}
     }
     public void sendBothBallsUp(){
         
@@ -392,6 +392,11 @@ public class Barrel extends SubsystemBase {
 
     public boolean hasBottomBall() {
         return bottomSensor.get();
+    }
+
+    public boolean hasTopBall(){
+        return topSensor.get();
+
     }
 
     public void resetToPos(double pos) {

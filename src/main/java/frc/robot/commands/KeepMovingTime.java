@@ -32,7 +32,7 @@ public class KeepMovingTime extends CommandBase implements CommandPathPiece{
     Drivetrain drivetrain;
     ChassisSpeeds speeds;
     /**
-     * It will go field-oriented
+     * It will go local-oriented
      * @param drivetrain
      * @param xSpeed
      * @param ySpeed

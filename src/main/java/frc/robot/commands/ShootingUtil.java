@@ -92,8 +92,8 @@ public class ShootingUtil {
         double topTime = topRPMDiff * 0.002;
         double bottomTime = bottomRPMDiff*0.002;
         double tiltTime = tiltDiff*0.5;
-        double turnTime = turnDiff*(1.4/180);
-        if(meters<=1.0){
+        double turnTime = turnDiff*(2/180);
+        if(meters<=1.3){
             turnTime = 99;
         }else{
 
@@ -134,7 +134,7 @@ public class ShootingUtil {
     public static double getShootingTilt(double meters){
         double x = meters;
         double result = 0.21913006142652056*x*x*x + -3.8869361329241414*x*x + 17.480770151592605*x + 48.48254195414914; //CURVE:TILT,08:33,04/04
-        if(x<=3.6){
+        if(x<=3.0){
             result = 71.5;
         }
         return result;

@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.ProxyScheduleCommand;
@@ -225,7 +226,7 @@ public class MultiPartPath {
             group.addCommands(command);
         }
         group.addRequirements((Subsystem)drivetrain);
-
+        SmartDashboard.putData(group);
         return group;
     }
 

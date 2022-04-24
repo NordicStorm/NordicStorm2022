@@ -25,6 +25,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     boolean done = false;
     boolean manual = false;
     boolean manualEnd = false;
+    boolean timeoutShot;
     boolean actuallyShoot;
     boolean isStopper;
     static boolean inActualShootingMode = false; // this global variable allows us to stop other TurnAndShoot instances when the mode changes
@@ -43,7 +44,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
      * @param timeout    in milliseconds
      * @param actuallyShoot
      */
-    public TurnAndShoot(Drivetrain drivetrain, Barrel barrel, Vision vision, long timeout, boolean actuallyShoot) {
+    public TurnAndShoot(Drivetrain drivetrain, Barrel barrel, Vision vision, long timeout, boolean actuallyShoot, boolean timeoutShot) {
         this.drivetrain = drivetrain;
         this.barrel = barrel;
         this.vision = vision;
@@ -52,6 +53,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         this.manualEnd = timeout == 30182;
         this.actuallyShoot = actuallyShoot;
         this.isStopper = false;
+        this.timeoutShot = timeoutShot;
         //SmartDashboard.putNumber("sTilt", barrel.intakePos);
         //SmartDashboard.putNumber("sTop", 1000);
         //SmartDashboard.putNumber("sBottom", 1000);
@@ -79,13 +81,14 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             shot = false;
             inActualShootingMode = actuallyShoot; // now if any others don't match this, they will end
         }
+        timesRotGood = 0;
     }
     /**
      * Sets rotation power so we point toward the target (actually a little to the side to prevent bounce).
      * Returns true if the current angle is within tolerance
      */
     public boolean rotateTowardTarget() {
-        double angleOffset = 0*Math.atan2(0.3, ShootingUtil.getCurrentDistance()); // aim 12in to the side
+        double angleOffset = Math.atan2(0.154, ShootingUtil.getCurrentDistance()); // aim 6in to the side
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
 
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded+angleOffset);
@@ -150,15 +153,21 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         }
         long timeLeft = endingTime - System.currentTimeMillis();
         //System.out.println(timesRotGood);
-        boolean speedGood = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds())<0.1;
+        double currentSpeed = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds());
+        boolean speedGood = currentSpeed<0.1;
         long shootTime = 300;
-        if (actuallyShoot && ((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || timeLeft<shootTime) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
-            barrel.sendBothBallsUp();
+
+        if (actuallyShoot && ((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || (timeLeft<shootTime && timeoutShot)) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
+            if(barrel.hasBottomBall() && barrel.hasTopBall()){
+                barrel.sendBothBallsUp();
+            }else{
+                barrel.shoot();
+            }
             System.out.println("shot");
             shot = true;
             endingTime = System.currentTimeMillis() + shootTime;
 
-            new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 0, 0), shootTime).schedule(false);;
+            new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 0, 0), shootTime).schedule(false);
         }
 
     }

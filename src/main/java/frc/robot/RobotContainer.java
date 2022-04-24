@@ -38,6 +38,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     private final Drivetrain drivetrain = new Drivetrain();
+    
+
     private final Climbers climbers = new Climbers();
     private final Barrel barrel = new Barrel();
 
@@ -121,7 +123,7 @@ public class RobotContainer {
                 path.finalizePath().schedule();
             }
         }, true);*/
-        new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181, true), false);
+        new JoystickButton(leftJoystick, 6).whileHeld(new TurnAndShoot(drivetrain, barrel, vision, 30181, true, false), false);
 
     }
 
@@ -135,5 +137,8 @@ public class RobotContainer {
         AutoWithInit auto = new BallAutonomous(drivetrain, barrel, vision);
         auto.initializeCommands();
         return auto;
+    }
+    public Drivetrain getDrivetrain() {
+      return drivetrain;
     }
 }
