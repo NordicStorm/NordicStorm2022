@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.nio.file.Path;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -155,8 +153,10 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         //System.out.println(timesRotGood);
         double currentSpeed = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds());
         boolean speedGood = currentSpeed<0.1;
-        long shootTime = 300;
-
+        long shootTime = 200;
+        if(shot){
+            drivetrain.drive(0, 0, 0);
+        }
         if (actuallyShoot && ((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || (timeLeft<shootTime && timeoutShot)) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
             if(barrel.hasBottomBall() && barrel.hasTopBall()){
                 barrel.sendBothBallsUp();
@@ -167,7 +167,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             shot = true;
             endingTime = System.currentTimeMillis() + shootTime;
 
-            new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 0, 0), shootTime).schedule(false);
+            //new KeepMovingTime(drivetrain, new ChassisSpeeds(0, 0, 0), shootTime).schedule(false);
         }
 
     }
@@ -197,5 +197,6 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     @Override
     public void end(boolean interrupted) {
         currentlyRunning = false;
+        System.out.println("endShoot");
     }
 }

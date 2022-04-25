@@ -10,6 +10,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -64,11 +66,27 @@ public class Vision extends SubsystemBase {
         var res = camera.getLatestResult();
         // System.out.println(res);
         if (res.hasTargets()) {
-            PhotonTrackedTarget target = res.getBestTarget();
-            bestTarget = target;
-            double visYaw = target.getYaw();
-            double visPitch = target.getPitch();
-            boolean usable = Math.abs(visYaw) < 4.5 && visPitch<20;
+            List<PhotonTrackedTarget> targets = res.getTargets();
+
+            var firstBest = targets.get(0);
+            if (targets.size() > 1) {
+
+                var secondBest = targets.get(1);
+                if (Math.abs(firstBest.getPitch() - secondBest.getPitch()) < 0.5) {
+                    if (firstBest.getYaw() < secondBest.getYaw()) {
+                        bestTarget = firstBest;
+                    } else {
+                        bestTarget = secondBest;
+                    }
+                } else {
+                    bestTarget = firstBest;
+                }
+            }else{
+                bestTarget = firstBest;
+            }
+            double visYaw = bestTarget.getYaw();
+            double visPitch = bestTarget.getPitch();
+            boolean usable = Math.abs(visYaw) < 4.5 && visPitch < 20;
             canSeeTarget = true;
 
             if (usable) {
@@ -77,31 +95,31 @@ public class Vision extends SubsystemBase {
                         camHeight,
                         targetHeight,
                         camAngle,
-                        Math.toRadians(res.getBestTarget().getPitch())) + 0.68;
+                        Math.toRadians(bestTarget.getPitch())) + 0.68;
                 Rotation2d botRotation = Rotation2d.fromDegrees(drivetrain.getGyroDegrees() + 180);
                 recentDistance = visToRealDist(recentDistance);
                 distanceAverage.put(recentDistance);
                 lastDistance = distanceAverage.get();
 
                 var estPose = estimateFieldToRobot(lastDistance,
-                        Rotation2d.fromDegrees(-target.getYaw()), botRotation, targetToField,
+                        Rotation2d.fromDegrees(-bestTarget.getYaw()), botRotation, targetToField,
                         camToRobot);
 
-                //SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(lastDistance));
-                //SmartDashboard.putNumber("vis_dist", lastDistance);
+                // SmartDashboard.putNumber("vis_dist_in", Units.metersToInches(lastDistance));
+                // SmartDashboard.putNumber("vis_dist", lastDistance);
 
-                //SmartDashboard.putNumber("vis_x", estPose.getX());
-                //SmartDashboard.putNumber("vis_y", estPose.getY());
+                // SmartDashboard.putNumber("vis_x", estPose.getX());
+                // SmartDashboard.putNumber("vis_y", estPose.getY());
 
-                //if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
-                    drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
-                //}else{
-                //    SmartDashboard.putString("Message", "Vision desync");
-                //}
+                // if(Util.distance(estPose, drivetrain.getPose())<3 || !hasSeenTarget){
+                drivetrain.setPose(estPose.getX(), estPose.getY(), 0);
+                // }else{
+                // SmartDashboard.putString("Message", "Vision desync");
+                // }
                 // System.out.println("dist "+);
                 hasSeenTarget = true;
 
-            }else{
+            } else {
                 distanceAverage.clear();
             }
         } else {
@@ -140,19 +158,20 @@ public class Vision extends SubsystemBase {
      * Estimate the position of the robot in the field. Adds to the distance so it
      * represents the center of the target
      *
-     * @param distanceToCenter   The distance from the camera to the center of the target
- 
-     * @param targetYaw          The observed yaw of the target. Note that this
-     *                           *must* be CCW-positive, and
-     *                           Photon returns CW-positive.
-     * @param gyroAngle          The current robot gyro angle, likely from odometry.
-     * @param fieldToTarget      A Pose2d representing the target position in the
-     *                           field coordinate system.
-     * @param cameraToRobot      The position of the robot relative to the camera.
-     *                           If the camera was
-     *                           mounted 3 inches behind the "origin" (usually
-     *                           physical center) of the robot, this would be
-     *                           Transform2d(3 inches, 0 inches, 0 degrees).
+     * @param distanceToCenter The distance from the camera to the center of the
+     *                         target
+     * 
+     * @param targetYaw        The observed yaw of the target. Note that this
+     *                         *must* be CCW-positive, and
+     *                         Photon returns CW-positive.
+     * @param gyroAngle        The current robot gyro angle, likely from odometry.
+     * @param fieldToTarget    A Pose2d representing the target position in the
+     *                         field coordinate system.
+     * @param cameraToRobot    The position of the robot relative to the camera.
+     *                         If the camera was
+     *                         mounted 3 inches behind the "origin" (usually
+     *                         physical center) of the robot, this would be
+     *                         Transform2d(3 inches, 0 inches, 0 degrees).
      * @return The position of the robot in the field.
      */
     public static Pose2d estimateFieldToRobot(

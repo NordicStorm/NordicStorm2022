@@ -9,13 +9,15 @@ public class DebugLights extends CommandBase implements CommandPathPiece{
     
     long timeout = 0;
     long timeToStop = 0;
+    long period;
     Vision vision;
 
    
-    public DebugLights(Vision vision,long timeout) {
+    public DebugLights(Vision vision,long timeout, long period) {
 
         this.timeout=timeout;
         this.vision= vision;
+        this.period = period;
 
     }
     
@@ -28,7 +30,7 @@ public class DebugLights extends CommandBase implements CommandPathPiece{
     // Called repeatedly when this Command is scheduled to run
     @Override
     public void execute() {
-        if(System.currentTimeMillis()%500 < 250){
+        if(System.currentTimeMillis()%period < period/2){
             vision.setLight(false);
         }else{
             vision.setLight(true);

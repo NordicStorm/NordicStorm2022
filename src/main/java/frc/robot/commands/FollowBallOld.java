@@ -13,6 +13,7 @@ package frc.robot.commands;
 import java.util.List;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.paths.CommandPathPiece;
 import frc.robot.subsystems.Barrel;
@@ -22,7 +23,7 @@ import frc.robot.subsystems.PixyObject;
 /**
  *
  */
-public class FollowBall extends CommandBase implements CommandPathPiece{
+public class FollowBallOld extends CommandBase implements CommandPathPiece{
 
 
     int camWidth = 315;
@@ -43,9 +44,6 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     static double abortMaxAspect = 3;
     int currentFollowingID = -1;
     long timeToEndDrive = 0;
-    int widthMetFor = -1; // this takes an ID if the ball becomes wide enough to be chargeworthy
-
-
     long chargeTime = 0;
 
     boolean doIntake;
@@ -55,8 +53,8 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     int targetColor = 0;
     boolean canAbort = false;
     double chargeSpeed = 0;
-    public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
-            double forwardMod, int targetColor, double chargeSpeed, boolean canAbort, long chargeTime) {
+    public FollowBallOld(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
+            double forwardMod, int targetColor, double chargeSpeed, boolean canAbort) {
 
         this.targetColor = targetColor;
         this.doIntake = handleIntake;
@@ -66,15 +64,14 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         this.barrel = barrel;
         this.chargeSpeed = chargeSpeed;
         this.canAbort = canAbort;
-        //chargeTime = (long) ((2/chargeSpeed)*300);
-        this.chargeTime = chargeTime;
+        chargeTime = (long) ((2/chargeSpeed)*300);
         addRequirements(barrel);
 
     }
-    public FollowBall(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
-    double forwardMod, int targetColor, double chargeSpeed, long chargeTime) {
+    public FollowBallOld(Drivetrain drivetrain, Barrel barrel, boolean handleIntake, boolean endWhenClose,
+    double forwardMod, int targetColor, double chargeSpeed) {
         this(drivetrain, barrel, handleIntake, endWhenClose,
-        forwardMod, targetColor, chargeSpeed, false, chargeTime);
+        forwardMod, targetColor, chargeSpeed, false);
     }
     // Called just before this Command runs the first time
     DriveToObject targetTracker;
@@ -104,7 +101,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             return false;
         }
         if (alreadyTracking) {
-            if (aspect >= abortMaxAspect && possible.y < 170) {
+            if (aspect >= abortMaxAspect && possible.y < 160) {
                 System.out.println("abort because aspect: " + aspect);
                 return false;
             }
@@ -140,7 +137,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         if (currentFollowingID != -1) {
             for (PixyObject possible : possibleTargets) {
                 if (possible.trackingIndex == currentFollowingID) {
-                    if (widthMetFor!=possible.trackingIndex && canAbort && !isValidBall(possible, true, targetColor)) {
+                    if (canAbort && !isValidBall(possible, true, targetColor)) {
                         System.out.println("brek");
                         break;
                     }
@@ -157,11 +154,10 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                 //System.out.println(possible);
                 if(isValidBall(possible, false, targetColor)){
                     currentFollowingID = possible.trackingIndex;
-                    //System.out.println("was chosen!");
+                    System.out.println("was chosen!");
                     return possible;
                 }
-                
-               
+
             }
         }
 
@@ -179,28 +175,20 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             }
             if (hasGotABall && endWhenClose) {
                 shouldStop = true;// The timer has run out after we have grabbed a ball
-                System.out.println("done");
-
             }
             List<PixyObject> objects = drivetrain.getPixy().readObjects();
             PixyObject object = findTarget(objects);
             if (object != null) {
-                System.out.println("width:" + object.width);
-                System.out.println("height:" + object.height);
-                System.out.println("y:" + object.y);
+                //System.out.println("width:" + object.width);
+                //System.out.println("height:" + object.height);
 
-                if (object.width > stopWidth && object.y+object.height >= 190) {// 207 is max/at the bottom of the bot
-                    widthMetFor = object.trackingIndex;
-                    System.out.println("widthmet!");
+                //System.out.println("y:" + object.y);
 
-                }else{
-                    //widthMetFor = -1;
-                }
-                if(widthMetFor == object.trackingIndex && object.y>195){
+                if (object.width > stopWidth && object.y+object.height >= 200) {// 207 is max/at the bottom of the bot
                     if (endWhenClose) {
                         hasGotABall = true;
                     }
-                    System.out.println("charge!");
+                    System.out.println("startcharge");
 
                     timeToEndDrive = System.currentTimeMillis() + chargeTime;
                 }
@@ -217,7 +205,6 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                 }
                 // turnValue = 0;
                 forwardValue = 0;
-                widthMetFor = -1;
 
             }
             if (Math.abs(turnValue) > 0.1 && Math.abs(turnValue) < 0.15) {
@@ -230,6 +217,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
         } else {
             forwardValue = chargeSpeed;
             turnValue = 0;
+            //System.out.println("charge!");
         }
         if(barrel.hasBottomBall()){
             forwardValue = 0;
@@ -245,7 +233,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
     @Override
     public boolean isFinished() {
 
-        return shouldStop;// || barrel.hasBottomBall();
+        return shouldStop;
     }
 
     

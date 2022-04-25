@@ -69,7 +69,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("DoAuto?", true);
         SmartDashboard.putBoolean("DoLastBall?", true);
         SmartDashboard.putBoolean("SingleBall?", false);
-        SmartDashboard.putData(new ResetBarrel(drivetrain, barrel, vision, 3000));
+        SmartDashboard.putData(new ResetBarrel(barrel, 3000));
 
     }
 
@@ -136,6 +136,9 @@ public class RobotContainer {
         drivetrain.setBallColors();
         AutoWithInit auto = new BallAutonomous(drivetrain, barrel, vision);
         auto.initializeCommands();
+        //PathAuto auto2 = new PathAuto(drivetrain);
+        //auto2.initializeCommands();
+        
         return auto;
     }
     public Drivetrain getDrivetrain() {

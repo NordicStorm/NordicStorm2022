@@ -22,7 +22,7 @@ public class PathAuto extends AutoWithInit{
         path.addWaypoint(3.737, 2.548);
         path.addWaypoint(5.084, 1.551);
         path.addWaypoint(3.904, 1.019);
-        path.stop();
+        path.addStop();
         addCommands(path.finalizePath());
 
         

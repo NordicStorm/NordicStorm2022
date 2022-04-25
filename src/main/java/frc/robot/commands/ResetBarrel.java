@@ -1,24 +1,13 @@
 package frc.robot.commands;
 
-import java.nio.file.Path;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.Util;
 import frc.robot.commands.paths.CommandPathPiece;
-import frc.robot.commands.paths.PathUtil;
 import frc.robot.subsystems.Barrel;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Vision;
 
 public class ResetBarrel extends CommandBase implements CommandPathPiece{
 
     public static boolean currentlyRunning = false;
-    private Drivetrain drivetrain;
     private Barrel barrel;
-    private Vision vision;
     private long timeout;
     private long endingTime;
     private long startTime = 0;
@@ -26,16 +15,13 @@ public class ResetBarrel extends CommandBase implements CommandPathPiece{
     
   
     /**
-     * Take control of the drivetrain and barrel to take the shot
      * 
      * @param drivetrain
      * @param vision
      * @param timeout    in milliseconds
      */
-    public ResetBarrel(Drivetrain drivetrain, Barrel barrel, Vision vision, long timeout) {
-        this.drivetrain = drivetrain;
+    public ResetBarrel(Barrel barrel, long timeout) {
         this.barrel = barrel;
-        this.vision = vision;
         this.timeout = timeout;
 
         addRequirements(barrel);

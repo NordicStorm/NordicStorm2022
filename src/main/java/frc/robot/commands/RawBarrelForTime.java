@@ -10,16 +10,9 @@
 
 package frc.robot.commands;
 
-import java.util.List;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Util;
 import frc.robot.commands.paths.CommandPathPiece;
 import frc.robot.subsystems.Barrel;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.PixyObject;
 
 /**
  *

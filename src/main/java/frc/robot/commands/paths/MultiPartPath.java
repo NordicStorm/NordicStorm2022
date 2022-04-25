@@ -117,17 +117,17 @@ public class MultiPartPath {
      * 
      * @param milliseconds Milliseconds. 1000ms = 1 second
      */
-    public void stop(int milliseconds) {
+    public void addStop(int milliseconds) {
         addSequentialCommand(new FullStopPiece(this, milliseconds));
     }
 
     /**
      * Stop completely.
      * 
-     * see {@link #stop(int)}
+     * see {@link #addStop(int)}
      */
-    public void stop() {
-        stop(0);
+    public void addStop() {
+        addStop(0);
     }
 
     /**
@@ -223,10 +223,10 @@ public class MultiPartPath {
         }
 
         for (Command command : actualCommands) {
+            System.out.println(command.getName());
             group.addCommands(command);
         }
         group.addRequirements((Subsystem)drivetrain);
-        SmartDashboard.putData(group);
         return group;
     }
 

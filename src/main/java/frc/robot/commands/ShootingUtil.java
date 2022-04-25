@@ -93,7 +93,7 @@ public class ShootingUtil {
         double bottomTime = bottomRPMDiff*0.002;
         double tiltTime = tiltDiff*0.5;
         double turnTime = turnDiff*(2/180);
-        if(meters<=1.3){
+        if(meters<=1.5){
             turnTime = 99;
         }else{
 

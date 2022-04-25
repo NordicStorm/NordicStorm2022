@@ -216,7 +216,7 @@
               "_source0": "network_table:///SmartDashboard/Field",
               "_title": "SmartDashboard/Field",
               "Game/Game": "A2022_Rapid_React",
-              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Robot Icon Size": 25.0,
               "Visuals/Show Outside Circles": false
             }
           },
@@ -284,6 +284,17 @@
               "_type": "Command",
               "_source0": "network_table:///SmartDashboard/ResetBarrel",
               "_title": "ResetBarrel"
+            }
+          },
+          "6,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/SequentialCommandGroup",
+              "_title": "SequentialCommandGroup"
             }
           }
         }
