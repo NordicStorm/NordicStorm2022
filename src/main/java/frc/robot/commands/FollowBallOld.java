@@ -179,10 +179,10 @@ public class FollowBallOld extends CommandBase implements CommandPathPiece{
             List<PixyObject> objects = drivetrain.getPixy().readObjects();
             PixyObject object = findTarget(objects);
             if (object != null) {
-                //System.out.println("width:" + object.width);
-                //System.out.println("height:" + object.height);
+                System.out.println("width:" + object.width);
+                System.out.println("height:" + object.height);
 
-                //System.out.println("y:" + object.y);
+                System.out.println("y:" + object.y);
 
                 if (object.width > stopWidth && object.y+object.height >= 200) {// 207 is max/at the bottom of the bot
                     if (endWhenClose) {
@@ -217,7 +217,7 @@ public class FollowBallOld extends CommandBase implements CommandPathPiece{
         } else {
             forwardValue = chargeSpeed;
             turnValue = 0;
-            //System.out.println("charge!");
+            System.out.println("charge!");
         }
         if(barrel.hasBottomBall()){
             forwardValue = 0;

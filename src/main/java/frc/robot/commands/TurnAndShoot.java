@@ -197,6 +197,8 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
     @Override
     public void end(boolean interrupted) {
         currentlyRunning = false;
-        System.out.println("endShoot");
+        if(actuallyShoot){
+            barrel.setTiltAngle(barrel.intakePos);
+        }
     }
 }

@@ -138,7 +138,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         drivetrainConfig.rotationCorrectionP = 2;
         drivetrainConfig.maxCentripetalAcceleration = 8;
 
-        pose = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
+        pose = new Pose2d(6, 4, Rotation2d.fromDegrees(0));
         odometry = new SwerveDriveOdometry(kinematics, Rotation2d.fromDegrees(0), pose);
         //SmartDashboard.putNumber("MaxAccel", 4);
         targetChassisSpeeds = new ChassisSpeeds(0, 0, 0);

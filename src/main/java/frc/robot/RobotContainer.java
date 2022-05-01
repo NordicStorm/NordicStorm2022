@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoWithInit;
 import frc.robot.commands.BallAutonomous;
 import frc.robot.commands.FollowBall;
+import frc.robot.commands.FollowBallOld;
 import frc.robot.commands.OperatorControl;
 import frc.robot.commands.PathAuto;
 import frc.robot.commands.ResetBarrel;
@@ -113,7 +114,9 @@ public class RobotContainer {
               return true;
             }
           });
-        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 3, 300));
+        //new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 3, 300));
+        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBallOld(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 2));
+
         /*new JoystickButton(rightJoystick, 10).whenPressed(new InstantCommand(){
             @Override
             public void initialize() {
