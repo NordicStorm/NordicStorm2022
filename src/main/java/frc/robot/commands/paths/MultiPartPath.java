@@ -223,7 +223,6 @@ public class MultiPartPath {
         }
 
         for (Command command : actualCommands) {
-            System.out.println(command.getName());
             group.addCommands(command);
         }
         group.addRequirements((Subsystem)drivetrain);

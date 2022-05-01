@@ -179,19 +179,18 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
             }
             if (hasGotABall && endWhenClose) {
                 shouldStop = true;// The timer has run out after we have grabbed a ball
-                System.out.println("done");
 
             }
             List<PixyObject> objects = drivetrain.getPixy().readObjects();
             PixyObject object = findTarget(objects);
             if (object != null) {
-                System.out.println("width:" + object.width);
-                System.out.println("height:" + object.height);
-                System.out.println("y:" + object.y);
+                //System.out.println("width:" + object.width);
+                //System.out.println("height:" + object.height);
+                //System.out.println("y:" + object.y);
 
                 if (object.width > stopWidth && object.y+object.height >= 190) {// 207 is max/at the bottom of the bot
                     widthMetFor = object.trackingIndex;
-                    System.out.println("widthmet!");
+                    //System.out.println("widthmet!");
 
                 }else{
                     //widthMetFor = -1;
@@ -200,7 +199,7 @@ public class FollowBall extends CommandBase implements CommandPathPiece{
                     if (endWhenClose) {
                         hasGotABall = true;
                     }
-                    System.out.println("charge!");
+                    //System.out.println("charge!");
 
                     timeToEndDrive = System.currentTimeMillis() + chargeTime;
                 }

@@ -53,9 +53,9 @@ public class BallAutonomous extends AutoWithInit{
             pathA.setHeading(-90);
             pathA.addWaypoint(7.669, 1.514);
 
-            pathA.addSequentialCommand(new FollowBallOld(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1).withTimeout(5), 1);//ENDPOS:7.621,0.220
+            pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 1, 200).withTimeout(5), 1);//ENDPOS:7.621,0.220
             //pathA.addParallelCommand(new DebugLights(vision, 8000, 1000));
-            //pathA.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false, false));
+            pathA.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false, false));
             //pathA.addSequentialCommand(new DebugLights(vision, 8000, 200));
 
             pathA.setHeading(-120);
@@ -68,15 +68,15 @@ public class BallAutonomous extends AutoWithInit{
 
                 pathA.setHeading(170);
                 pathA.addWaypoint(6.555, 1.538);
-                pathA.addSequentialCommand(new FollowBallOld(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2));//ENDPOS:4.734,2.053
+                pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2, 100));//ENDPOS:4.734,2.053
                 //pathA.stop();
 
     
                 pathA.setHeading(-135);
                 
                 pathA.addWaypoint(2.140, 2.294);
-                pathA.addSequentialCommand(new FollowBallOld(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1));//ENDPOS:1.128,1.143
-                //pathA.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false, false));
+                pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1, 200));//ENDPOS:1.128,1.143
+                pathA.addParallelCommand(new TurnAndShoot(drivetrain, barrel, vision, 99000, false, false));
                 pathA.addWaypoint(2.290, 1.718);
                 pathA.addWaypoint(4.842, 1.454);
                 pathA.addWaypoint(6.348, 1.926);

@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 import frc.robot.Util;
 import frc.robot.commands.paths.CommandPathPiece;
@@ -86,7 +87,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
      * Returns true if the current angle is within tolerance
      */
     public boolean rotateTowardTarget() {
-        double angleOffset = Math.atan2(0.154, ShootingUtil.getCurrentDistance()); // aim 6in to the side
+        double angleOffset = 0*Math.atan2(0.154, ShootingUtil.getCurrentDistance()); // aim 6in to the side
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
 
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded+angleOffset);
@@ -153,12 +154,14 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         //System.out.println(timesRotGood);
         double currentSpeed = PathUtil.linearSpeedFromChassisSpeeds(drivetrain.getSpeeds());
         boolean speedGood = currentSpeed<0.1;
-        long shootTime = 200;
+        boolean twoBall = barrel.hasBottomBall() && barrel.hasTopBall();
+        long shootTime = twoBall ? 400 : 200;
+        System.out.println("shot: "+shot);
         if(shot){
             drivetrain.drive(0, 0, 0);
         }
         if (actuallyShoot && ((barrel.readyToShoot() && (timesRotGood>3) && speedGood) || (timeLeft<shootTime && timeoutShot)) && (RobotContainer.leftJoystick.getRawButton(6) || !manual) && !shot) {
-            if(barrel.hasBottomBall() && barrel.hasTopBall()){
+            if(twoBall){
                 barrel.sendBothBallsUp();
             }else{
                 barrel.shoot();

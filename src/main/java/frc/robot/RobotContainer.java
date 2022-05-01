@@ -71,7 +71,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("DoLastBall?", true);
         SmartDashboard.putBoolean("SingleBall?", false);
         SmartDashboard.putData(new ResetBarrel(barrel, 3000));
-
+        SmartDashboard.putData(CommandScheduler.getInstance());
     }
 
     /**
@@ -114,8 +114,8 @@ public class RobotContainer {
               return true;
             }
           });
-        //new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 3, 300));
-        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBallOld(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 2));
+        new JoystickButton(rightJoystick, 1).whileHeld(new FollowBall(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 3, 300));
+        //new JoystickButton(rightJoystick, 1).whileHeld(new FollowBallOld(drivetrain, barrel, true, false, 3, drivetrain.myBallColor, 2));
 
         /*new JoystickButton(rightJoystick, 10).whenPressed(new InstantCommand(){
             @Override
