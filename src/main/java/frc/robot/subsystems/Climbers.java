@@ -80,7 +80,7 @@ public class Climbers extends SubsystemBase {
         spark.disableVoltageCompensation();
         spark.setInverted(reverse);
         int sign = reverse?-1:1;
-        spark.setSoftLimit(SoftLimitDirection.kReverse, -50.0f);
+        spark.setSoftLimit(SoftLimitDirection.kReverse, -49.5f);
         spark.setSoftLimit(SoftLimitDirection.kForward, -0.2f);
         spark.enableSoftLimit(SoftLimitDirection.kForward, true);
         spark.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -127,5 +127,19 @@ public class Climbers extends SubsystemBase {
      */
     public void setPidSlot(int slot){
 
+    }
+
+    public double getLeftSpeed(){
+        return leftEncoder.getVelocity();
+    }
+    public double getRightSpeed(){
+        return rightEncoder.getVelocity();
+    }
+
+    public double getLeftPos(){
+        return leftEncoder.getPosition();
+    }
+    public double getRightPos(){
+        return rightEncoder.getPosition();
     }
 }

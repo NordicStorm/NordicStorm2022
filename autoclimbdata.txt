@@ -1,0 +1,23 @@
+1.4
+
+
+
+
+
+
+
+
+Pos:
+clearPos:33.8
+topPos:49.5
+clipPos:39
+underPos:30
+unhookPos:20
+waitPos:20
+chinPos:3
+unclipPos:10
+
+Angle:
+Pushable >:43
+Clipable <:47
+FailClip >:40
