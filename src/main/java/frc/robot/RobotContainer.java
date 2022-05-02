@@ -70,6 +70,7 @@ public class RobotContainer {
         SmartDashboard.putBoolean("DoAuto?", true);
         SmartDashboard.putBoolean("DoLastBall?", true);
         SmartDashboard.putBoolean("SingleBall?", false);
+        SmartDashboard.putBoolean("ExtendToFive?", false);
         SmartDashboard.putData(new ResetBarrel(barrel, 3000));
         SmartDashboard.putData(CommandScheduler.getInstance());
     }

@@ -91,7 +91,7 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         double angleNeeded = ShootingUtil.getNeededTurnAngle();
 
         double angleDiff = Util.angleDiff(drivetrain.getGyroDegrees(), angleNeeded+angleOffset);
-        double p = 0.12;
+        double p = 0.115;
         if(vision.canSeeTarget){
             angleDiff = -vision.bestTarget.getYaw()-angleOffset;
         }
@@ -156,7 +156,6 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
         boolean speedGood = currentSpeed<0.1;
         boolean twoBall = barrel.hasBottomBall() && barrel.hasTopBall();
         long shootTime = twoBall ? 400 : 200;
-        System.out.println("shot: "+shot);
         if(shot){
             drivetrain.drive(0, 0, 0);
         }
