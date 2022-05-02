@@ -32,7 +32,7 @@ public class AutoClimb extends CommandBase{
 
     @Override
     public void execute() {
-        double currentPos = 0;
+        double currentPos = 0; 
     }
 
     private double getAppropiatePower(double currentPos, double currentSpeed, double currentTilt){
