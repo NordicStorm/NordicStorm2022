@@ -6,13 +6,20 @@ import frc.robot.subsystems.Climbers;
 public class AutoClimb extends CommandBase{
 
     enum ClimbState{
-        BottomClipped,
-        TopDetached
+        ExtendingWhileClear,
+        ExtendingFullUp,
+        ClippingDown,
+        WaitingToPull,
+        UnhookingBottom,
+        WaitingForSprings,
+        ChinningUp,
+        WaitingToUnclip,
+        UnclippingAxes
 
         
     }
     Climbers climbers;
-    double d;
+    
 
     public AutoClimb(Climbers climbers){
         this.climbers = climbers;
@@ -25,7 +32,11 @@ public class AutoClimb extends CommandBase{
 
     @Override
     public void execute() {
-        
+        double currentPos = 0;
+    }
+
+    private double getAppropiatePower(double currentPos, double currentSpeed, double currentTilt){
+        return 0;
     }
 
     @Override
