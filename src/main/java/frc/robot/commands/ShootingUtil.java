@@ -27,6 +27,11 @@ public class ShootingUtil {
         double result = distance*magnitude;//CURVE:perp
         return result;
     }
+    private static double getScale(double distance){
+        double x = 0;
+        double result = distance*0.5;//CURVE:scale
+        return result;
+    }
     /**
      * Get the current measured distance from target to CAMERA!
      * @return
@@ -46,30 +51,12 @@ public class ShootingUtil {
 
         ChassisSpeeds currentSpeeds = Util.rotateSpeeds(drivetrain.getSpeeds(), -drivetrain.getGyroRadians());
         double distance = getCurrentDistance();
-
-        EVector2d speedsVector = new EVector2d(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
-        EVector2d normalVector = new EVector2d(visionPose.getX() - currentPose.getX(),
-                visionPose.getY() - currentPose.getY());
-        normalVector.normalize();
-        EVector2d perpPart = normalVector.times(speedsVector.dot(normalVector));
-        EVector2d paraPart = speedsVector.minus(perpPart);
-        //System.out.println("normal"+normalVector);
-        //System.out.println("speeds"+speedsVector);
-        //System.out.println("dot"+speedsVector.dot(normalVector));
-
-        //System.out.println("perp"+perpPart);
-        //System.out.println("para"+paraPart);
-
-
-        perpPart.setMagnitude(getOffsetPerp(distance, perpPart.magnitude()));
-        paraPart.setMagnitude(getOffsetPara(distance, paraPart.magnitude()));
+        double scale = getScale(distance);
         //System.out.println("perp2"+perpPart);
 
-        var transform = new Transform2d(new Translation2d(perpPart.x+paraPart.x, perpPart.y+paraPart.y), new Rotation2d());
-        transform = new Transform2d(new Translation2d(), new Rotation2d());
+        //var transform = new Transform2d(new Translation2d(currentSpeeds.vxMetersPerSecond*scale, currentSpeeds.vyMetersPerSecond*scale), new Rotation2d());
         //futurePose = futurePose.plus(transform);
 
-        //perpPart.normalized().times();
 
         return futurePose;
     }
