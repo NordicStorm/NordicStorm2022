@@ -176,6 +176,10 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
     public double getGyroRadians() {
         return Math.toRadians(getGyroDegrees());
     }
+    /**
+     * Get the pitch value in degrees, aka forward/back tilt
+     * @return
+     */
     public double getGyroPitch(){
         return navx.getRoll(); // because of orientation this is pitch
     }

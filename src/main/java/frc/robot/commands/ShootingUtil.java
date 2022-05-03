@@ -117,13 +117,13 @@ public class ShootingUtil {
     public static double getShootingTopSpeed(double meters){
         double x = meters;
 
-        double result = 1.865309389106279*x*x*x + -26.26362452915182*x*x + 182.28595848492472*x + 401.66947061883366; //CURVE:TSPEED,10:42,04/23
+        double result = 1.593947969587455*x*x*x + -22.005436231609348*x*x + 161.48336004116533*x + 432.8153682962188; //CURVE:TSPEED,08:49,05/02
         return result;
     }
     public static double getShootingBottomSpeed(double meters){
         double x = meters;
 
-        double result = 3.730618778212558*x*x*x + -52.52724905830364*x*x + 364.57191696984944*x + 803.3389412376673; //CURVE:BSPEED,10:42,04/23
+        double result = 3.18789593917491*x*x*x + -44.010872463218696*x*x + 322.96672008233065*x + 865.6307365924376; //CURVE:BSPEED,08:49,05/02
         return result;
     }
     /**

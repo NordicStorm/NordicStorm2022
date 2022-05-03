@@ -102,11 +102,6 @@
                 },
                 {
                   "_type": "Toggle Switch",
-                  "_source0": "network_table:///SmartDashboard/DoAuto?",
-                  "_title": "DoAuto?"
-                },
-                {
-                  "_type": "Toggle Switch",
                   "_source0": "network_table:///SmartDashboard/DoLastBall?",
                   "_title": "DoLastBall?"
                 },
@@ -114,6 +109,16 @@
                   "_type": "Toggle Switch",
                   "_source0": "network_table:///SmartDashboard/SingleBall?",
                   "_title": "SingleBall?"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/ExtendToFive?",
+                  "_title": "ExtendToFive?"
+                },
+                {
+                  "_type": "Toggle Switch",
+                  "_source0": "network_table:///SmartDashboard/DoAuto?",
+                  "_title": "DoAuto?"
                 }
               ]
             }
@@ -191,21 +196,6 @@
               }
             }
           },
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Number Slider",
-              "_source0": "network_table:///SmartDashboard/tiltOffset",
-              "_title": "tiltOffset",
-              "Slider Settings/Min": 10.0,
-              "Slider Settings/Max": 170.0,
-              "Slider Settings/Block increment": 0.5,
-              "Visuals/Display value": true
-            }
-          },
           "3,2": {
             "size": [
               3,
@@ -247,7 +237,7 @@
               ]
             }
           },
-          "5,0": {
+          "3,0": {
             "size": [
               1,
               2
@@ -275,17 +265,6 @@
               ]
             }
           },
-          "3,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Command",
-              "_source0": "network_table:///SmartDashboard/ResetBarrel",
-              "_title": "ResetBarrel"
-            }
-          },
           "6,0": {
             "size": [
               1,
@@ -296,8 +275,107 @@
               "_source0": "network_table:///SmartDashboard/SequentialCommandGroup",
               "_title": "SequentialCommandGroup"
             }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/tiltOffset",
+              "_title": "tiltOffset"
+            }
+          },
+          "0,3": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Command",
+              "_source0": "network_table:///SmartDashboard/ResetBarrel",
+              "_title": "ResetBarrel"
+            }
           }
         }
+      }
+    },
+    {
+      "title": "Tab 7",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              8,
+              3
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///SmartDashboard/Scheduler",
+              "_title": "SmartDashboard/Scheduler"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 3",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    },
+    {
+      "title": "Tab 4",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    },
+    {
+      "title": "Tab 5",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    },
+    {
+      "title": "Tab 6",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
       }
     },
     {
