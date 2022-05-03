@@ -180,7 +180,7 @@ public class Barrel extends SubsystemBase {
 
     public void setIntake(boolean running){
         if(running){
-            bottomStopIntake = System.currentTimeMillis() + 900;
+            bottomStopIntake = System.currentTimeMillis() + 1000;
         }else{
             //bottomStopIntake = 0; // don't do because this way all intake finishes first
 
