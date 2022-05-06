@@ -54,7 +54,7 @@ public class BallAutonomous extends AutoWithInit{
             MultiPartPath pathA;
 
             pathA = new MultiPartPath(drivetrain, config, null);
-            pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.717,1.874
+            pathA.addSequentialCommand(new FullStopPiece(pathA, 1));//ENDPOS:7.741,2.029
             pathA.setHeading(-90);
             pathA.addWaypoint(7.669, 1.514);
 
@@ -75,7 +75,7 @@ public class BallAutonomous extends AutoWithInit{
                 pathA.addWaypoint(6.351, 1.562);
                 pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 3, drivetrain.myBallColor, 2, 100));//ENDPOS:4.734,2.053
                 
-                if(!extendToFive){//path off
+                if(!extendToFive){//path on
 
                     pathA.setHeading(-135);
                     pathA.addWaypoint(2.140, 2.294);
@@ -87,7 +87,7 @@ public class BallAutonomous extends AutoWithInit{
                 pathA.addWaypoint(5.585, 1.921);
                 pathA.addStop();
                 pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000, true, true));//ENDPOS:5.680,1.969
-                if(extendToFive){ //path on
+                if(extendToFive){ //path off
                     pathA.setHeading(-135);
                     pathA.addWaypoint(2.140, 2.294);
                     pathA.addSequentialCommand(new FollowBall(drivetrain, barrel, true, true, 2, drivetrain.myBallColor, 1, 100));//ENDPOS:1.128,1.143
@@ -97,7 +97,6 @@ public class BallAutonomous extends AutoWithInit{
                     pathA.addWaypoint(6.327, 1.957);
                     pathA.addStop();
                     pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000, true, true));//ENDPOS:6.555,2.005
-
                 }
                 //pathA.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000, true, true));//ENDPOS:6.471,2.101
         
@@ -118,10 +117,14 @@ public class BallAutonomous extends AutoWithInit{
             pathC.setHeading(180);
 
             pathC.addSequentialCommand(new FullStopPiece(pathC, 1));//ENDPOS:6.232,3.790
+            if(doLastBall){//path on
+                pathC.addWaypoint(4.003, 4.305);
+
+            }
             pathC.addWaypoint(4.351, 3.766);
             pathC.addWaypoint(5.165, 3.754);
             pathC.addStop();
-            pathC.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000, true, true));//ENDPOS:5.249,3.718
+            pathC.addSequentialCommand(new TurnAndShoot(drivetrain, barrel, vision, 2000, true, true));//ENDPOS:5.291,3.743
             pathC.addStop();
             addCommands(pathC.finalizePath());
         }
