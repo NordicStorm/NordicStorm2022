@@ -245,7 +245,7 @@ public class Drivetrain extends SubsystemBase implements PathableDrivetrain {
         driveActualMotors(targetChassisSpeeds);
         currentRotationPrivilegeNeeded = 0;
         fieldDisplay.setRobotPose(pose.getX(), pose.getY(), new Rotation2d(getGyroRadians()));
-        SmartDashboard.putNumber("Pitch", navx.getRoll());
+        //SmartDashboard.putNumber("Pitch", navx.getRoll());
 
         SmartDashboard.putNumber("driveAng", getGyroDegrees());
         SmartDashboard.putNumber("Pixy Num", FollowBall.countTargets( pixy.readObjects(), myBallColor));

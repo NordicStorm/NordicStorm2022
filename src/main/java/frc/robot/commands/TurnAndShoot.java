@@ -133,7 +133,11 @@ public class TurnAndShoot extends CommandBase implements CommandPathPiece{
             //topRPM = 5000;
             //barrel.setFlywheels(topRPM, bottomRPM);
             if(actuallyShoot){
-                barrel.setTiltAngle(tilt);
+                if(!RobotContainer.leftJoystick.getRawButton(3)){
+                    barrel.setTiltAngle(tilt);
+                }else{
+                    barrel.setTiltAngle(barrel.intakePos);
+                }
             }
 
             SmartDashboard.putNumber("sTilt", tilt);

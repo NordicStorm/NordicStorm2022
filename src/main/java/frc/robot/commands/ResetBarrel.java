@@ -46,7 +46,6 @@ public class ResetBarrel extends CommandBase implements CommandPathPiece{
         
         if(Math.abs(barrel.getTiltVelocity())<200 && !(timeGoing<200)) {
             timesGood+=1;
-            System.out.println(timesGood);
         }else {
             timesGood = 0;
         }

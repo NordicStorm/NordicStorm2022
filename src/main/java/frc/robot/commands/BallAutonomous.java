@@ -106,8 +106,7 @@ public class BallAutonomous extends AutoWithInit{
             
             addCommands(pathA.finalizePath());
         } else if (singleBall) { //path on
-            config.maxCentripetalAcceleration = 5;
-            config.maxAcceleration = 3;
+           
 
             drivetrain.setPose(6.232,3.790, 0);
             drivetrain.setAngleOffset(-180);
@@ -117,7 +116,7 @@ public class BallAutonomous extends AutoWithInit{
             pathC.setHeading(180);
 
             pathC.addSequentialCommand(new FullStopPiece(pathC, 1));//ENDPOS:6.232,3.790
-            if(doLastBall){//path on
+            if(doLastBall){//path off
                 pathC.addWaypoint(4.003, 4.305);
                 pathC.setHeading(-135);
                 pathC.addWaypoint(2.793, 4.042);
@@ -130,7 +129,7 @@ public class BallAutonomous extends AutoWithInit{
                 pathC.addWaypoint(2.266, 3.814);
                 pathC.addWaypoint(3.896, 4.245);
                 pathC.addWaypoint(5.153, 4.030);
-            }else{//path off
+            }else{//path on
                 pathC.addWaypoint(4.375, 4.042);
                 pathC.addWaypoint(5.285, 4.078);
             }

@@ -86,6 +86,9 @@ public class Vision extends SubsystemBase {
             }
             double visYaw = bestTarget.getYaw();
             double visPitch = bestTarget.getPitch();
+            if(visPitch<20){
+                SmartDashboard.putNumber("visYaw", visYaw);
+            }
             boolean usable = Math.abs(visYaw) < 4.5 && visPitch < 20;
             canSeeTarget = true;
 
@@ -125,6 +128,8 @@ public class Vision extends SubsystemBase {
         } else {
             distanceAverage.clear();
             canSeeTarget = false;
+            SmartDashboard.putNumber("visYaw", 0);
+
             // System.out.println("no target");
         }
     }
