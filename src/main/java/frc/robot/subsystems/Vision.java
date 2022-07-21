@@ -128,7 +128,7 @@ public class Vision extends SubsystemBase {
         } else {
             distanceAverage.clear();
             canSeeTarget = false;
-            SmartDashboard.putNumber("visYaw", 0);
+            SmartDashboard.putNumber("visYaw", -30);
 
             // System.out.println("no target");
         }

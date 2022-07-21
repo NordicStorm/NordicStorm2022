@@ -6,10 +6,13 @@ import datetime
 from pygame.color import THECOLORS as COLORS
 import numpy as np
 from datetime import datetime
-
+import math
+def get_dist(p1, p2):
+    return math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2)
 class Curve:
     def __init__(self, points, name, multi=False):
         self.points = points
+        self.drawn_points = []
         self.name = name
         self.order = 2
         self.multi = multi
@@ -28,7 +31,10 @@ class Curve:
             x = [p[0] for p in self.points]
             y = [p[1] for p in self.points]
             self.line = np.poly1d(np.polyfit(x, y, self.order))
-
+    def check_intersect(self, point):
+        for p in self.drawn_points:
+            if get_dist(point, [p[0],p[1]])<4:
+                return p
     def get_expr(self):
         terms = []
         exponent = len(self.line.c)-1
@@ -83,6 +89,7 @@ def make_map(in_min, in_max, out_min, out_max):
 
 def graph_points(curve, surf, color, label_pos, all_ax_width, draw_frame):
     points = curve.points
+    curve.drawn_points = []
     if not points:return
     x = [p[0] for p in points]
     y = [p[1] for p in points]
@@ -93,15 +100,16 @@ def graph_points(curve, surf, color, label_pos, all_ax_width, draw_frame):
     for ind in range(len(points)):
         dx = x_ax(x[ind])
         dy = y_ax(y[ind])
+        curve.drawn_points.append([dx,dy,str(round(x[ind],2)),str(round(y[ind], 1))])
         pygame.draw.circle(surf, color, [dx,dy], 4)
-        text = font.render(str(y[ind]), 1, color)
+        text = font.render(str(round(y[ind], 1)), 1, color)
         surf.blit(text, [label_pos, dy])
 
         if(draw_frame):
             pygame.draw.line(surf, [0,0,0], [all_ax_width, 5], [all_ax_width, x_label_pos]) # y axis
             pygame.draw.line(surf, [0,0,0], [all_ax_width, x_label_pos], [surf.get_width()-15, x_label_pos]) # x axis
 
-            xtext = font.render(str(round(x[ind],4)), 1, [0,0,0])
+            xtext = font.render(str(round(x[ind],2)), 1, [0,0,0])
             surf.blit(xtext, [dx, x_label_pos])
             
     text = font.render(curve.name, 1, color)
@@ -172,18 +180,18 @@ graphSurf = pygame.surface.Surface([600, 480])
 running = True
 clock = pygame.time.Clock()
 graph_all_points(curves, graphSurf)
-
+disp_point = None
 while running:
-    clock.tick(20)
+    clock.tick(30)
+    
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             running = False
         if e.type == pygame.KEYDOWN:
-            if e.key == pygame.K_c:
-                graph_all_points(curves, graphSurf)
+            
             if e.key == pygame.K_r:
                 curves=load_curves()
-                graph_all_points(curves, graphSurf)
+                #graph_all_points(curves, graphSurf)
             if e.key == pygame.K_o:
                 choice = easygui.choicebox("which to change order of?", choices=curves.keys())
                 if choice is None: continue
@@ -199,7 +207,22 @@ while running:
                 if choices:
                     for choice in choices:
                         write_java_file(curves[choice])
+        if e.type == pygame.MOUSEMOTION:
+            disp_point = None
+            for curve in curves.values():
+                found = curve.check_intersect(e.pos)
+                if found:
+                    disp_point = found
+                    break
+  
+        
     screen.fill([255,255,255])
+    graph_all_points(curves, graphSurf)
+    if disp_point is not None:
+            xtext = font.render(disp_point[2], 1, [0,0,0], [255,255,255])
+            graphSurf.blit(xtext, [disp_point[0]+15, disp_point[1]+5])
+            ytext = font.render(disp_point[3], 1, [0,0,0], [255,255,255])
+            graphSurf.blit(ytext, [disp_point[0]+15, disp_point[1]+20])
     screen.blit(graphSurf, [0,0])
     pygame.display.flip()
     
